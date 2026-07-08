@@ -87,5 +87,57 @@ class TestPaths(unittest.TestCase):
             self.assertTrue(any("https" in e for e in errs))
 
 
+LAB_OK = '''# Lab 1: Connect APEX to Generative AI
+## Introduction
+Estimated Time: 10 minutes
+### Objectives
+* Do a thing
+## Task 1: Go
+1. Click.
+    ```sql
+    <copy>select 1 from dual;</copy>
+    ```
+2. See ![The APEX builder](images/builder.png " ").
+## Acknowledgements
+* **Author** - Rick Houlihan
+'''
+
+
+class TestLabStructure(unittest.TestCase):
+    def _write(self, t, body):
+        lab = Path(t) / "1-connect-genai"
+        (lab / "images").mkdir(parents=True)
+        (lab / "images/builder.png").write_bytes(b"\x89PNG")
+        p = lab / "1-connect-genai.md"
+        p.write_text(body)
+        return p
+
+    def test_good_lab_passes(self):
+        with tempfile.TemporaryDirectory() as t:
+            self.assertEqual(vw.check_lab_structure(self._write(t, LAB_OK)), [])
+
+    def test_copy_tag_required(self):
+        with tempfile.TemporaryDirectory() as t:
+            p = self._write(t, LAB_OK.replace("<copy>", "").replace("</copy>", ""))
+            self.assertTrue(any("<copy>" in e for e in vw.check_lab_structure(p)))
+
+    def test_missing_sections_reported(self):
+        with tempfile.TemporaryDirectory() as t:
+            p = self._write(t, "# T\nhello\n")
+            errs = vw.check_lab_structure(p)
+            for needle in ("Estimated Time", "Objectives", "Acknowledgements"):
+                self.assertTrue(any(needle in e for e in errs), needle)
+
+    def test_empty_alt_text_reported(self):
+        with tempfile.TemporaryDirectory() as t:
+            p = self._write(t, LAB_OK.replace("![The APEX builder]", "![]"))
+            self.assertTrue(any("alt text" in e for e in vw.check_lab_structure(p)))
+
+    def test_missing_image_file_reported(self):
+        with tempfile.TemporaryDirectory() as t:
+            p = self._write(t, LAB_OK.replace("builder.png", "gone.png"))
+            self.assertTrue(any("gone.png" in e for e in vw.check_lab_structure(p)))
+
+
 if __name__ == "__main__":
     unittest.main()

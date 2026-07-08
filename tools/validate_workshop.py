@@ -55,3 +55,30 @@ def check_paths_resolve(manifest, variant_dir, online=False):
             if not (variant_dir / fn).resolve().exists():
                 errs.append(f"{t.get('title')}: file not found: {fn}")
     return errs
+
+
+IMG_RE = re.compile(r"!\[([^\]]*)\]\(([^) ]+)( \"[^\"]*\")?\)")
+FENCE_RE = re.compile(r"```[a-z]*\n(.*?)```", re.S)
+
+
+def check_lab_structure(md_path):
+    md_path = Path(md_path)
+    errs, text = [], md_path.read_text(encoding="utf-8")
+    h1 = [l for l in text.splitlines() if l.startswith("# ")]
+    if len(h1) != 1:
+        errs.append(f"{md_path.name}: expected exactly one H1, found {len(h1)}")
+    if "Estimated Time" not in text and "Estimated Lab Time" not in text:
+        errs.append(f"{md_path.name}: missing 'Estimated Time' line")
+    if "### Objectives" not in text:
+        errs.append(f"{md_path.name}: missing '### Objectives'")
+    if "## Acknowledgements" not in text:
+        errs.append(f"{md_path.name}: missing '## Acknowledgements'")
+    for block in FENCE_RE.findall(text):
+        if "<copy>" not in block:
+            errs.append(f"{md_path.name}: fenced code block without <copy>: {block.strip()[:40]!r}")
+    for alt, src, _ in IMG_RE.findall(text):
+        if not alt.strip():
+            errs.append(f"{md_path.name}: image {src} missing alt text")
+        if not src.startswith("http") and not (md_path.parent / src).exists():
+            errs.append(f"{md_path.name}: image file not found: {src}")
+    return errs
