@@ -55,6 +55,25 @@ class TestManifest(unittest.TestCase):
         errs = vw.check_manifest_order(bad, "sandbox")
         self.assertTrue(any("Need Help" in e for e in errs))
 
+    def test_order_tenancy_no_get_started_ok(self):
+        # nyc-genai-lab tenancy pattern: Introduction -> Sign Up -> labs -> Need Help
+        tm = {"tutorials": [
+            {"title": "Introduction", "filename": "../../introduction/introduction.md"},
+            {"title": "Sign Up for an APEX Workspace", "filename": "../../../common-261/1-sign-up-apex/1-sign-up-apex.md"},
+            {"title": "Lab 1: Connect APEX to Generative AI", "filename": "../../1-connect-genai/1-connect-genai.md"},
+            {"title": "Need Help?", "filename": "https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-livelabs.md"},
+        ]}
+        self.assertEqual(vw.check_manifest_order(tm, "tenancy"), [])
+
+    def test_order_tenancy_missing_signup_reported(self):
+        tm = {"tutorials": [
+            {"title": "Introduction", "filename": "x"},
+            {"title": "Lab 1: A", "filename": "y"},
+            {"title": "Need Help?", "filename": "z"},
+        ]}
+        errs = vw.check_manifest_order(tm, "tenancy")
+        self.assertTrue(any("Sign" in e for e in errs))
+
 
 class TestPaths(unittest.TestCase):
     def test_missing_local_file_reported(self):

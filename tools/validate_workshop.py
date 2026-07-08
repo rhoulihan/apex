@@ -22,16 +22,22 @@ def load_manifest(variant_dir):
 
 
 def check_manifest_order(manifest, variant):
+    """sandbox: Introduction, Get Started, sign-up, ..., Need Help? last.
+    tenancy/event (nyc-genai-lab pattern): Introduction, sign-up, ..., Need Help? last."""
     errs = []
     titles = [t.get("title", "") for t in manifest.get("tutorials", [])]
     if not titles:
         return [f"{variant}: manifest has no tutorials"]
     if not titles[0].startswith("Introduction"):
         errs.append(f"{variant}: Introduction must be first, got '{titles[0]}'")
-    if len(titles) > 1 and not titles[1].startswith("Get Started"):
-        errs.append(f"{variant}: Get Started must be second, got '{titles[1]}'")
-    if variant == "sandbox" and len(titles) > 2 and "Sign up" not in titles[2]:
-        errs.append(f"{variant}: sign-up lab must be third, got '{titles[2]}'")
+    if variant == "sandbox":
+        if len(titles) > 1 and not titles[1].startswith("Get Started"):
+            errs.append(f"{variant}: Get Started must be second, got '{titles[1]}'")
+        if len(titles) > 2 and "Sign up" not in titles[2]:
+            errs.append(f"{variant}: sign-up lab must be third, got '{titles[2]}'")
+    else:
+        if len(titles) > 1 and not ("Sign" in titles[1] or "Provision" in titles[1]):
+            errs.append(f"{variant}: Sign Up/Provision lab must be second, got '{titles[1]}'")
     if not titles[-1].startswith("Need Help"):
         errs.append(f"{variant}: 'Need Help?' must be last, got '{titles[-1]}'")
     return errs
