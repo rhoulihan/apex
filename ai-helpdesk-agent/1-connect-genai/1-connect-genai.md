@@ -149,10 +149,10 @@ Paste this block into SQL Commands, select it, and ask the APEX Assistant to *ex
 <copy>declare
   l_subject tickets.subject%type;
 begin
-  select subject into l_subject from tickets where id = :ticket_id;
-  update tickets set status = 'Resolved' where id = :ticket_id;
+  select subject into l_subject from tickets where id = :TICKET_ID;
+  update tickets set status = 'Resolved' where id = :TICKET_ID;
   apex_ai.set_tool_result(
-    p_result => 'Ticket ' || :ticket_id || ' ("' || l_subject || '") is now Resolved.');
+    p_result => 'Ticket ' || :TICKET_ID || ' ("' || l_subject || '") is now Resolved.');
 end;</copy>
 ```
 
