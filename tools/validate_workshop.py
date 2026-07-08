@@ -35,3 +35,23 @@ def check_manifest_order(manifest, variant):
     if not titles[-1].startswith("Need Help"):
         errs.append(f"{variant}: 'Need Help?' must be last, got '{titles[-1]}'")
     return errs
+
+
+def check_paths_resolve(manifest, variant_dir, online=False):
+    errs, variant_dir = [], Path(variant_dir)
+    for t in manifest.get("tutorials", []):
+        fn = t.get("filename", "")
+        if fn.startswith("https://"):
+            if online:
+                import urllib.request
+                try:
+                    req = urllib.request.Request(fn, method="HEAD")
+                    urllib.request.urlopen(req, timeout=10)
+                except Exception as e:
+                    errs.append(f"{t.get('title')}: URL unreachable: {fn} ({e})")
+        elif fn.startswith("http://"):
+            errs.append(f"{t.get('title')}: must use https, got {fn}")
+        else:
+            if not (variant_dir / fn).resolve().exists():
+                errs.append(f"{t.get('title')}: file not found: {fn}")
+    return errs

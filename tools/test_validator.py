@@ -56,5 +56,36 @@ class TestManifest(unittest.TestCase):
         self.assertTrue(any("Need Help" in e for e in errs))
 
 
+class TestPaths(unittest.TestCase):
+    def test_missing_local_file_reported(self):
+        with tempfile.TemporaryDirectory() as t:
+            d = make_variant(t, GOOD)
+            errs = vw.check_paths_resolve(GOOD, d, online=False)
+            self.assertTrue(any("introduction.md" in e for e in errs))
+
+    def test_existing_local_file_ok(self):
+        # layout mirrors the real repo: <repo>/<workshop>/workshops/sandbox
+        # so ../../../common-261/... resolves to <repo>/common-261/...
+        with tempfile.TemporaryDirectory() as t:
+            wk = Path(t) / "repo" / "wkshp"
+            d = make_variant(wk, GOOD)
+            for rel in ("introduction/introduction.md", "1-connect-genai/1-connect-genai.md"):
+                f = wk / rel
+                f.parent.mkdir(parents=True, exist_ok=True)
+                f.write_text("# x")
+            c = Path(t) / "repo" / "common-261/1-sign-up-apex/sign-up-apex-sandbox.md"
+            c.parent.mkdir(parents=True, exist_ok=True)
+            c.write_text("# x")
+            self.assertEqual(vw.check_paths_resolve(GOOD, d, online=False), [])
+
+    def test_bad_url_scheme_reported(self):
+        bad = dict(GOOD)
+        bad["tutorials"] = [dict(GOOD["tutorials"][0], filename="http://insecure")]
+        with tempfile.TemporaryDirectory() as t:
+            d = make_variant(t, bad)
+            errs = vw.check_paths_resolve(bad, d, online=False)
+            self.assertTrue(any("https" in e for e in errs))
+
+
 if __name__ == "__main__":
     unittest.main()
