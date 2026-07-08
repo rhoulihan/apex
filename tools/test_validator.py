@@ -139,5 +139,63 @@ class TestLabStructure(unittest.TestCase):
             self.assertTrue(any("gone.png" in e for e in vw.check_lab_structure(p)))
 
 
+def budget_fixture(t, l1_minutes):
+    m = {"tutorials": [
+        {"title": "Introduction", "filename": "../../intro/intro.md"},
+        {"title": "Lab 1: A", "filename": "../../l1/l1.md"},
+        {"title": "Lab 6 [OPTIONAL]: B", "filename": "../../l6/l6.md"},
+    ]}
+    for name, mins in (("intro", 0), ("l1", l1_minutes), ("l6", 60)):
+        p = Path(t) / name
+        p.mkdir()
+        (p / f"{name}.md").write_text(f"# L\nEstimated Time: {mins} minutes\n")
+    vd = Path(t) / "workshops" / "sandbox"
+    vd.mkdir(parents=True)
+    return m, vd
+
+
+CFG = {"include_times": {"Introduction": 0}, "core_budget": 90, "warn_budget": 180}
+
+
+class TestBudgetAndBans(unittest.TestCase):
+    def test_core_budget_excludes_optional(self):
+        with tempfile.TemporaryDirectory() as t:
+            m, vd = budget_fixture(t, 85)
+            errs = vw.check_time_budget(m, "sandbox", vd, CFG)
+            self.assertEqual(errs, [])  # core 85 <= 90; total 145 <= 180
+
+    def test_core_budget_hard_fail(self):
+        with tempfile.TemporaryDirectory() as t:
+            m, vd = budget_fixture(t, 95)
+            errs = vw.check_time_budget(m, "sandbox", vd, CFG)
+            self.assertTrue(any("hard" in e for e in errs))
+
+    def test_warn_budget_fail(self):
+        with tempfile.TemporaryDirectory() as t:
+            m, vd = budget_fixture(t, 85)
+            cfg = dict(CFG, warn_budget=100)
+            errs = vw.check_time_budget(m, "sandbox", vd, cfg)
+            self.assertTrue(any("warn" in e for e in errs))
+
+    def test_banned_string_found(self):
+        with tempfile.TemporaryDirectory() as t:
+            p = Path(t) / "x.md"
+            p.write_text("uses cohere.command-r-16k model")
+            errs = vw.check_banned_strings(p, {"banned_strings": ["cohere.command-r-16k"]})
+            self.assertTrue(errs)
+
+    def test_ocid_in_copy_block_allowed(self):
+        with tempfile.TemporaryDirectory() as t:
+            p = Path(t) / "x.md"
+            p.write_text('```\n<copy>ocid1.<your-compartment-ocid></copy>\n```')
+            self.assertEqual(vw.check_banned_strings(p, {"banned_strings": ["ocid1."]}), [])
+
+    def test_ocid_outside_copy_block_banned(self):
+        with tempfile.TemporaryDirectory() as t:
+            p = Path(t) / "x.md"
+            p.write_text("my compartment is ocid1.compartment.oc1..aaa")
+            self.assertTrue(vw.check_banned_strings(p, {"banned_strings": ["ocid1."]}))
+
+
 if __name__ == "__main__":
     unittest.main()
