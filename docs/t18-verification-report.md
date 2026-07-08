@@ -35,7 +35,20 @@ Configured `Helpdesk AI` (static id `helpdesk_ai`), region `us-chicago-1`, model
 - No `404` on the model → **the model id and region are valid and available.**
 - The failure is purely a **compartment-level on-demand-chat quota**, hit on the very first request and still failing after a 50-second wait → the quota is at or near **zero** for LiveLabs student compartments.
 
-**Implication:** the workshop's core AI mechanism is *viable* on the green button — the plumbing works — but it is gated entirely on the LiveLabs team raising this quota. This must be the #1 line item in the WMS Sandbox Lite / full-sandbox Jira request. It also confirms the spec's 429 risk is real and **compartment-level** (worse than the tenancy-level we assumed), making the OpenAI fallback and staggered-exercise design load-bearing rather than defensive.
+**Implication:** the workshop's core AI mechanism is *viable* on the green button — the plumbing works — but it is gated entirely on the environment's GenAI capacity being provisioned. This must be the #1 line item in the WMS Sandbox Lite / full-sandbox Jira request.
+
+### Root cause of the 429 — refined (which "guardrail" is it?)
+
+The most likely cause is **the account tier of the sandbox tenancy, not a per-workshop provisioning toggle.** Evidence:
+- The sandbox tenancy (`c4ustudent03`) is flagged **"Free Tier account"** on every OCI page.
+- The error string `max-on-demand-chat-request-per-minute-count` is the literal name of an **OCI Generative AI service limit**, and OCI Free-Trial / Always-Free accounts default this on-demand-inference limit to **0 / near-0** until a service-limit increase is requested. The OCI Console → *Limits, quotas and usage* page even surfaces a **"Request a service limit increase"** action and notes "availability can be affected by quota policies set on this compartment and/or its parent compartments."
+- The assigned compartment is per-reservation and isolated, and the first-ever request 429'd → not shared consumption, but a limit at/near zero.
+
+So the throttle is best understood as **"free-tier GenAI is off by default,"** an OCI-account-level cost guardrail — directionally what one would expect for a free workshop, but tied to the *tenancy's account tier/service limit*, not to whether a particular workshop's sandbox pool has "GenAI enabled."
+
+**Corroborating signal, with a caveat:** the shopping-cart workshop we borrowed *does* ship GenAI labs, and the dedicated AI-APEX green buttons (nyc-genai-lab, ai-vision-lab) are currently **disabled** — consistent with GenAI-on-sandbox being broadly constrained right now, which fits an account-tier/service-limit cause more than a per-workshop one.
+
+**What we could NOT determine from inside one borrowed free-trial sandbox:** the exact limit value, and whether LiveLabs' *production* GenAI-workshop sandboxes run on an entitled/paid tenancy with the limit already raised. A LiveLabs admin can read both in ~30 seconds. So the sharpened ask is: **does our workshop's sandbox run on a tenancy/compartment where the OCI Generative AI on-demand chat service limit is > 0 (entitled tenancy, or limit-increase filed)** — not merely "please enable GenAI for this pool." This makes the OpenAI fallback + staggered-exercise design load-bearing regardless.
 
 ## Decisions this run tees up (for Rick + APEX team)
 
