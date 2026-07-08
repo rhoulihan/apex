@@ -39,3 +39,7 @@ Plan: `docs/plans/2026-07-08-ai-helpdesk-agent-workshop.md`
 - [ ] T6 manual ADB gate: run helpdesk-schema.sql twice (state-reset), divergent-precondition test, resolve-ticket block with :TICKET_ID=42
 - [ ] T18 actual lab timings vs budget (core must stay <= 90)
 - [ ] Verify Lab 6 'Generate Text with AI' dynamic action config fields against the 26.1 builder during the real run (Message/Result Item names)
+
+### T18 run log (2026-07-08)
+- Reservation: "Build a Starter Online Shopping App using Oracle APEX!" (wid 848, green button), submitted 09:18 US/Central, Sandbox Lite-style (login -> create ADB + workspace in assigned compartment)
+- CATALOG INTEL: nyc-genai-lab (wid 3947) and ai-vision-lab (wid 3811) currently have their green buttons DISABLED in the catalog (button present in DOM, display:none + disabled) — only 3 APEX workshops have active sandboxes today (spreadsheet, shopping-cart, movies-lab; none AI). Strengthens our gap claim AND raises the question for WMS/Jira: why were the AI-APEX sandboxes pulled? Ask LiveLabs team; GenAI-from-sandbox verification below is therefore even more load-bearing.
