@@ -64,3 +64,7 @@ ACTIONS:
 
 ### T18 Lab 7 (in-database ONNX) finding
 Lab 7 semantic search is INDEPENDENT of the GenAI chat quota (pure in-DB), so it was the best candidate to run on sandbox today. Result: DEMO schema lacks EXECUTE on DBMS_CLOUD + CREATE MINING MODEL (our Lab 7 Task 1 grants). Ran the grants as ADMIN in Database Actions ("Grant succeeded" x2) BUT verification shows DEMO still has DIRECT_PRIV=0, MINING_PRIV=0 -> the student sandbox tenancy restricts these ADMIN grants (they don't actually land). So ONNX model load (DBMS_VECTOR.LOAD_ONNX_MODEL via DBMS_CLOUD.GET_OBJECT) is BLOCKED on this sandbox. Same root cause class as the GenAI quota: LiveLabs student tenancy needs proper privilege/quota provisioning. WMS/Jira must request: DBMS_CLOUD execute + CREATE MINING MODEL grantable to workspace schemas (or pre-provisioned). CONFIRMED separately: 26ai VECTOR column type compiles fine (schema HAS_VEC=1), so only the model-load privilege is the blocker, not vector support.
+
+### T18 teardown (2026-07-08)
+- Reservation 213888 TERMINATED ("Keep in History") — workshop environment destroyed: HELPDESKDB ADB, HELPDESK/DEMO APEX workspace, self-generated OCI API key, and all compartment resources released back to the shared sandbox pool. Reservation record kept for reference.
+- No persistent artifacts: workshop content + all findings are committed to git; throwaway sandbox credentials existed only in the session scratchpad (ephemeral).
