@@ -78,7 +78,13 @@ familiarity with SQL helpful but not required.
 
 1. VPN → livelabs.oracle.com/wms → **Submit a Workshop**. Paste title, abstract, outline, prerequisites, tags from above. Submit. (Council reviews in 2–3 business days.)
 2. When status = **Approved**: on the workshop's **Sandbox Environment** tab, tick the **Sandbox Lite** checkbox (auto-created ~1 business day). This is our ship-now green-button path.
-3. Same tab, in parallel (optional upgrade, non-blocking): open the **Jira for a Full Sandbox** — summary format `[Sandbox] WMS ID: <id> LL ID: <id> Build an AI-Powered Help Desk with Oracle APEX`. Ask for: pre-provisioned Always Free ADB (26ai, APEX 26.1) + pre-created APEX workspace per attendee; cite `apex-native-map-regions` as the existing full-sandbox APEX precedent. Also ask them to confirm **OCI Generative AI availability from sandbox compartments** (nyc-genai-lab precedent).
+3. Same tab, in parallel (optional upgrade, non-blocking): open the **Jira for a Full Sandbox** — summary format `[Sandbox] WMS ID: <id> LL ID: <id> Build an AI-Powered Help Desk with Oracle APEX`. Ask for: pre-provisioned ADB (26ai, APEX 26.1) + pre-created APEX workspace per attendee; cite `apex-native-map-regions` as the existing full-sandbox APEX precedent.
+
+   **CRITICAL provisioning asks (from the T18 verification run — see `docs/t18-verification-report.md`). Without these, NO AI lab runs on the green button:**
+   - **Raise the compartment GenAI quota** `max-on-demand-chat-request-per-minute-count` (and embedding equivalents) on the workshop compartments. T18 proved GenAI auth/endpoint/model all work from a sandbox compartment, but this quota is at/near **zero** on student compartments → all chat inference 429s. This is the #1 blocker and almost certainly why the existing AI-APEX green buttons are disabled.
+   - **APEX 26.1 on the ADB** — sandbox ADBs are still on APEX 24.2.17; Labs 4 (AI Interactive Reports) and 5 (AI Agents + tools) are 26.1-only. Ask when 26.1 reaches ADB in the LiveLabs tenancies, or plan a 24.2 "AI Configurations" fallback for those two labs.
+   - **`adb-free-count ≥ 1`** on the compartment (Always Free ADB creation currently quota-blocked → had to use trial credits).
+   - **Lab 7:** `DBMS_CLOUD` execute + `CREATE MINING MODEL` grantable to workspace schemas (or pre-load the ONNX model). T18 showed these ADMIN grants don't land in the student tenancy.
 4. Reply here with the **WMS ID** → I cut the clean PR branch (T20) with the ID in the title.
 5. Once you have any sandbox reservation (yours via the green-buttoned nyc-genai-lab in the same tenancy, or ours once Sandbox Lite exists): that's our T18 screenshot/timing run and the week-1 GenAI verification.
 
