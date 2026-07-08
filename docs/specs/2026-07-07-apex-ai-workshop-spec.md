@@ -1,9 +1,9 @@
 # Workshop Spec — "Build an AI-Powered Help Desk with Oracle APEX: From Prompt to Agent"
 
-**Status:** Draft for Rick's review — no lab authoring until approved
-**Date:** 2026-07-07 (rev 2 — post adversarial review: 27 confirmed findings applied)
+**Status:** **Approved by Rick 2026-07-08** — lab authoring may begin (inline, strict TDD per §7)<br>
+**Date:** 2026-07-07 · rev 2 post adversarial review (27 findings) · rev 3 2026-07-08 delivery decisions (§10)<br>
 **Author:** Claude (research: 3 agent reports in `docs/research/`, LiveLabs conventions report)
-**Target repo:** `oracle-livelabs/apex` (this repo; develop on a fork branch, PR with WMS ID)
+**Target repo:** `oracle-livelabs/apex` (this repo; develop on a fork branch, PR with WMS ID)<br>
 **Delivery:** Oracle LiveLabs, green button (LiveLabs Sandbox) primary + tenancy (brown button) variant
 
 ---
@@ -137,11 +137,12 @@ Budget evidence: `scm-ai-agent` (Oracle's own 26.1 agent workshop, prebuilt app)
 
 **OpenAI fallback logistics (it is load-bearing in three places — Lab 1 type path, GenAI-blocked risk, 429 relief valve):** at instructor-led events, use a per-event OpenAI key with a hard spend cap, distributed via the Event Code page or on-screen at the venue (never baked into lab content), revoked immediately after the event. Self-paced catalog users on the OpenAI track bring their own key (stated plainly in Lab 1); the "nothing but a free Oracle account" promise holds on the default OCI GenAI track.
 
-**Variants shipped:** `workshops/sandbox/` (green, primary), `workshops/tenancy/` (brown twin — required for the WMS publishing entry; swaps the setup includes for freetier login/provision labs and `need-help-freetier.md`), and later `workshops/event/` re-cuts per developer day (established `tenancy-special`/`aiw25` pattern). Single-source lab content; variance only in manifests and `type` conditionals — **every include path must resolve in every variant** (validator-enforced).
+**Variants shipped:** `workshops/sandbox/` (green, Track A primary), `workshops/tenancy/` (brown — **first-class, not a twin**: it is the Track B large-event backbone and gets equal Self-QA; swaps the setup includes for freetier login/provision labs and `need-help-freetier.md`), and `workshops/event/` re-cuts per developer day (established `tenancy-special`/`aiw25` pattern; first one authored alongside launch so the Track B path is rehearsed, not improvised). Single-source lab content; variance only in manifests and `type` conditionals — **every include path must resolve in every variant** (validator-enforced).
 
-**Concurrency plan for developer days:** green button caps at **~30 concurrent reservations**.
-- ≤30 seats: green button as-is (have attendees start reservations at t-0; provisioning is minutes).
-- >30 seats: request an **Event Code** in WMS (2-day review) pointing at the event manifest, backed by the **tenancy variant on an event-provided tenancy** (capacity = tenancy limits), and/or pre-negotiate sandbox capacity with the LiveLabs team (research cites livelabs-help-db_us@oracle.com; **confirm the current alias in WMS before the request** — one review verdict disputed it). Decision input needed from Rick: expected seat count (open question #1).
+**Concurrency plan for developer days (DECIDED 2026-07-08 — plan for large groups):** most events are ≤30 seats, but **some will be hundreds**. Two first-class delivery tracks, both shipped and QA'd from day one:
+
+- **Track A — green button (≤30 seats, and all self-paced use):** sandbox as-is; attendees start reservations at t-0 (provisioning is minutes).
+- **Track B — large events (hundreds of seats):** **Event Code** in WMS (2-day review) pointing at an event manifest, backed by the **tenancy variant on an event-provided tenancy** — the established bootcamp pattern (`tenancy-special` in bootcamp_crm / event-mangement). Capacity = tenancy limits, so the pre-event runbook (§6) must cover, per event: (1) event-tenancy service limits — ADB instance count for N attendees (or pre-provisioned shared instances with per-attendee workspaces, the bootcamp approach); (2) **OCI GenAI throughput at hundreds of concurrent users** — pre-negotiate limits for the event tenancy or shard attendees across compartments/regions; at this scale the 429 mitigations below are load-bearing, not defensive; (3) the per-event OpenAI relief-valve key (logistics above); (4) event-code issuance timing (request ≥1 week out; code active from 1 day before to 1 day after). Sandbox-capacity pre-negotiation with the LiveLabs team remains a fallback for mid-size events (research cites livelabs-help-db_us@oracle.com; **confirm the current alias in WMS before the request** — one review verdict disputed it).
 
 **Throttling defense (any variant):** OCI GenAI on-demand inference is dynamically throttled per tenancy — 30–50 people in one tenancy can see 429s. Mitigations designed in: **attendee-set Max AI Tokens on the GenAI service (Lab 1 step 3)** — per-workspace caps on Sandbox Lite are necessarily attendee-side, since each attendee is their own instance admin; labs alternate clicky tasks with AI calls (natural staggering); the scripted agent conversation is 3 calls, not 20; troubleshooting box in every AI lab ("if you get a rate-limit error, wait 30s and retry"); OpenAI fallback path as pressure relief.
 
@@ -159,9 +160,12 @@ ai-helpdesk-agent/
 ├── 7-vector-search/7-vector-search.md    # OPTIONAL + files/embed-kb.sql (Vector Provider pattern, §4)
 ├── 8-take-it-home/8-take-it-home.md      # + finished app export zip
 └── workshops/
-    ├── sandbox/{index.html,manifest.json}
-    └── tenancy/{index.html,manifest.json}
+    ├── sandbox/{index.html,manifest.json}   # Track A (green button)
+    ├── tenancy/{index.html,manifest.json}   # Track B backbone (brown button) — equal QA priority
+    └── event/{index.html,manifest.json}     # first event re-cut, authored alongside launch
 ```
+
+**Additional deliverable — large-event runbook** (`docs/event-runbook.md`, kept with the spec, not shipped in the workshop PR): per-event checklist for hundreds-scale delivery — event-tenancy sizing (ADB count or shared pre-provisioned instances + workspaces), OCI GenAI limit pre-negotiation / compartment-or-region sharding, Event Code request timeline, OpenAI relief-valve key issuance + revocation, day-of instructor contingencies (Lab 5 podium-drive rule), and post-event teardown.
 
 Conventions (from `sample-workshop` + repo lint, validator-enforced): lowercase filenames; one folder per lab with `images/` (+ `files/`); lab skeleton `# Title → ## Introduction → Estimated Time → ### Objectives → ### Prerequisites → ## Task 1..N → ## Learn More → ## Acknowledgements`; `<copy>` on every code block; alt text on every image; image sizes within the repo's `enforce-image-size` workflow limits; manifest lab titles `Lab N: <imperative>`; "Need Help?" CDN include last; help email `livelabs-help-apex_us@oracle.com` (manifest `help` field).
 
@@ -197,8 +201,8 @@ End-to-end: **~2–4 weeks** — schedule the first developer day accordingly.
 | Risk | Likelihood | Mitigation |
 |---|---|---|
 | OCI GenAI blocked/limited in LiveLabs sandbox compartments | Low (nyc-genai-lab proves the pattern) but **must verify week 1** | OpenAI `type` path (event key logistics §5); instructor-tenancy demo as last resort |
-| >30 attendees vs sandbox concurrency cap | Depends on event size (open Q1) | Event Code + tenancy variant on event tenancy; pre-negotiate capacity (§5, confirm alias) |
-| 429 throttling on shared-tenancy GenAI | Medium at 30 seats | Attendee-set Max AI Tokens (Lab 1), staggered lab design, retry guidance, OpenAI relief valve |
+| Hundreds-seat events exceed sandbox capacity | **Certain for some events (decided)** | Track B is first-class: Event Code + tenancy variant on event tenancy, rehearsed via the event runbook (§6) |
+| 429 throttling on shared-tenancy GenAI | Medium at 30 seats; **high at hundreds** | Attendee-set Max AI Tokens (Lab 1), staggered lab design, retry guidance, OpenAI relief valve; Track B: pre-negotiated GenAI limits / compartment-or-region sharding (§5) |
 | Model ID deprecation between QA and event | High over months | "Pick latest chat model" instruction, banned-ID validator check, week-of-event verification, quarterly QA |
 | AI output variance breaks lab continuity | Certain (it's generative) | State-reset canonical script (Lab 2), blueprint checklist pinning the Tickets IR page type (Lab 3), Lab 4 NL recovery step, "your app may differ" fallback boxes, deterministic seed data |
 | Lab 7 embed path breaks for OpenAI-track attendees | Certain on that track, if OCI-only | Track-independence is a hard requirement: ONNX in-database preferred / type-conditional / pre-computed vectors (§4 Lab 7) |
@@ -208,13 +212,13 @@ End-to-end: **~2–4 weeks** — schedule the first developer day accordingly.
 | Stale include paths across variants (nyc-genai-lab bug; we nearly shipped one — see rev-2 changelog) | Medium | Validator resolves every path in every variant, CI-style |
 | Quarterly QA lapse → catalog removal | Medium over a year | Named owner + calendar from day one (open Q3) |
 
-## 10. Open questions for Rick
+## 10. Decisions (answered by Rick, 2026-07-08)
 
-1. **Seat count per developer day?** Determines green-button-only vs Event Code + event tenancy track (§5).
-2. **WMS access:** you submit under your Oracle identity — any co-authors/stakeholders to list?
-3. **Quarterly QA owner** — you, or a teammate?
-4. **Scope check:** keep both optional labs (6: Generate Text, 7: Vector Search), or cut one? Recommendation: keep both — they're the fast-lane for experts and neither blocks the core.
-5. **App domain sign-off:** Help Desk (recommended) vs alternates (field-service dispatch, HR case tracker)?
+1. **Seat count:** plan for large groups — most events ≤30, **some in the hundreds** → dual-track delivery (§5): green button for ≤30/self-paced, Event Code + tenancy variant on event tenancy for hundreds; tenancy variant and event runbook are first-class deliverables.
+2. **WMS access:** submitted under Rick's Oracle identity.
+3. **Quarterly QA owner:** Rick.
+4. **Scope:** keep both optional labs (6: Generate Text, 7: Vector Search).
+5. **App domain:** Help Desk approved — "perfect choice for this audience."
 
 ## 11. Source documents
 

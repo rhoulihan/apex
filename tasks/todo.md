@@ -17,7 +17,7 @@ Plan: `/home/rickh/.claude/plans/vast-herding-volcano.md` (approved 2026-07-07)
 - [x] Commit spec + research on branch apex-ai-workshop-spec
 
 ## Phase 3 — Review gate
-- [ ] Rick reviews spec (BLOCKING — no lab authoring until approved)
+- [x] Rick reviews spec — APPROVED 2026-07-08 (large groups; both optionals; Help Desk domain; Rick = WMS submitter + QA owner)
 
 ## Phase 4 — Development (future task; inline, strict TDD)
 - [ ] Build validation harness first (tests red), then author labs to green
