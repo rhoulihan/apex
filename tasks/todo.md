@@ -52,3 +52,12 @@ Plan: `docs/plans/2026-07-08-ai-helpdesk-agent-workshop.md`
 - [x] **T6 DB GATE — FULLY PASSED**: helpdesk-schema.sql = 83 statements / 83 successful / 0 errors. Run TWICE (idempotent). Divergent-precondition (wrong 2-col tickets + junk row 999) -> canonical schema WINS (junk gone, ticket 42 Open/Network restored, 50/20/8 counts exact). REPLY + EMBEDDING columns present. **VECTOR type compiled OK -> 26ai DB confirmed even under APEX 24.2.**
 - [x] resolve-ticket core logic (SELECT subject + UPDATE Resolved) works; message exact. apex_ai.set_tool_result is 26.1-only (APEX_AI pkg exists in 24.2 but SET_TOOL_RESULT/GENERATE/CHAT procs not exposed -> Lab 5 agent tools confirmed 26.1-gated at API level too).
 - [ ] Lab 1 GenAI-from-sandbox: IN PROGRESS
+
+### T18 HEADLINE FINDING — GenAI-from-sandbox (Lab 1 verification)
+Configured OCI GenAI service in APEX (Helpdesk AI, static id helpdesk_ai, us-chicago-1, model cohere.command-r-08-2024, self-generated API key). **Test Connection result: GenAI IS REACHABLE — auth OK, endpoint OK, model accepted (no 401/404)** — BUT returned:
+`429: Compartment quota max-on-demand-chat-request-per-minute-count is exceeded, request is throttled for compartment`
+INTERPRETATION: The plumbing works end-to-end from a LiveLabs student compartment (huge — validates the workshop's core AI mechanism on sandbox). BUT these compartments carry a per-minute on-demand-chat quota that is at or near ZERO — almost certainly WHY the AI-APEX green buttons (nyc-genai-lab, ai-vision-lab) are currently disabled in the catalog.
+ACTIONS:
+1. WMS Sandbox Lite / full-sandbox Jira MUST explicitly request the quota `max-on-demand-chat-request-per-minute-count` (and embed/generate equivalents) be raised for the workshop's compartments. This is now the #1 gating dependency — without it, NO AI lab runs on green button.
+2. Spec 429 risk is CONFIRMED and is COMPARTMENT-level (worse than the tenancy-level we assumed) — OpenAI fallback + staggering are load-bearing, not optional.
+3. Screenshot saved: scratchpad/t18-captures/genai-429-error.png
