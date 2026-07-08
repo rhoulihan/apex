@@ -39,7 +39,8 @@ create table kb_articles (
   title      varchar2(200) not null,
   content    varchar2(4000) not null,
   category   varchar2(20) not null,
-  updated_on date default sysdate not null
+  updated_on date default sysdate not null,
+  embedding  vector  -- populated in optional Lab 7; re-run its embed script after any schema reset
 );
 
 -- ---------- team members (8) ----------
