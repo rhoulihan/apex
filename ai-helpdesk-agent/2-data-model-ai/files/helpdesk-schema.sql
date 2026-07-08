@@ -30,7 +30,8 @@ create table tickets (
   category    varchar2(20) not null
               constraint tickets_category_ck check (category in ('Network','Hardware','Software','Access','Email')),
   created_on  date default sysdate not null,
-  assigned_to number references team_members(id)
+  assigned_to number references team_members(id),
+  reply       varchar2(4000)
 );
 
 create table kb_articles (
