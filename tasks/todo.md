@@ -1,28 +1,41 @@
 # APEX + AI LiveLabs Workshop — Task Tracker
 
-Plan: `/home/rickh/.claude/plans/vast-herding-volcano.md` (approved 2026-07-07)
+Spec: `docs/specs/2026-07-07-apex-ai-workshop-spec.md` (rev 3, APPROVED 2026-07-08)
+Plan: `docs/plans/2026-07-08-ai-helpdesk-agent-workshop.md`
 
 ## Phase 1 — Research
-- [x] Explore LiveLabs authoring conventions (Rick's developer fork, sample-workshop)
-- [x] Deep research: APEX platform + AI capabilities (26.1, sandbox constraints)
-- [x] Deep research: APEX developer persona
-- [x] Deep research: LiveLabs landscape, gap analysis, sandbox mechanics, publishing process
-- [x] Clone oracle-livelabs/apex to ~/GitHub/apex
-- [x] Persist research reports to docs/research/
+- [x] All research complete (see docs/research/)
 
 ## Phase 2 — Spec
-- [x] Write workshop spec to docs/specs/2026-07-07-apex-ai-workshop-spec.md
-- [x] Adversarial multi-agent spec review (persona fit / technical accuracy / LiveLabs compliance / timing realism + completeness critic)
-- [x] Fix review findings inline
-- [x] Commit spec + research on branch apex-ai-workshop-spec
+- [x] Spec written, adversarially reviewed (rev 2), delivery decisions applied (rev 3)
 
 ## Phase 3 — Review gate
 - [x] Rick reviews spec — APPROVED 2026-07-08 (large groups; both optionals; Help Desk domain; Rick = WMS submitter + QA owner)
 
-## Phase 4 — Development (future task; inline, strict TDD)
-- [ ] Build validation harness first (tests red), then author labs to green
-- [ ] Per-lab: manifest entry + validator expectations → lab content → green
-- [ ] SQL artifacts tested against real 26ai ADB (idempotent)
-- [ ] Repo lint (lintchecker/md-validator) passes
-- [ ] Self QA click-through on real sandbox reservation, timed ≤ 90 min
-- [ ] WMS submission / PR with WMS ID (Rick, Oracle-internal)
+## Phase 4 — Development (inline, strict TDD; plan tasks)
+- [x] T1 Validator core — manifest load + ordering (21 unit tests total by T17)
+- [x] T2 Validator — path resolution
+- [x] T3 Validator — lab structural rules
+- [x] T4 Validator — budget/bans/CLI (workshop went red as designed)
+- [x] T5 Scaffold manifests (sandbox/tenancy/event) + index stubs + placeholder tool
+- [x] T6 SQL artifacts (schema/seed/resolve-ticket) + 7-test text contract — manual ADB gate PENDING (below)
+- [x] T7 Introduction lab
+- [x] T8 Lab 1 connect-genai (type-conditional OCI/OpenAI, token quota beat)
+- [x] T9 Lab 2 data-model-ai (review-then-run checkpoint)
+- [x] T10 Lab 3 generate-app (blueprint pins Tickets IR)
+- [x] T11 Lab 4 ai-interactive-report (+ app-level AI Attributes link — spec gap found & fixed)
+- [x] T12 Lab 5 ai-agent (mirrors scm-ai-agent mechanics: trigger action, param grid, set_tool_result)
+- [x] T13 Lab 6 generate-text (reply column moved into canonical schema)
+- [x] T14 Lab 7 vector-search (in-database ONNX — track-independent, pure-SQL embedding)
+- [x] T15 Take It Home — validator 0 errors all variants, --online green
+- [x] T16 Event runbook (docs/event-runbook.md)
+- [x] T17 Repo lint gates — official validate-livelabs-markdown.sh PASSES (caught 'Estimated Workshop Time:' rule → encoded in validator); markdownlint is advisory-only in CI
+- [ ] T18 Screenshot pass (EXTERNAL: real sandbox reservation) → replace placeholders, export app zip, `--final --online` green, record timings
+- [ ] T19 Self QA + WMS submission (EXTERNAL: Rick, Oracle VPN)
+- [ ] T20 Clean PR branch (ai-helpdesk-agent/ only, `-s` signoff, WMS ID in PR title)
+
+### External gates / verifications to record
+- [ ] Week-1 sandbox check: OCI GenAI reachable from LiveLabs compartment; APEX version >= 26.1; Lab 7 ONNX link + grants work in sandbox
+- [ ] T6 manual ADB gate: run helpdesk-schema.sql twice (state-reset), divergent-precondition test, resolve-ticket block with :TICKET_ID=42
+- [ ] T18 actual lab timings vs budget (core must stay <= 90)
+- [ ] Verify Lab 6 'Generate Text with AI' dynamic action config fields against the 26.1 builder during the real run (Message/Result Item names)
