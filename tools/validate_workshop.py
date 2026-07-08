@@ -73,7 +73,11 @@ def check_lab_structure(md_path):
     h1 = [l for l in text.splitlines() if l.startswith("# ")]
     if len(h1) != 1:
         errs.append(f"{md_path.name}: expected exactly one H1, found {len(h1)}")
-    if "Estimated Time" not in text and "Estimated Lab Time" not in text:
+    if md_path.name == "introduction.md":
+        # official LiveLabs gate (validate-livelabs-markdown.sh) requires this exact phrase
+        if "Estimated Workshop Time:" not in text:
+            errs.append(f"{md_path.name}: missing 'Estimated Workshop Time:' line")
+    elif "Estimated Time" not in text and "Estimated Lab Time" not in text:
         errs.append(f"{md_path.name}: missing 'Estimated Time' line")
     if "### Objectives" not in text:
         errs.append(f"{md_path.name}: missing '### Objectives'")

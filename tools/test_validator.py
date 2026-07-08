@@ -157,6 +157,20 @@ class TestLabStructure(unittest.TestCase):
             p = self._write(t, LAB_OK.replace("builder.png", "gone.png"))
             self.assertTrue(any("gone.png" in e for e in vw.check_lab_structure(p)))
 
+    def test_introduction_requires_workshop_time(self):
+        # official LiveLabs gate: introduction.md must say 'Estimated Workshop Time:'
+        intro = LAB_OK.replace("# Lab 1: Connect APEX to Generative AI", "# Introduction")
+        with tempfile.TemporaryDirectory() as t:
+            lab = Path(t) / "introduction"
+            (lab / "images").mkdir(parents=True)
+            (lab / "images/builder.png").write_bytes(b"\x89PNG")
+            p = lab / "introduction.md"
+            p.write_text(intro)
+            errs = vw.check_lab_structure(p)
+            self.assertTrue(any("Estimated Workshop Time" in e for e in errs))
+            p.write_text(intro.replace("Estimated Time: 10 minutes", "Estimated Workshop Time: 90 minutes"))
+            self.assertEqual(vw.check_lab_structure(p), [])
+
 
 def budget_fixture(t, l1_minutes):
     m = {"tutorials": [

@@ -16,7 +16,7 @@ The workshop tells one story in three acts — **Prompt → App → Trustworthy 
 
 ![Semantic knowledge-base search finding an article with no keyword overlap](images/finished-vector-search.png " ")
 
-Estimated Time: 90 minutes
+Estimated Workshop Time: 90 minutes
 
 ### What Data Leaves Your Database?
 
