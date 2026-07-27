@@ -68,3 +68,7 @@ Lab 7 semantic search is INDEPENDENT of the GenAI chat quota (pure in-DB), so it
 ### T18 teardown (2026-07-08)
 - Reservation 213888 TERMINATED ("Keep in History") — workshop environment destroyed: HELPDESKDB ADB, HELPDESK/DEMO APEX workspace, self-generated OCI API key, and all compartment resources released back to the shared sandbox pool. Reservation record kept for reference.
 - No persistent artifacts: workshop content + all findings are committed to git; throwaway sandbox credentials existed only in the session scratchpad (ephemeral).
+
+### 2026-07-27 — resuming to validate full 26.1 lab; dev-env network fix
+- Blocker found & being fixed: NordVPN Threat Protection (NDivert WFP driver) SNI-blocked livelabs/apex for non-browser clients on Rick's host (false-positive reputation-DB block, ~1 week old). Not WSL, not router, not DNS — proven from 6 angles. Rick disabling nordsec-threatprotection-service + nordvpn-service (StartupType Disabled) + reboot.
+- ON RESUME (after reboot): verify `curl https://livelabs.oracle.com/ords/r/dbpm/livelabs/home` = 200, then reserve green-button sandbox → 26ai ADB + workspace → CHECK APEX VERSION (26.1?) → GenAI Test Connection (re-check 429 compartment chat quota) → run Lab 4 (NL2IR) + Lab 5 (AI Agent) end-to-end.
