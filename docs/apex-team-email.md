@@ -1,29 +1,27 @@
 # Draft email to the APEX / LiveLabs team
 
-**To:** [APEX PM / LiveLabs team]
-**Subject:** APEX + AI LiveLabs workshop — two questions before I submit (26.1-on-ADB + GenAI sandbox limits)
+**To:** [LiveLabs sandbox/infra owner] · **Cc:** [APEX PM] · livelabs-help-apex_us@oracle.com
+**Subject:** LiveLabs green-button GenAI is quota-blocked (429) — request to raise the compartment chat limit
 
 ---
 
 Hi [name],
 
-I'm putting together a new LiveLabs workshop — **"Build an AI-Powered Help Desk with Oracle APEX: From Prompt to Agent"** — a 90-minute, **green-button (Sandbox)** workshop that walks attendees from prompt-to-app through a governed AI Agent that acts on their data. It's aimed at a gap I couldn't find covered: an end-to-end *build-an-AI-app-on-the-green-button* experience, since today's AI-APEX workshops (event-mangement, scm-ai-agent, crm-apexlang, …) are all tenancy-only.
+Two quick updates on the new green-button workshop I'm building — **"Build an AI-Powered Help Desk with Oracle APEX: From Prompt to Agent."** I re-verified it end-to-end on a fresh LiveLabs green-button sandbox today (2026-07-28), and it's down to a single provisioning blocker.
 
-Before submitting to WMS, I ran the whole thing end-to-end on a real LiveLabs sandbox. The **content held up** — our schema and PL/SQL ran clean on 26ai and setup timed to budget — but I hit two environment blockers I'd like your read on:
+**1. APEX 26.1 on ADB — resolved, thank you.** The sandbox ADB now provisions **APEX 26.1.1** (it was 24.2.17 three weeks ago). My two 26.1-only labs — AI Interactive Reports and AI Agents + tools — are unblocked, and the 26.1 declarative-agent data model is present. One small heads-up for anyone writing green-button labs: the ADB create form's **database-version dropdown still defaults to `19c`** (until the Sep 15 2026 default flip), so lab text has to tell readers to pick **26ai** explicitly or they silently get a 19c database.
 
-**1. APEX 26.1 on ADB.** The sandbox ADB provisioned at **APEX 24.2.17** (and reports "up to date"). Two of my labs — AI Interactive Reports and AI Agents + Tools — are 26.1-only. When do you expect 26.1 to reach ADB Serverless in the LiveLabs sandbox tenancies/regions? If it's a way out, I'll ship a 24.2-compatible v1 (AI Configurations in place of Agents) and upgrade once ADB catches up.
+**2. GenAI on-demand chat is still quota-blocked at zero — this is the blocker.** Configuring the Generative AI service in APEX works — auth, region (I tested `uk-london-1`), and model all validate — but **Test Connection returns:**
 
-**2. GenAI on-demand chat in the sandbox.** Configuring the Generative AI service worked — auth, region (us-chicago-1), and model all validated — but Test Connection returns:
+> `HTTP-429: Compartment quota max-on-demand-chat-request-per-minute-count is exceeded, request is throttled for compartment: ocid1.compartment.oc1..aaaa…`
 
-> `429: Compartment quota max-on-demand-chat-request-per-minute-count is exceeded, request is throttled for compartment…`
+This is the same error I hit on 2026-07-08, now **reproduced on a brand-new sandbox, different region, different tenancy, on the very first request** from a freshly created compartment — so the per-minute quota is effectively **0**. Importantly:
+- The API key **authenticated** (a bad key returns 401, not 429), and the model/region **resolved** (else 404). It's purely the GenAI service quota.
+- **API-key creation on the sandbox user is unrestricted** — so this is *not* an IAM ask; it's specifically the OCI Generative AI service limit.
 
-The sandbox tenancy is a **Free Tier account**, so I suspect the OCI on-demand-chat service limit is 0 by default. Two questions:
-- Do the production APEX GenAI green-button sandboxes run on a tenancy/compartment where that service limit is **raised** (or a limit increase is on file)? I want the workshop's sandbox to have chat capacity > 0 — otherwise no AI lab runs on the green button.
-- Related: the **nyc-genai-lab** and **ai-vision-lab** green buttons are currently **disabled** in the catalog — is that the same GenAI-on-sandbox issue?
+**The ask:** raise `max-on-demand-chat-request-per-minute-count` (and the embedding equivalent) above zero on the LiveLabs green-button compartments. Without it, **no LiveLabs workshop can use OCI Generative AI on the green button at all** — this hits more than mine (e.g. the shopping-cart workshop's own GenAI lab hits the same wall), and it's almost certainly why the dedicated AI-APEX green buttons are currently disabled in the catalog.
 
-For the sandbox request itself, I'll be asking for: the **GenAI on-demand chat limit raised**, **adb-free-count ≥ 1** on the compartment, and **DBMS_CLOUD execute + CREATE MINING MODEL grantable** to workspace schemas (my optional vector-search lab loads an ONNX model in-database).
-
-I have a full verification write-up — findings, timings, and exact errors — happy to send it over. Mostly I want to request the right sandbox configuration up front so the AI labs actually run at our developer days.
+I have a full write-up with the verbatim errors, the compartment OCID, screenshots, and timings — happy to send it over or open the sandbox Jira with it attached. Mostly I want to get the right compartment quota in place so the AI labs actually run at our developer days.
 
 Thanks,
 Rick
@@ -31,6 +29,6 @@ Rick
 ---
 
 *Notes for Rick before sending:*
-- *Fill in the recipient(s). Good candidates: the APEX PM who owns the AI features / the LiveLabs APEX content owner, plus livelabs-help-apex_us@oracle.com or the LiveLabs infra/sandbox owner on cc.*
-- *Full evidence is in `docs/t18-verification-report.md`; the concrete sandbox asks are in `docs/wms-submission.md`.*
-- *If you'd rather split it: question 1 (26.1-on-ADB) is really for the APEX PM team; question 2 (GenAI limits + disabled green buttons) is for the LiveLabs sandbox/infra owner. Sending one email cc'ing both is fine — they'll route it.*
+- *Evidence: `agentBridge/screenshots/009-test-result.png` (the 429), plus `docs/t18-verification-report.md` and the concrete asks in `docs/wms-submission.md`.*
+- *Recipients: the LiveLabs sandbox/infra owner is the primary now (it's a provisioning/quota ask, not an APEX-feature question). Cc the APEX PM for awareness.*
+- *If they want it as a ticket: the sandbox Jira summary format is `[Sandbox] WMS ID: <id> LL ID: <id> …` — but the quota raise can likely be actioned directly.*
