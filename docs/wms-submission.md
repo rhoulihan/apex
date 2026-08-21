@@ -74,19 +74,30 @@ familiarity with SQL helpful but not required.
 | Brown-button URL (after PR merges) | `https://oracle-livelabs.github.io/apex/ai-helpdesk-agent/workshops/tenancy/` |
 | Green-button URL (after PR merges) | `https://oracle-livelabs.github.io/apex/ai-helpdesk-agent/workshops/sandbox/` |
 
-## Submission steps (in order)
+## Environment status (2026-07-28 re-verification)
 
-1. VPN → livelabs.oracle.com/wms → **Submit a Workshop**. Paste title, abstract, outline, prerequisites, tags from above. Submit. (Council reviews in 2–3 business days.)
-2. When status = **Approved**: on the workshop's **Sandbox Environment** tab, tick the **Sandbox Lite** checkbox (auto-created ~1 business day). This is our ship-now green-button path.
-3. Same tab, in parallel (optional upgrade, non-blocking): open the **Jira for a Full Sandbox** — summary format `[Sandbox] WMS ID: <id> LL ID: <id> Build an AI-Powered Help Desk with Oracle APEX`. Ask for: pre-provisioned ADB (26ai, APEX 26.1) + pre-created APEX workspace per attendee; cite `apex-native-map-regions` as the existing full-sandbox APEX precedent.
+Verified end-to-end on a real green-button sandbox (see `docs/t18-verification-report.md` and the
+`~/GitHub/agentBridge` run, responses 006 & 009):
 
-   **CRITICAL provisioning asks — updated after the 2026-07-28 re-verification run (see `docs/t18-verification-report.md` + `~/GitHub/agentBridge` responses 006 & 009). Without ask #1, NO AI lab runs on the green button:**
-   - **① Raise the compartment GenAI quota** `max-on-demand-chat-request-per-minute-count` (and embedding equivalents) on the workshop compartments — **THE blocker, now confirmed TWICE.** 2026-07-08 (Phoenix, tenancy `c4ustudent03`) and again **2026-07-28 (London, tenancy `c4u02`, compartment `ocid1.compartment.oc1..aaaaaaaa2yexgkle2r55mz724nqi75kqnluror4heoknzsfqmuwbl6w4xryq`)**: a **first-ever** chat request from a fresh compartment returns `HTTP-429: Compartment quota max-on-demand-chat-request-per-minute-count is exceeded` → the per-minute quota is **0**. Auth succeeds (not 401) and model/region resolve (not 404), so this is purely the GenAI service quota, **not** IAM — **API-key creation on the sandbox user is unrestricted.** Evidence screenshot: `agentBridge/screenshots/009-test-result.png`. This affects **every** GenAI LiveLabs on green button (e.g. workshop 848's own Lab 9), not just ours.
-   - **② APEX 26.1 on the ADB — ✅ RESOLVED (2026-07-28).** Sandbox ADBs now provision **APEX 26.1.1** (was 24.2.17 on 2026-07-08); Labs 4 & 5 are unblocked, and the 26.1 AI-Agent data model is present. **No ask needed** — one caveat for the workshop text: the ADB-create **DB-version dropdown defaults to `19c`** (options: 26ai / 19c) until Oracle flips the default on **Sep 15 2026**, so the lab must instruct picking **26ai** explicitly.
-   - **③ Always Free ADB** is unreliable on green-button sandboxes for reasons that vary by assignment (2026-07-08 Phoenix: `adb-free-count=0`; 2026-07-28 London: refused because tenancy **home region is us-ashburn-1**, not the assigned region). Either request Always Free capacity in the assigned region, or accept trial-credit ADBs — the workshop should tell readers to expect trial credits, not describe an Always Free path.
-   - **④ Lab 7:** `DBMS_CLOUD` execute + `CREATE MINING MODEL` grantable to workspace schemas (or pre-load the ONNX model). T18 showed these ADMIN grants don't land in the student tenancy. (Not re-tested 2026-07-28.)
-4. Reply here with the **WMS ID** → I cut the clean PR branch (T20) with the ID in the title.
-5. Once you have any sandbox reservation (yours via the green-buttoned nyc-genai-lab in the same tenancy, or ours once Sandbox Lite exists): that's our T18 screenshot/timing run and the week-1 GenAI verification.
+| Item | Status |
+|---|---|
+| **APEX 26.1 on the sandbox ADB** | ✅ **Resolved** — provisions **APEX 26.1.1** (was 24.2.17 on 2026-07-08). Labs 4 & 5 unblocked; 26.1 AI-Agent data model present. |
+| **OCI GenAI compartment chat quota** | ⚠️ **Zero by default → 429**, but **the Oracle LiveLabs team has confirmed they can raise `max-on-demand-chat-request-per-minute-count` on request** once the workshop's sandbox exists. So this is a **standard provisioning line-item**, not a blocker — it just has to be requested for our compartments (step 3 below). |
+| **Always Free ADB** | Unreliable on green-button (varies by region assignment) → workshop uses **trial-credit** ADB, not Always Free. |
+| **Lab 7 ONNX grants** | `DBMS_CLOUD` execute + `CREATE MINING MODEL` need to be grantable to the workspace schema (or the model pre-loaded); not re-tested 2026-07-28. |
+
+## Step-by-step submission guide
+
+1. **Submit the workshop.** Connect **Oracle VPN** → `livelabs.oracle.com/wms` → **Submit a Workshop**. Paste **Title, Abstract, Outline, Prerequisites, Tags** from the sections above. Submit. *(Council reviews in ~2–3 business days.)*
+2. **On `Approved` → create the green-button sandbox.** On the workshop's **Sandbox Environment** tab, tick the **Sandbox Lite** checkbox (auto-created in ~1 business day). This is the ship-now green-button path. *(Optional, non-blocking upgrade: open the **Full Sandbox Jira** — summary `[Sandbox] WMS ID: <id> LL ID: <id> Build an AI-Powered Help Desk with Oracle APEX` — for a pre-provisioned 26ai/APEX-26.1 ADB + pre-created workspace per attendee; cite `apex-native-map-regions` as the existing full-sandbox APEX precedent.)*
+3. **Request the provisioning items for our compartments** (in the Sandbox Lite request and/or the Jira). These are the environment settings the AI labs need:
+   - **① Raise the OCI GenAI chat quota** — set `max-on-demand-chat-request-per-minute-count` (and the embedding equivalent) **above zero** on the workshop compartments. The team confirmed this is doable on request. Without it, GenAI chat returns `HTTP-429: Compartment quota max-on-demand-chat-request-per-minute-count is exceeded` on the first request (verified 2026-07-08 Phoenix `c4ustudent03` and 2026-07-28 London `c4u02`; evidence `agentBridge/screenshots/009-test-result.png`). Note it is a **quota** ask, **not** IAM — API-key creation on the sandbox user is already unrestricted. Same limit affects every GenAI LiveLabs on green button.
+   - **② Trial-credit ADB** — either grant Always-Free capacity in the assigned region, or confirm attendees create a **Transaction Processing** ADB on trial credits (the workshop already assumes this).
+   - **③ Lab 7 (optional lab) grants** — `DBMS_CLOUD` execute + `CREATE MINING MODEL` grantable to the workspace schema, or pre-load the ONNX model.
+4. **Record the WMS ID.** Put it in `tasks/todo.md`, then it goes in the **PR title** (mandatory). Reply with the WMS ID → the clean PR branch (T20) gets cut with the ID in the title.
+5. **Screenshot / timing run + quota confirmation.** Once any sandbox reservation exists (Sandbox Lite, or a borrowed green-button in the same tenancy), do the screenshot/timing pass and confirm **GenAI Test Connection now succeeds** (i.e. the quota raise landed).
+
+> **Workshop-content note (not a WMS field):** the ADB-create **DB-version dropdown defaults to `19c`** (options: 26ai / 19c) until Oracle flips the default on **Sep 15 2026** — the sign-up lab must tell readers to pick **26ai** explicitly, or every 26ai-dependent lab silently fails.
 
 ## What does NOT block on WMS
 
