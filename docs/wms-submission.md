@@ -32,6 +32,12 @@ Suitable for experienced APEX developers, Oracle Database professionals new to A
 developers new to Oracle.
 ```
 
+## Short description
+
+```
+Build a governed AI help desk in Oracle APEX 26.1 in 90 minutes — from a prompt-generated app to an AI Agent that answers from your data and acts only after you approve, free in the browser.
+```
+
 ## Reason for the workshop / business justification
 
 ```
