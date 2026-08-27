@@ -71,8 +71,13 @@ familiarity with SQL helpful but not required.
 | Workshop Time (publishing entry) | 90 minutes |
 | Author / Owner | Rick Houlihan |
 | Quarterly QA owner | Rick Houlihan |
-| Brown-button URL (after PR merges) | `https://oracle-livelabs.github.io/apex/ai-helpdesk-agent/workshops/tenancy/` |
-| Green-button URL (after PR merges) | `https://oracle-livelabs.github.io/apex/ai-helpdesk-agent/workshops/sandbox/` |
+| **Development URL — green (sandbox)** ✅ LIVE | `https://rhoulihan.github.io/apex/ai-helpdesk-agent/workshops/sandbox/index.html` |
+| **Development URL — brown (tenancy)** ✅ LIVE | `https://rhoulihan.github.io/apex/ai-helpdesk-agent/workshops/tenancy/index.html` |
+| Development URL — event ✅ LIVE | `https://rhoulihan.github.io/apex/ai-helpdesk-agent/workshops/event/index.html` |
+| Production URL — green (sandbox), after PR merges | `https://oracle-livelabs.github.io/apex/ai-helpdesk-agent/workshops/sandbox/index.html` |
+| Production URL — brown (tenancy), after PR merges | `https://oracle-livelabs.github.io/apex/ai-helpdesk-agent/workshops/tenancy/index.html` |
+
+*Dev hosting: fork `rhoulihan/apex`, branch `helpdesk-workshop-dev` (workshop-only), GitHub Pages built 2026-08-27. Screenshots are still placeholders until the T18 capture pass.*
 
 ## Environment status (2026-07-28 re-verification)
 
