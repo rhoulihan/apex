@@ -32,12 +32,34 @@ Suitable for experienced APEX developers, Oracle Database professionals new to A
 developers new to Oracle.
 ```
 
+## Reason for the workshop / business justification
+
+```
+This workshop supports a strategic account initiative: Oracle is working to grow database share within
+Southwest Airlines' (SWA) developer organization, and this hands-on lab is built to reach those
+developers directly — demonstrating that Oracle Database + APEX + the new 26.1 AI features let them
+build governed, production-ready AI applications faster than the alternatives, and making the case for
+Oracle Database as their platform of choice.
+
+It also fills a real gap in the LiveLabs catalog. APEX 26.1 is a major AI release — declarative AI
+Agents with governed tools, AI Interactive Reports (natural-language querying), and an expanded
+Generative AI provider set — yet no workshop takes a developer end-to-end from prompt to a governed AI
+agent on the free green-button sandbox; the existing AI-APEX workshops are all tenancy-only, which
+excludes the large developer-day audience that arrives with just a browser and a free Oracle account.
+In 90 minutes this green-button-first path teaches the new 26.1 AI features and, just as importantly,
+the governance patterns that make them safe to ship — human review of AI-generated SQL, tool
+allow-lists, user-approval confirmations on write actions, self-set token quotas, and an explicit
+statement of what data each feature sends to the model. It serves the full APEX developer persona —
+experienced APEX developers adopting AI, Oracle Database professionals new to low-code, and developers
+new to Oracle.
+```
+
 ## Outline (labs)
 
 ```
 Introduction (finished-app tour; the Prompt -> App -> Trustworthy App arc)
 Get Started: log in to the LiveLabs Sandbox (5 min)
-Sign up for an APEX Workspace: Always Free ADB + workspace (10 min)
+Sign up for an APEX Workspace: Autonomous AI Database (Always Free where available, else trial credits) + workspace (10 min)
 Lab 1: Connect APEX to Generative AI - OCI GenAI or OpenAI, token quota, APEX Assistant test (10 min)
 Lab 2: Design the Data Model with AI - review AI's SQL, run the vetted schema + seed (10 min)
 Lab 3: Generate the App from a Prompt - blueprint review, run the Horizon Help Desk (10 min)
