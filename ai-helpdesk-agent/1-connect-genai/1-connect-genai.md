@@ -91,6 +91,8 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
     >
     > Leaving the pre-filled Cohere model in place is the single most likely way to break this workshop. If `xai.grok-4.3` has since been retired, pick another **xAI** model from OCI Console > **Generative AI** > **Playground** > **Chat** > model picker, and re-test Lab 4 before continuing.
 
+    > **Lab 5 may want a different model.** The AI Agent in Lab 5 works with `cohere.command-a-03-2025` — the very model that fails Lab 4. Changing the Model ID between the two labs takes ten seconds and is called out where it matters. Also note OCI applies a **per-model service limit** separate from the compartment quota: if a model answers a few times and then returns `HTTP-429 ... service limit for this model has been reached`, that model is rate-limited for your tenancy, and either you request a limit increase in OCI or you switch models.
+
     > **Model availability is region-specific.** A model offered in `us-chicago-1` may not exist in another region — pointing at the wrong one returns `HTTP-404: Entity with key <model> not found`. Read the model list from the picker **while the console is set to the same region you entered above**.
 
     > **Don't skip the toggle.** "Used by App Builder" is what lights up the APEX Assistant in the builder — it's the most commonly missed step in this lab.

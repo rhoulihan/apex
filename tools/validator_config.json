@@ -1,0 +1,14 @@
+{
+  "workshop_dir": "ai-helpdesk-agent",
+  "variants": ["sandbox", "tenancy", "event"],
+  "core_budget": 90,
+  "warn_budget": 180,
+  "include_times": {
+    "Get Started": 5,
+    "Sign up for an APEX Workspace": 10,
+    "Sign Up for an APEX Workspace": 15,
+    "Need Help?": 0,
+    "Introduction": 0
+  },
+  "banned_strings": ["cohere.command-r-16k", "command-r-plus", "ocid1.", "23ai", "Guardrail", "TODO", "TBD"]
+}

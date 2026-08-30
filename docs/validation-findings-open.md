@@ -20,6 +20,7 @@ Recording alone is not sufficient. Each entry below is marked ✅ IMPLEMENTED (w
 | 7 | T18 screenshots (39 placeholders) | ⬜ OPEN — needs real capture; cannot be written, only taken |
 | 8 | ORA-20987 dashboard chart defect | ✅ IMPLEMENTED — Lab 3 Task 3 workaround + defect report drafted |
 | 9 | Model must support tool calling | ✅ IMPLEMENTED — Labs 1/4/5 + guarded by `tools/test_model_guidance.py` |
+| 10 | Labs 4 and 5 need **different** models; two distinct 429s | ✅ IMPLEMENTED — Lab 1 + Lab 5 tables, switch instructions, guarded by tests |
 
 Detail for each follows.
 
@@ -177,3 +178,42 @@ model-compatibility matrix as the practical consequence.
 (Lab 1's alternative) is affected — OpenAI tolerates extra schema keys, so it is likely fine, which would
 make the OpenAI track *more* reliable than the OCI track for Labs 4-5. That inverts the workshop's
 current framing of OCI as primary and OpenAI as fallback.
+
+## 10. 🔴 Labs 4 and 5 need DIFFERENT models — no single OCI model passes both
+
+Corrects and supersedes finding #9's implication that `xai.grok-4.3` is the answer for the whole workshop.
+Verified 2026-08-30 on APEX 26.1.4, OCI GenAI `us-chicago-1`:
+
+| Model | Lab 4 — AI Interactive Report | Lab 5 — AI Agent (On Demand tools) |
+|---|---|---|
+| `cohere.command-a-03-2025` (APEX default) | ❌ `INVALID_TOOL_GENERATION` | ✅ **works** — and is what APEX itself recommends |
+| `xai.grok-4.3` | ✅ works | ⚠️ **unverified** — hit a per-model service limit before answering |
+| `google.gemini-2.5-pro` | ❌ rejects `$schema` | untested |
+| older Cohere models | untested | ❌ `ORA-20950: ... does not support On Demand tools. Oracle recommends upgrading to at least "cohere.command-a-03-2025"` |
+
+**The two features are not equivalent.** AI Interactive Reports and AI Agents both use tool calling, but
+they emit different tool definitions, and APEX validates agent tools itself (ORA-20950 is APEX's own
+error, not a passthrough). A model can support one and not the other.
+
+**Two distinct 429s — do not conflate them:**
+
+1. `Compartment quota max-on-demand-chat-request-per-minute-count is exceeded` — the LiveLabs
+   green-button blocker from July. Compartment-scoped. Already a provisioning line-item.
+2. `The requested model is throttled because the OCI Generative AI service limit for this model has been
+   reached. Request a service limit increase for Generative AI in OCI, then retry.` — **per-model**,
+   tenancy/region-scoped. Hit on `xai.grok-4.3` after only two Lab 4 prompts, and it did **not** clear
+   after 70 s, so it is a limit, not a burst.
+
+**Consequence for the sandbox/green-button provisioning ask — it must cover BOTH, and name models:**
+- compartment quota raised above zero, AND
+- per-model service limits for **each** model the workshop uses (currently one xAI model for Lab 4 and
+  `cohere.command-a-03-2025` for Lab 5).
+- Size for **agents, not chat**: one agent turn is several tool-calling round trips, so Lab 5 consumes far
+  more requests per student than Lab 4. A 30-seat room needs real headroom.
+- **Open risk:** third-party model capacity (xAI, Google, Meta) may be harder for LiveLabs to raise than
+  Cohere, which is Oracle's own partner capacity. If xAI limits cannot be raised, Lab 4 needs either the
+  `$schema` defect fixed or the OpenAI track.
+
+**IMPLEMENTED:** Lab 1 names the Lab 4 model, explains the per-model service limit and points at the Lab 5
+switch; Lab 5 carries the comparison table and the switch instruction; `tools/test_model_guidance.py`
+(39 tests) fails the build if any of it is removed.

@@ -23,7 +23,17 @@ In this lab, you will:
 This lab assumes you have:
 
 * Completed Lab 4 (the app is linked to the Helpdesk AI service)
-* A Generative AI service whose **Model ID supports tool calling** — `xai.grok-4.3` on the OCI track. An AI Agent *is* tool calling; the model APEX pre-fills (`cohere.command-a-03-2025`) does not work. See Lab 1, Task 2.
+* A Generative AI service whose **Model ID supports *On Demand tools*** — on the OCI track use **`cohere.command-a-03-2025`**, which is what Oracle recommends for agents (APEX will tell you so if you pick an older Cohere model).
+
+    > **⚠️ This lab and Lab 4 want different models.** Lab 4's AI Interactive Report works with `xai.grok-4.3` and fails on `cohere.command-a-03-2025`; this lab is the other way round. Verified on APEX 26.1.4:
+    >
+    > | Model ID | Lab 4 report | Lab 5 agent |
+    > |---|---|---|
+    > | `cohere.command-a-03-2025` | ❌ | ✅ |
+    > | `xai.grok-4.3` | ✅ | ⚠️ hit an OCI per-model service limit before it could answer |
+    > | older Cohere models | — | ❌ rejected: *"does not support On Demand tools"* |
+    >
+    > **Switch the Model ID between the two labs** (App Builder > Workspace Utilities > Generative AI > Helpdesk AI > Model ID > Apply Changes). It takes ten seconds and needs no other change.
 
 ## Task 1: Create the AI Agent
 
@@ -58,6 +68,8 @@ This lab assumes you have:
 > **Glossary — agent and tool:** an *agent* is an LLM given a goal (your system prompt) and a set of *tools* — declarative capabilities it may call. The model decides *when* to call a tool; APEX controls *what* each tool can do and executes it inside your app's security context. The agent cannot touch anything you didn't attach.
 
 ## Task 2: Add the Tickets Tool
+
+> **Why tools come second:** the **Tools** section does not exist until the agent has been created. After Task 1 you are returned to the agent's edit page, and a **Tools** tab is now there. That is where the next three tasks happen.
 
 > **Glossary — RAG (Retrieval-Augmented Generation):** the agent's answers are grounded in rows retrieved from your tables at question time — not in whatever the model memorized during training. The next two tools are exactly that.
 
@@ -114,7 +126,7 @@ This tool changes data, so you'll turn on **Requires Confirmation** — a built-
 
     * Name: **resolve\_ticket**
     * Type: **Execute Server-side Code**
-    * Execution Point: **On Demand**
+    * Execution Point: **On Demand** — this becomes read-only once you pick the type above; nothing to change
     * Description:
 
         ```
@@ -122,13 +134,13 @@ This tool changes data, so you'll turn on **Requires Confirmation** — a built-
         user explicitly asks to resolve or close a specific ticket number.</copy>
         ```
 
-2. Under **Parameters**, click **Add Parameter**:
+2. Under **Parameters**, click **Add Parameter**. A row appears in an editable grid — **double-click a cell** to type in it (a single click only selects the row):
 
     | Parameter | Description | Data Type | Required |
     | --- | --- | --- | --- |
     | `TICKET_ID` | The id of the ticket to mark Resolved. | NUMBER | Yes |
 
-3. Under **Settings**, for PL/SQL Code, paste (this is the block you asked the Assistant to explain in Lab 1 — also in [resolve-ticket.sql](files/resolve-ticket.sql)):
+3. Under **Settings**, for PL/SQL Code, **paste** the following — do not retype it, the editor auto-indents and you will end up with cascading whitespace. (This is the block you asked the Assistant to explain in Lab 1 — also in [resolve-ticket.sql](files/resolve-ticket.sql)):
 
     ```
     <copy>declare
@@ -150,7 +162,7 @@ This tool changes data, so you'll turn on **Requires Confirmation** — a built-
 
 4. Under **User Approval**, enter/select:
 
-    * Requires Confirmation: Toggle **On**
+    * Requires Confirmation: **confirm it is On** — APEX defaults it on for Execute Server-side Code tools. That default *is* the governance story: Oracle assumes a tool that runs your code needs human approval.
     * Confirmation Title: **Confirm Ticket Resolution**
     * Confirmation Message:
 
@@ -166,10 +178,14 @@ This tool changes data, so you'll turn on **Requires Confirmation** — a built-
 
 ## Task 5: Put the Agent in Your App
 
-1. Open **Page 1** (the Dashboard) in **Page Designer**. Under **Rendering > Breadcrumb Bar**, right-click **Breadcrumb** and select **Create Button Below**. Configure it:
+1. Open **Page 1** (the Dashboard) in **Page Designer**. Under **Rendering > Breadcrumb Bar**, right-click the region inside it and select **Create Button Below**.
+
+    > **That region is probably named after your application** (for example `Horizon Help Desk`), not "Breadcrumb" — on the Dashboard the generator puts a Hero region in the Breadcrumb Bar slot. Right-click whatever sits under **Breadcrumb Bar**; the button lands in the right place either way.
+
+    Configure it:
 
     * Button Name: **ASK\_THE\_ANALYST**
-    * Region: **Breadcrumb** — Slot: **Next**
+    * Region: the Breadcrumb Bar region you just right-clicked — Slot: **Next**
     * Button Template: **Text with Icon** — Hot: **On** — Icon: **fa-ai-square**
 
 2. Right-click the new button and select **Create Trigger Action**. Configure it:

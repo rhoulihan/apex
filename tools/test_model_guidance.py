@@ -19,8 +19,9 @@ LAB1 = ROOT / "1-connect-genai" / "1-connect-genai.md"
 LAB4 = ROOT / "4-ai-interactive-report" / "4-ai-interactive-report.md"
 LAB5 = ROOT / "5-ai-agent" / "5-ai-agent.md"
 
-GOOD_MODEL = "xai.grok-4.3"
-BAD_DEFAULT = "cohere.command-a-03-2025"
+GOOD_MODEL = "xai.grok-4.3"          # verified for Lab 4 (AI Interactive Report)
+AGENT_MODEL = "cohere.command-a-03-2025"  # verified for Lab 5 (AI Agent On Demand tools)
+BAD_DEFAULT = AGENT_MODEL            # ...and the model that FAILS Lab 4
 
 
 def read(p):
@@ -69,9 +70,27 @@ class TestDownstreamLabsDeclareTheDependency(unittest.TestCase):
         self.assertIn("INVALID_TOOL_GENERATION", read(LAB4),
                       "Lab 4 must tell the reader a tool-calling error means the wrong Model ID")
 
-    def test_lab5_prerequisite_names_the_model(self):
-        self.assertIn(GOOD_MODEL, read(LAB5),
-                      "Lab 5 (AI Agents) is tool calling by definition and must state the requirement")
+    def test_lab5_names_the_agent_model(self):
+        self.assertIn(AGENT_MODEL, read(LAB5),
+                      "Lab 5 must name the model verified to work with On Demand tools")
+
+    def test_lab5_warns_the_two_labs_want_different_models(self):
+        txt = read(LAB5)
+        self.assertIn(GOOD_MODEL, txt,
+                      "Lab 5 must contrast against the model Lab 4 needs")
+        self.assertRegex(
+            txt,
+            r"(different models|other way round|Switch the Model ID)",
+            "Lab 5 must warn that Lab 4 and Lab 5 do not share one working model",
+        )
+
+    def test_lab1_flags_the_per_model_service_limit(self):
+        self.assertRegex(
+            read(LAB1),
+            r"service limit for this model",
+            "Lab 1 must explain the per-model OCI service limit, which is separate "
+            "from the compartment quota and produces its own HTTP-429",
+        )
 
 
 if __name__ == "__main__":
