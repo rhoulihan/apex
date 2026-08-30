@@ -47,6 +47,10 @@ This lab assumes you have:
     * **Naming** — will you still understand these names in six months?
 
     > **Governance beat #2 — you review AI's SQL before anything runs.** The habit you just practiced is the whole trick to trustworthy AI-assisted development: AI proposes, you approve. Nothing the AI wrote has touched your database yet.
+    >
+    > Oracle makes the same point in the product: the APEX Assistant panel tells you, unprompted, that
+    > *"AI-generated code may contain errors or security risks. Always review and validate all code before
+    > use."* This lab is that sentence turned into a habit.
 
 2. **Do not run the wizard's script.** Close the wizard after your review. (The wizard's final step *saves* a script rather than running it — we're skipping even that, because in the next task the whole room runs one vetted, identical version, so every lab, screenshot, and AI answer that follows matches what you see.)
 

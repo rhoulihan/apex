@@ -54,6 +54,17 @@ This workshop assumes you have:
 * A free Oracle.com account and a modern browser — no OCI tenancy, no local install
 * Familiarity with SQL (helpful but not required)
 
+## Before You Begin: What This Workshop Needs
+
+* **Oracle APEX 26.1 or later.** Every AI feature used here — AI Interactive Reports, AI Agents, Generate
+  Text with AI — is new in 26.1 and does not exist in 24.2 or earlier.
+* Screens in this workshop were captured on **APEX 26.1.x**. Oracle ships patch releases regularly, so a
+  label or a menu position may differ slightly from a screenshot. The steps still apply; where a control
+  has moved, the property **Filter** box in Page Designer will find it by name.
+* **Your APEX workspace schema will be prefixed.** On Autonomous Database, asking for a schema named
+  `HELPDESK` gets you **`WKSP_HELPDESK`**. That is expected. The workshop's SQL never schema-qualifies
+  anything, so it just works — but Lab 7 asks you to type your schema name, and this is the name it wants.
+
 ## Learn More
 
 * [Oracle APEX and AI](https://www.oracle.com/apex/ai/)

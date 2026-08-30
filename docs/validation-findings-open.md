@@ -1,10 +1,27 @@
-# Open validation findings — confirmed but NOT yet written into the lab docs
+# Validation findings — status tracker
+
+**Rule for this file: a finding is not done until it is IMPLEMENTED in the labs.**
+Recording alone is not sufficient. Each entry below is marked ✅ IMPLEMENTED (with where), or
+⬜ OPEN with what still blocks it.
 
 **Last updated:** 2026-08-30 · **Source:** live validation run on Rick's own tenancy
 (`crhsentllc`, ADB `HELPDESK`, Always Free, 26ai, APEX **26.1.4**, workspace `HELPDESK` / schema `WKSP_HELPDESK`)
 
-Lab 1's seven fixes are already applied to `ai-helpdesk-agent/1-connect-genai/1-connect-genai.md`.
-**Everything below is verified but still undocumented** — it is parked here so it is not lost.
+## Status summary
+
+| # | Finding | Status |
+|---|---|---|
+| 1 | APEX 26.1.4 vs 26.1.1 version drift | ✅ IMPLEMENTED — `introduction.md` "Before You Begin" |
+| 2 | `WKSP_` schema prefix | ✅ IMPLEMENTED — `introduction.md` + Lab 7 Task 1 callout |
+| 3 | "Always Free" refused on sandboxes | ✅ IMPLEMENTED — `sign-up-apex-sandbox.md` callout + 19c default warning |
+| 4 | OCI region/model reference data | ✅ IMPLEMENTED — Lab 1 region + model guidance |
+| 5 | Sandbox GenAI 429 quota | ✅ IMPLEMENTED — Lab 1 troubleshooting now distinguishes busy-service from zero-quota and routes to the OpenAI track |
+| 6 | In-product governance disclaimer | ✅ IMPLEMENTED — quoted in Lab 2 governance beat #2 |
+| 7 | T18 screenshots (39 placeholders) | ⬜ OPEN — needs real capture; cannot be written, only taken |
+| 8 | ORA-20987 dashboard chart defect | ✅ IMPLEMENTED — Lab 3 Task 3 workaround + defect report drafted |
+| 9 | Model must support tool calling | ✅ IMPLEMENTED — Labs 1/4/5 + guarded by `tools/test_model_guidance.py` |
+
+Detail for each follows.
 
 ---
 

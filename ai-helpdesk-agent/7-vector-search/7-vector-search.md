@@ -27,7 +27,11 @@ This lab assumes you have:
 
 ## Task 1: Grant Model Privileges
 
-1. Open **Database Actions** (SQL) as **ADMIN** — the password you set when creating the database — and run, replacing the schema name with your workspace schema (shown in the APEX SQL Workshop header):
+1. Open **Database Actions** (SQL) as **ADMIN** — the password you set when creating the database — and run, replacing the schema name with your workspace schema (shown in the APEX SQL Workshop header).
+
+    > **Your schema name is almost certainly `WKSP_` + your workspace name** — for example a workspace
+    > called `HELPDESK` uses schema **`WKSP_HELPDESK`**. Autonomous Database adds that prefix when APEX
+    > creates a new schema. Use the prefixed name here, exactly as SQL Workshop shows it.
 
     ```
     <copy>grant execute on dbms_cloud to <your-schema-name>;

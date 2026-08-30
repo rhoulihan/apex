@@ -110,7 +110,7 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
     >
     > * `HTTP-401` — most often your tenancy is **not subscribed** to the region, or you subscribed only moments ago and identity replication hasn't finished. Re-check **Before You Start** and retry after a few minutes. Failing that, confirm all four credential fields came from the same API key.
     > * `HTTP-404: Entity with key ... not found` — the credentials are **fine** (the request authenticated); the **Model ID** does not exist in that region. Pick one from the Chat playground with the console set to that region.
-    > * `HTTP-429` — a quota or rate limit. At a live event this just means the room is busy: wait 30 seconds and retry.
+    > * `HTTP-429 ... max-on-demand-chat-request-per-minute-count ... is exceeded` — a **compartment quota**, not a busy service. At a live event, wait 30 seconds and retry. On a LiveLabs Sandbox this quota may be set to zero, in which case retrying will never help: **switch this page to the OpenAI track** and continue.
     > * `Bad Gateway` — transient. Retry once.
 
     > **⚠️ A successful Test Connection does NOT prove Labs 4 and 5 will work.** It sends a plain chat request and never exercises **tool calling**, which is what AI Interactive Reports and AI Agents depend on. If Lab 4 or 5 later fails with `INVALID_TOOL_GENERATION`, or a complaint about `$schema` or `function_declarations`, the **Model ID is wrong** — the report and agent configuration are fine. Set it to `xai.grok-4.3` and retry.
