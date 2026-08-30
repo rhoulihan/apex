@@ -22,32 +22,58 @@ This lab assumes you have:
 
 ## Task 1: Describe the App
 
-1. Navigate to **App Builder** and choose **Create App with AI** (labelled *Generate with AI* on some screens).
+1. Navigate to **App Builder > Create**, then choose **Create App Using Generative AI**.
 
     ![App Builder Create App with AI option](images/create-app-with-ai.png " ")
 
 2. Paste this prompt and send it:
 
     ```
-    <copy>Create an application named Horizon Help Desk over my existing TICKETS, KB_ARTICLES
-    and TEAM_MEMBERS tables with: a dashboard with charts of tickets by status and category;
-    an interactive report on tickets with a form to edit a ticket; and a report on knowledge
-    base articles.</copy>
+    <copy>Create an application named Horizon Help Desk using my existing TICKETS, KB_ARTICLES
+    and TEAM_MEMBERS tables. Build exactly these three pages, in this order:
+    1. Dashboard - make this the home page. Include a chart of ticket counts by STATUS and a
+    chart of ticket counts by CATEGORY.
+    2. Tickets - an Interactive Report on the TICKETS table, with an editable form to edit a
+    single ticket.
+    3. Knowledge Base - a report on the KB_ARTICLES table.
+    Use TEAM_MEMBERS only as a lookup for a ticket's assigned team member. Do not create any
+    additional pages.</copy>
     ```
 
-3. AI responds with an application **blueprint** — a proposed set of pages you can edit before anything is built.
+    > **Why this prompt is so specific.** Generated apps vary between runs, but Labs 4, 5 and 6 build on
+    this one. Naming the pages, pinning the Dashboard as the home page, and asking for an **Interactive
+    Report** by name are what make the rest of the workshop work first time. The full contract is in
+    *Task 2*.
+
+    > **Note the wording of item 2.** The report and its edit form are asked for as **one page entry**, not
+    two. Listing them separately makes the wizard build *two* report-and-form pairs, leaving you with two
+    pages both named Tickets — and Lab 4 then can't tell you which one to open.
+
+3. AI responds with an application **blueprint** — a proposed set of pages. Read it, then click **Create Application** *in the chat*.
+
+    > **That button does not create anything yet.** It hands off to the Create Application wizard, which is where the blueprint becomes editable — page names, page types, charts, features and authentication. The chat summary lists pages only; the wizard is where you can actually inspect and change them. Task 2 happens there.
 
     ![AI-proposed application blueprint](images/app-blueprint.png " ")
 
 ## Task 2: Review the Blueprint — Pin the Pages Later Labs Need
 
-1. Before clicking Create, verify the blueprint includes all three of:
+This is the highest-leverage review in the workshop. Everything below is **free to change now** in the
+blueprint editor, and fiddly to change after the app exists.
 
-    * **Dashboard**
-    * **Tickets** — and the page type must be **Interactive Report** (with a form to edit a ticket)
-    * **Knowledge Base** report
+1. Check the blueprint against all five requirements:
 
-    > **Why the page type matters:** Lab 4's AI features exist only on Interactive Report regions. If the blueprint chose Faceted Search or Cards for Tickets, change the page type here in the blueprint editor — or add an extra Interactive Report page on TICKETS. Declarative, ten seconds.
+    | # | Check | Needed by |
+    |---|---|---|
+    | 1 | **Dashboard** is listed **first** — it must become page 1 | Lab 5 |
+    | 2 | Dashboard has a **tickets by status** chart and a **tickets by category** chart — click its **Edit** and step through the *Chart 1* / *Chart 2* tabs to confirm | the Lab 3 tour |
+    | 3 | A page named **Tickets** whose type is **Interactive Report** | **Lab 4** |
+    | 4 | The Tickets entry also produces an **editable form** on TICKETS | **Lab 6** |
+    | 5 | A page named **Knowledge Base** reporting on KB_ARTICLES | the tour |
+    | 6 | There is only **one** page named Tickets | Lab 4 tells you to open "the Tickets page" |
+
+    > **Check 3 is the one that bites.** Lab 4's AI features exist **only** on Interactive Report regions. If the blueprint chose Faceted Search, Cards, or a plain Classic Report for Tickets, change the page type here — ten seconds, declarative. Left wrong, Lab 4 has no AI settings to turn on.
+
+    > **Check 1 matters for a smaller reason.** Lab 5 puts the agent button on **Page 1**, described there as the Dashboard. If your Dashboard ends up as a different page number, Lab 5 still works — just apply its Task 5 steps to whichever page holds the Breadcrumb Bar.
 
 2. Adjust anything else you like (this is the review habit from Lab 2, applied to app design), then click **Create Application**.
 
@@ -58,6 +84,22 @@ This lab assumes you have:
     ![Horizon Help Desk running: dashboard with charts](images/app-running.png " ")
 
 2. Take that in: **a real web application — authentication, a URL you could send to a colleague, responsive UI — from one reviewed prompt.** In most stacks that was your whole afternoon.
+
+    > **Dashboard charts empty, with an `ORA-20987` error?** Known issue in APEX 26.1.4, not something you
+    > did. Verbatim: `ORA-20987: APEX - Column "ID" specified for attribute "" has not been found in data
+    > source!` The Create App wizard builds each chart series from the whole `TICKETS` table *and* applies a
+    > `Count` aggregation, so after grouping, the `ID` column it still refers to no longer exists.
+    >
+    > **Sixty-second fix, per chart:** in **Page Designer** open page 1, select the chart region's
+    > **Series 1**, and under **Source** set **Type** to **SQL Query**. Replace the query with:
+    >
+    > `select status as label, count(*) as value from tickets group by status order by 1`
+    >
+    > (use `category` in place of `status` for the second chart). Then set **Column Mapping** — **Label** to `LABEL` and
+    > **Value** to `VALUE` — and click **Save**. Reload the app and both charts render.
+    >
+    > Worth doing even though nothing later depends on these charts: it is a tidy example of reading an
+    > Oracle error, finding the real cause, and fixing it declaratively.
 
 ## Task 4: A Two-Minute Tour (Vocabulary for the Rest of the Day)
 
@@ -90,4 +132,4 @@ You may now **proceed to the next lab**.
 ## Acknowledgements
 
 * **Author** - Rick Houlihan
-* **Last Updated By/Date** - Rick Houlihan, July 2026
+* **Last Updated By/Date** - Rick Houlihan, August 2026

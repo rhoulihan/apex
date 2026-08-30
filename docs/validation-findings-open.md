@@ -65,3 +65,56 @@ Both support the workshop's governance narrative and are quotable:
 
 Unchanged; keeps `--final` red. Lab 1 now has real screens available to capture
 (region subscription, Add API key dialog, GenAI service form, terms dialog, Assistant result).
+
+## 8. 🔴 APEX 26.1.4 defect — generated dashboard charts fail with ORA-20987
+
+**Every reader will hit this**, on the first screen they see after generating the app in Lab 3.
+
+Verbatim runtime error on the Dashboard:
+
+```
+Ajax call returned server error ORA-20987: APEX - Column "ID" specified for attribute ""
+has not been found in data source! for Tickets by Category.
+```
+
+Both charts render **"No data to display"**.
+
+**Root cause (confirmed, not inferred).** The Create App wizard builds each chart series as
+`Source Type = Table / View` on `TICKETS` with `Value Aggregation = Count` and **no Value column**.
+Switching the source type to `SQL Query` reveals the query APEX generates for it:
+
+```sql
+select ID, SUBJECT, DESCRIPTION, STATUS, PRIORITY, CATEGORY, CREATED_ON, ASSIGNED_TO, REPLY
+from TICKETS
+```
+
+It projects **every column, including `ID`**, and then aggregates. After the implied `group by`,
+`ID` is not in the result set, so the reference to it cannot resolve. The offending attribute is
+reported as `""` (blank) and is **not exposed anywhere in the Page Designer property editor** —
+neither on the series nor the region. Re-saving the page does **not** clear it.
+
+**Workaround — ~60 seconds per chart, verified working 2026-08-30:**
+
+1. Page Designer > page 1 > chart region > **Series 1**.
+2. Source: set **Type** = `SQL Query`.
+3. Replace the query with an explicit aggregate:
+
+   ```sql
+   select status as label, count(*) as value from tickets group by status order by 1
+   ```
+
+   (and `category` for the second chart)
+4. Column Mapping: **Label** = `LABEL`, **Value** = `VALUE`. `Value Aggregation` disappears — correct.
+5. **Save**, then reload the running app.
+
+Result: both charts render correctly (`Closed / In Progress / Open / Resolved`, and
+`Access / Email / Hardware / Network / Software`).
+
+**Decision needed before publishing:**
+- (a) Document the workaround in Lab 3 as a known 26.1.4 issue, or
+- (b) Have Lab 3's prompt ask for charts defined by SQL query rather than table+aggregate, or
+- (c) Report to the APEX team and hope it is fixed before the workshop ships.
+
+Recommend (a) + (c): a reader cannot be left staring at a broken dashboard at the exact moment the
+lab says *"Take that in: a real web application."* Note this is **not blocking for Labs 4–6** — none of
+them depend on the dashboard charts — so it is a polish/credibility issue, not a functional gate.
