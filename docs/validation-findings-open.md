@@ -21,6 +21,7 @@ Recording alone is not sufficient. Each entry below is marked ✅ IMPLEMENTED (w
 | 8 | ORA-20987 dashboard chart defect | ✅ IMPLEMENTED — Lab 3 Task 3 workaround + defect report drafted |
 | 9 | Model must support tool calling | ✅ IMPLEMENTED — Labs 1/4/5 + guarded by `tools/test_model_guidance.py` |
 | 10 | Labs 4 and 5 need **different** models; two distinct 429s | ✅ IMPLEMENTED — Lab 1 + Lab 5 tables, switch instructions, guarded by tests |
+| 11 | Re-verify xAI for Lab 5 once service limits are raised | ⬜ OPEN — blocked on provisioning; steps written into `docs/wms-submission.md` step 3② + step 5 |
 
 Detail for each follows.
 
@@ -217,3 +218,27 @@ error, not a passthrough). A model can support one and not the other.
 **IMPLEMENTED:** Lab 1 names the Lab 4 model, explains the per-model service limit and points at the Lab 5
 switch; Lab 5 carries the comparison table and the switch instruction; `tools/test_model_guidance.py`
 (39 tests) fails the build if any of it is removed.
+
+## 11. ⬜ OPEN — re-verify the xAI model for Lab 5 once service limits are raised
+
+**Why it is open:** `xai.grok-4.3` is the only model verified to drive **Lab 4**, but it hit a per-model
+service limit before **Lab 5**'s agent produced a single answer. Its agent behaviour is therefore
+**unverified, not failed** — we never saw it succeed or fail on merit.
+
+**Do this during production/sandbox provisioning testing, after the per-model limits land:**
+
+1. Set Model ID to the xAI model and run **Lab 4**: `show open tickets by priority as a chart`.
+2. Without changing the model, run the **whole Lab 5 conversation** — KB question, related tickets,
+   `Resolve ticket 42`, approve, and confirm in the database that ticket 42 flipped to `Resolved`.
+3. Record how many agent turns complete before any `HTTP-429 ... service limit for this model` appears.
+
+**Outcomes:**
+- **xAI drives both** → standardise on one model; delete the Lab 4 ↔ Lab 5 switch from Labs 1 and 5 and
+  drop the comparison table to a single line. Simpler workshop.
+- **xAI still throttles** → keep the two-model guidance as permanent, and make sure the provisioning ask
+  covers `cohere.command-a-03-2025` at agent-scale volume.
+
+**`Test Connection` cannot answer this** — it is a plain chat call and never exercises tool calling.
+Only running the labs settles it.
+
+**Tracked in the provisioning ask:** `docs/wms-submission.md`, step 3② and step 5.

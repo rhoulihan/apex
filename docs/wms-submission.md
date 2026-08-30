@@ -116,6 +116,7 @@ Verified end-to-end on a real green-button sandbox (see `docs/t18-verification-r
 |---|---|
 | **APEX 26.1 on the sandbox ADB** | ✅ **Resolved** — provisions **APEX 26.1.1** (was 24.2.17 on 2026-07-08). Labs 4 & 5 unblocked; 26.1 AI-Agent data model present. |
 | **OCI GenAI compartment chat quota** | ⚠️ **Zero by default → 429**, but **the Oracle LiveLabs team has confirmed they can raise `max-on-demand-chat-request-per-minute-count` on request** once the workshop's sandbox exists. So this is a **standard provisioning line-item**, not a blocker — it just has to be requested for our compartments (step 3 below). |
+| **OCI GenAI per-model service limit** | ⚠️ **A second, separate limit** — tenancy/region scoped and applied **per model**, not per compartment. Raising the compartment quota does nothing for it. Verified 2026-08-30: `xai.grok-4.3` returned `HTTP-429: The requested model is throttled because the OCI Generative AI service limit for this model has been reached` after only two Lab 4 prompts, and had not recovered 70 s later. Must be requested **by model name** (step 3② below). |
 | **Always Free ADB** | Unreliable on green-button (varies by region assignment) → workshop uses **trial-credit** ADB, not Always Free. |
 | **Lab 7 ONNX grants** | `DBMS_CLOUD` execute + `CREATE MINING MODEL` need to be grantable to the workspace schema (or the model pre-loaded); not re-tested 2026-07-28. |
 
@@ -124,11 +125,31 @@ Verified end-to-end on a real green-button sandbox (see `docs/t18-verification-r
 1. **Submit the workshop.** Connect **Oracle VPN** → `livelabs.oracle.com/wms` → **Submit a Workshop**. Paste **Title, Abstract, Outline, Prerequisites, Tags** from the sections above. Submit. *(Council reviews in ~2–3 business days.)*
 2. **On `Approved` → create the green-button sandbox.** On the workshop's **Sandbox Environment** tab, tick the **Sandbox Lite** checkbox (auto-created in ~1 business day). This is the ship-now green-button path. *(Optional, non-blocking upgrade: open the **Full Sandbox Jira** — summary `[Sandbox] WMS ID: <id> LL ID: <id> Build an AI-Powered Help Desk with Oracle APEX` — for a pre-provisioned 26ai/APEX-26.1 ADB + pre-created workspace per attendee; cite `apex-native-map-regions` as the existing full-sandbox APEX precedent.)*
 3. **Request the provisioning items for our compartments** (in the Sandbox Lite request and/or the Jira). These are the environment settings the AI labs need:
+   - **② Raise the per-model GenAI service limits — by model name.** Separate from ①. The workshop
+     currently needs an **xAI** model for Lab 4 (AI Interactive Reports) and **`cohere.command-a-03-2025`**
+     for Lab 5 (AI Agents); no single model passes both labs on APEX 26.1.4. Size for **agents, not
+     chat** — one agent turn is several tool-calling round trips, so Lab 5 consumes far more requests per
+     student than Lab 4; a 30-seat room needs real headroom.
+     **⚠️ Open question for the LiveLabs team:** can third-party model limits (xAI, Google, Meta) be
+     raised at all, or only Oracle's own Cohere partner capacity? If xAI cannot be raised, Lab 4 needs
+     either Oracle to fix the tool-definition `$schema` defect or the OpenAI track promoted to primary.
    - **① Raise the OCI GenAI chat quota** — set `max-on-demand-chat-request-per-minute-count` (and the embedding equivalent) **above zero** on the workshop compartments. The team confirmed this is doable on request. Without it, GenAI chat returns `HTTP-429: Compartment quota max-on-demand-chat-request-per-minute-count is exceeded` on the first request (verified 2026-07-08 Phoenix `c4ustudent03` and 2026-07-28 London `c4u02`; evidence `agentBridge/screenshots/009-test-result.png`). Note it is a **quota** ask, **not** IAM — API-key creation on the sandbox user is already unrestricted. Same limit affects every GenAI LiveLabs on green button.
    - **② Trial-credit ADB** — either grant Always-Free capacity in the assigned region, or confirm attendees create a **Transaction Processing** ADB on trial credits (the workshop already assumes this).
    - **③ Lab 7 (optional lab) grants** — `DBMS_CLOUD` execute + `CREATE MINING MODEL` grantable to the workspace schema, or pre-load the ONNX model.
 4. **Record the WMS ID.** Put it in `tasks/todo.md`, then it goes in the **PR title** (mandatory). Reply with the WMS ID → the clean PR branch (T20) gets cut with the ID in the title.
 5. **Screenshot / timing run + quota confirmation.** Once any sandbox reservation exists (Sandbox Lite, or a borrowed green-button in the same tenancy), do the screenshot/timing pass and confirm **GenAI Test Connection now succeeds** (i.e. the quota raise landed).
+
+   > **⬜ MUST DO in production sandbox testing — re-verify the xAI model once limits are raised.**
+   > `xai.grok-4.3` is the only model verified to drive **Lab 4**, but on Rick's tenancy it hit a
+   > per-model service limit before **Lab 5**'s agent could answer even once. So its agent behaviour is
+   > **unverified**. Once ② lands, re-run **both** Lab 4 (`show open tickets by priority as a chart`)
+   > **and** the full Lab 5 conversation on the xAI model.
+   > - If xAI drives both, the workshop can standardise on **one** model and the Lab 4 ↔ Lab 5 switch
+   >   instruction can be deleted from Labs 1 and 5.
+   > - If it still throttles, keep the two-model guidance and treat the switch as permanent.
+   >
+   > Note that **`Test Connection` succeeding proves nothing here** — it is a plain chat call and never
+   > exercises tool calling. Only running the labs settles it.
 
 > **Workshop-content note (not a WMS field):** the ADB-create **DB-version dropdown defaults to `19c`** (options: 26ai / 19c) until Oracle flips the default on **Sep 15 2026** — the sign-up lab must tell readers to pick **26ai** explicitly, or every 26ai-dependent lab silently fails.
 
