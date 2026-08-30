@@ -23,6 +23,7 @@ In this lab, you will:
 This lab assumes you have:
 
 * Completed Lab 4 (the app is linked to the Helpdesk AI service)
+* A Generative AI service whose **Model ID supports tool calling** — `xai.grok-4.3` on the OCI track. An AI Agent *is* tool calling; the model APEX pre-fills (`cohere.command-a-03-2025`) does not work. See Lab 1, Task 2.
 
 ## Task 1: Create the AI Agent
 
@@ -228,4 +229,4 @@ You may now **proceed to the next lab**.
 ## Acknowledgements
 
 * **Author** - Rick Houlihan
-* **Last Updated By/Date** - Rick Houlihan, July 2026
+* **Last Updated By/Date** - Rick Houlihan, August 2026

@@ -20,6 +20,7 @@ In this lab, you will:
 This lab assumes you have:
 
 * Completed Lab 3 (the Horizon Help Desk app exists)
+* A Generative AI service whose **Model ID supports tool calling** — `xai.grok-4.3` on the OCI track. This lab is driven entirely by tool calling, and the model APEX pre-fills (`cohere.command-a-03-2025`) **does not work**. See Lab 1, Task 2.
 
 ## Task 1: Link the AI Service to Your Application
 
@@ -56,6 +57,12 @@ The workspace-level service from Lab 1 must be selected inside the app before in
 
 4. **Save and Run Page.** The report opens with a conversational search bar.
 
+    > **If prompting the report returns an error instead of chips**, read the error text:
+    > `INVALID_TOOL_GENERATION`, or a complaint about `$schema` / `function_declarations`, means your
+    > **Model ID cannot drive APEX's tool calling**. Nothing on this page is wrong. Go to
+    > **App Builder > Workspace Utilities > Generative AI > Helpdesk AI**, set **Model ID** to
+    > `xai.grok-4.3`, **Apply Changes**, and reload this page.
+
 ## Task 4: Interrogate Your Help Desk
 
 1. Try these prompts, one at a time:
@@ -90,4 +97,4 @@ You may now **proceed to the next lab**.
 ## Acknowledgements
 
 * **Author** - Rick Houlihan
-* **Last Updated By/Date** - Rick Houlihan, July 2026
+* **Last Updated By/Date** - Rick Houlihan, August 2026

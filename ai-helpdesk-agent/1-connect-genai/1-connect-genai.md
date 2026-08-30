@@ -78,8 +78,18 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
     * Static ID: **helpdesk\_ai** — Labs 5 and 7 refer to the service by this exact ID
     * Compartment ID: your assigned compartment OCID from Task 1, step 5
     * Region: **us-chicago-1** (OCI Generative AI runs in a limited set of regions; APEX calls it over REST, so your database can live anywhere)
-    * Model ID: **type an exact model ID** — this is a free-text field, not a dropdown, and it is pre-filled with a model that may no longer exist. Pre-trained models are deprecated regularly, so this lab never names one. To find a current ID: OCI Console > **Generative AI** > **Playground** > **Chat**, open the **Model** picker, and use a name shown there.
+    * Model ID: **replace the pre-filled value with** `xai.grok-4.3`
     * Used by App Builder: toggle **ON**
+
+    > **🔴 The model matters more than you would expect — do not just pick one.** Labs 4 and 5 drive APEX through **tool calling**, and most models fail at it here. Verified on APEX 26.1.4 against the same report and prompt:
+    >
+    > | Model ID | Labs 4 & 5 |
+    > |---|---|
+    > | `xai.grok-4.3` | ✅ works |
+    > | `cohere.command-a-03-2025` (**what APEX pre-fills**) | ❌ `INVALID_TOOL_GENERATION` |
+    > | `google.gemini-2.5-pro` | ❌ rejects APEX's tool definitions |
+    >
+    > Leaving the pre-filled Cohere model in place is the single most likely way to break this workshop. If `xai.grok-4.3` has since been retired, pick another **xAI** model from OCI Console > **Generative AI** > **Playground** > **Chat** > model picker, and re-test Lab 4 before continuing.
 
     > **Model availability is region-specific.** A model offered in `us-chicago-1` may not exist in another region — pointing at the wrong one returns `HTTP-404: Entity with key <model> not found`. Read the model list from the picker **while the console is set to the same region you entered above**.
 
@@ -102,6 +112,8 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
     > * `HTTP-404: Entity with key ... not found` — the credentials are **fine** (the request authenticated); the **Model ID** does not exist in that region. Pick one from the Chat playground with the console set to that region.
     > * `HTTP-429` — a quota or rate limit. At a live event this just means the room is busy: wait 30 seconds and retry.
     > * `Bad Gateway` — transient. Retry once.
+
+    > **⚠️ A successful Test Connection does NOT prove Labs 4 and 5 will work.** It sends a plain chat request and never exercises **tool calling**, which is what AI Interactive Reports and AI Agents depend on. If Lab 4 or 5 later fails with `INVALID_TOOL_GENERATION`, or a complaint about `$schema` or `function_declarations`, the **Model ID is wrong** — the report and agent configuration are fine. Set it to `xai.grok-4.3` and retry.
 
 </if>
 
@@ -128,7 +140,7 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
     * AI Provider: **OpenAI**
     * Name: **Helpdesk AI**
     * Static ID: **helpdesk\_ai** — Labs 5 and 7 refer to the service by this exact ID
-    * Model ID: **pick the latest available chat model from the list**
+    * Model ID: **pick a current chat model that supports tool calling** (for example a recent GPT-4-class or GPT-5-class model) — Labs 4 and 5 depend on tool calling, so avoid older or lightweight models
     * Used by App Builder: toggle **ON**
     * Credential: **Create New**, and paste your API key
 

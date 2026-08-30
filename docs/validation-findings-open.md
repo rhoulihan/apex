@@ -118,3 +118,45 @@ Result: both charts render correctly (`Closed / In Progress / Open / Resolved`, 
 Recommend (a) + (c): a reader cannot be left staring at a broken dashboard at the exact moment the
 lab says *"Take that in: a real web application."* Note this is **not blocking for Labs 4–6** — none of
 them depend on the dashboard charts — so it is a polish/credibility issue, not a functional gate.
+
+## 9. 🔴 CRITICAL — AI Interactive Reports only work with SOME OCI GenAI models
+
+**Tested 2026-08-30 on APEX 26.1.4, same report, same prompt** (`show open tickets by priority as a chart`),
+OCI Generative AI in `us-chicago-1`, changing only the Model ID:
+
+| Model | Result |
+|---|---|
+| `cohere.command-a-03-2025` — **APEX's own pre-filled default** | ❌ `HTTP-400 {"error_type":"INVALID_TOOL_GENERATION","message":"your request resulted in an invalid tool generation. Try updating the messages or tool definitions"}` |
+| `google.gemini-2.5-pro` | ❌ `HTTP-400 {"error":{"code":400,"message":"Invalid JSON payload received. Unknown name \"$schema\" at 'tools[0].function_declarations[0].parameters': Cannot find field.` |
+| **`xai.grok-4.3`** | ✅ **WORKS** — chips `Chart` + `Status in 'Open, In Progress'`, bar chart by priority |
+
+Note **all three pass `Test Connection`** — that only exercises a plain chat completion, not tool calling.
+So a reader can configure Lab 1 perfectly, see "Connection Succeeded!", and still have Lab 4 fail.
+
+**Analysis.** AI Interactive Reports translate the prompt into declarative report settings via
+**tool/function calling**. APEX 26.1.4 emits tool definitions containing a **`$schema`** key. Google's
+function-declaration API rejects unknown fields outright; Cohere accepts the call but cannot generate a
+valid tool invocation against it. Only the xAI models (OpenAI-compatible tool schema, tolerant of extra
+keys) worked. This looks like an APEX defect — the `$schema` key should not be emitted — with a
+model-compatibility matrix as the practical consequence.
+
+**Impact on the workshop — this is not cosmetic:**
+- Lab 1 currently says *"Model ID: pick the latest available chat model from the list"*. Two of the three
+  obvious picks, **including the one APEX pre-fills for you**, break Lab 4 completely.
+- The errors name tool generation and JSON payloads. Nothing points at the model. A reader will assume
+  they misconfigured the report and will not recover.
+- **Lab 5 (AI Agents with declarative tools) almost certainly has the same dependency** — agents are
+  tool-calling by definition. Untested as of this writing; test before shipping.
+
+**Required doc changes:**
+1. Lab 1 must **name a known-good model** (`xai.grok-4.3` verified) rather than telling readers to choose.
+   Keep the "models get deprecated" caveat, but give a working default and a fallback list.
+2. Add to Lab 1 troubleshooting: `INVALID_TOOL_GENERATION` or `Unknown name "$schema"` means **the model
+   does not work with APEX's tool calling — change the Model ID**, not the report configuration.
+3. State explicitly that **`Test Connection` succeeding does not prove Labs 4 and 5 will work**, because
+   it does not exercise tool calling.
+
+**Still to determine:** whether any Cohere or Meta model in Chicago works, and whether the OpenAI track
+(Lab 1's alternative) is affected — OpenAI tolerates extra schema keys, so it is likely fine, which would
+make the OpenAI track *more* reliable than the OCI track for Labs 4-5. That inverts the workshop's
+current framing of OCI as primary and OpenAI as fallback.
