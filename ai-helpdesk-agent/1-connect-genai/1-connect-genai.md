@@ -25,11 +25,23 @@ This lab assumes you have:
 
 <if type="OCIGenAI">
 
+## Before You Start: Confirm You Are Subscribed to a Generative AI Region
+
+OCI Generative AI runs in a limited set of regions, and your tenancy must be **subscribed** to the region you point APEX at. On the LiveLabs Sandbox this is already done for you — **skip to Task 2**. On your own tenancy, check it now: skipping this step produces an `HTTP-401` later in this lab that looks exactly like a bad credential.
+
+1. In the OCI Console, click the **region menu** in the top-right corner. Your subscribed regions are listed under **Home region**.
+
+2. If **US Midwest (Chicago)** is not listed, click **Manage regions**, find `us-chicago-1`, open its **⋯** menu and choose **Subscribe to this region**.
+
+    > **Region subscriptions are permanent.** You can add a region to a tenancy, but you cannot remove it afterwards. Subscribing costs nothing on its own.
+
+3. **Wait a few minutes before continuing.** A newly subscribed region needs time to replicate your identity data. Until it finishes, every request signed against that region returns `HTTP-401` even though your credentials are perfectly valid. Five minutes is typical.
+
 ## Task 1: Generate API Keys using the OCI Console
 
 OCI API keys are a public/private key pair used to authenticate REST calls to OCI services — including OCI Generative AI.
 
-1. In the OCI Console, click **Profile** at the top-right corner and select your username.
+1. In the OCI Console, click **Profile** at the top-right corner and select **User settings**.
 
     ![Profile menu in the OCI Console](images/oci-profile.png " ")
 
@@ -39,6 +51,8 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
 3. Select **Generate API Key Pair**, then click **Download Private Key**. A *.pem* file is saved to your device — you paste its contents into APEX in the next task.
 
+    > **The Add button stays greyed out until you download the private key.** That is expected, not a broken dialog — the key is shown only once, so the console makes you save it first.
+
     > **Keep the private key private.** Never share the .pem file or upload it anywhere; anyone holding it can call OCI services as you.
 
 4. Click **Add**. The **Configuration File Preview** appears — copy the whole snippet into a scratch note. It contains your **user OCID**, **tenancy OCID**, and **key fingerprint**, all needed in the next task.
@@ -46,6 +60,8 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
     ![Configuration file preview dialog](images/oci-config-preview.png " ")
 
 5. You also need your **assigned compartment's OCID** — this one is *not* in the configuration file. In the LiveLabs Sandbox, open your reservation details to find your assigned compartment, or in the OCI Console navigate to **Identity & Security > Compartments** and copy the OCID shown next to your compartment.
+
+    > **Running in your own tenancy's root compartment?** Then the compartment OCID *is* the tenancy OCID — reuse the `tenancy=` value from the Configuration File Preview and skip this step.
 
     ![Compartments page showing the compartment OCID](images/oci-compartment-ocid.png " ")
 
@@ -62,8 +78,10 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
     * Static ID: **helpdesk\_ai** — Labs 5 and 7 refer to the service by this exact ID
     * Compartment ID: your assigned compartment OCID from Task 1, step 5
     * Region: **us-chicago-1** (OCI Generative AI runs in a limited set of regions; APEX calls it over REST, so your database can live anywhere)
-    * Model ID: **pick the latest available chat model from the list** — pre-trained models are deprecated regularly, so this lab never names one
+    * Model ID: **type an exact model ID** — this is a free-text field, not a dropdown, and it is pre-filled with a model that may no longer exist. Pre-trained models are deprecated regularly, so this lab never names one. To find a current ID: OCI Console > **Generative AI** > **Playground** > **Chat**, open the **Model** picker, and use a name shown there.
     * Used by App Builder: toggle **ON**
+
+    > **Model availability is region-specific.** A model offered in `us-chicago-1` may not exist in another region — pointing at the wrong one returns `HTTP-404: Entity with key <model> not found`. Read the model list from the picker **while the console is set to the same region you entered above**.
 
     > **Don't skip the toggle.** "Used by App Builder" is what lights up the APEX Assistant in the builder — it's the most commonly missed step in this lab.
 
@@ -78,7 +96,12 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
     ![Generative AI service configuration with successful test](images/genai-service-created.png " ")
 
-    > **If Test Connection fails:** re-check the region spelling (`us-chicago-1`, exactly) and that all four credential fields came from the same API key. At a live event, a rate-limit error just means the room is busy — wait 30 seconds and retry.
+    > **If Test Connection fails, read the error code — each one means something different:**
+    >
+    > * `HTTP-401` — most often your tenancy is **not subscribed** to the region, or you subscribed only moments ago and identity replication hasn't finished. Re-check **Before You Start** and retry after a few minutes. Failing that, confirm all four credential fields came from the same API key.
+    > * `HTTP-404: Entity with key ... not found` — the credentials are **fine** (the request authenticated); the **Model ID** does not exist in that region. Pick one from the Chat playground with the console set to that region.
+    > * `HTTP-429` — a quota or rate limit. At a live event this just means the room is busy: wait 30 seconds and retry.
+    > * `Bad Gateway` — transient. Retry once.
 
 </if>
 
@@ -131,13 +154,15 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
 1. Navigate to **SQL Workshop > SQL Commands** and click the **APEX Assistant** button in the toolbar.
 
-2. Ask it:
+2. **The first time you use an AI feature in a workspace, APEX asks you to accept the third-party AI terms.** Read them and click **Accept** — the Assistant will not open otherwise. This appears once per workspace.
+
+3. Ask it:
 
     ```
     <copy>Write a query that shows today's date in three different formats.</copy>
     ```
 
-3. The Assistant streams back a query — click **Insert** and run it. If you get SQL and a result, everything downstream of this lab will work.
+4. The Assistant streams back a query — click **Insert** and run it. If you get SQL and a result, everything downstream of this lab will work.
 
     ![APEX Assistant generating a query in SQL Commands](images/assistant-test.png " ")
 
@@ -166,4 +191,4 @@ You may now **proceed to the next lab**.
 ## Acknowledgements
 
 * **Author** - Rick Houlihan
-* **Last Updated By/Date** - Rick Houlihan, July 2026
+* **Last Updated By/Date** - Rick Houlihan, August 2026
