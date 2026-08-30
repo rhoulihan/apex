@@ -81,6 +81,10 @@ blueprint editor, and fiddly to change after the app exists.
 
 1. When the builder finishes, click **Run Application** and sign in with your workspace credentials.
 
+    > **"Your session has ended" later on?** Expected, not a failure. APEX expires an idle session after
+    > an hour, and this workshop runs about 90 minutes, so you will probably be asked to sign in again
+    > once — most likely around Lab 5. Sign in again and carry on; nothing you built is lost.
+
     ![Horizon Help Desk running: dashboard with charts](images/app-running.png " ")
 
 2. Take that in: **a real web application — authentication, a URL you could send to a colleague, responsive UI — from one reviewed prompt.** In most stacks that was your whole afternoon.

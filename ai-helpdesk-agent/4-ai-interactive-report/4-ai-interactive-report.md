@@ -28,7 +28,7 @@ The workspace-level service from Lab 1 must be selected inside the app before in
 
 1. In the builder, open your **Horizon Help Desk** application and select **Shared Components**.
 
-2. Select **AI Attributes**. Under **Generative AI**, set **Service** to **Helpdesk AI** and click **Apply Changes**. (If it's already selected, app generation linked it for you — carry on.)
+2. Select **AI Attributes** — it is near the **bottom** of the Shared Components page, so scroll down. (The page you land on is titled just **AI**.) Under **Generative AI**, set **Service** to **Helpdesk AI** and click **Apply Changes**. (If it's already selected, app generation linked it for you — carry on.)
 
     ![AI Attributes with the Helpdesk AI service selected](images/ai-attributes-link.png " ")
 
@@ -43,6 +43,10 @@ The workspace-level service from Lab 1 must be selected inside the app before in
 1. With the Tickets region selected, open the **Attributes** tab.
 
 2. In the **Generative AI** section, turn **Natural Language Support** **On**, and confirm **Default Search Mode** is **Search with AI**.
+
+    > **Tip — don't scroll for these.** The Attributes property list is long. Type `natural`, then
+    > `context`, into the **Filter** box at the top of the property editor to jump straight to each
+    > setting. `Default Search Mode` and `Report Context` only appear once Natural Language Support is on.
 
     ![Region attributes with Natural Language Support on](images/enable-nl-support.png " ")
 
