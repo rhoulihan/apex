@@ -443,3 +443,36 @@ to the contrary was from a truncated filter view and is withdrawn.
 
 **Next:** Lab 6 (Draft Replies with AI, uses ticket 27) and Lab 7 (Vector Search — already proven on the
 local container; needs ONNX model load on ADB).
+
+### ⭐ Lab 6 PASSED (2026-08-30) — AI drafted a reply on ticket 27
+
+Ticket 27 ("VPN error 812 on my new laptop", Open/Medium/Network/Marcus Webb) opened as a drawer from the
+Tickets report; **Draft Reply with AI** produced, into the Reply textarea:
+
+> *"Thanks for reaching out. Error 812 typically indicates an issue with the VPN authentication process.
+> Here's how you can troubleshoot this on your new laptop: 1. **Check VPN Credentials**: Ensure you're
+> using the correct username, password, and any required authentication details..."*
+
+Model in use: `cohere.command-a-03-2025` (left from Lab 5). **Generate Text With AI is a plain completion,
+not tool calling, so it works on any of the models tested** — unlike Labs 4 and 5.
+
+**Doc fixes IMPLEMENTED in Lab 6:**
+
+1. **`Create Dynamic Action` → `Create Trigger Action`.** For a *button*, the context menu offers Trigger
+   Action; there is no "Create Dynamic Action" entry. (Lab 5 already had this right — the two labs
+   disagreed with each other.)
+2. **The action is spelled `Generate Text With AI`** (capital W).
+3. **🔴 The biggest one — `Message` / `Result Item` do not exist.** The real UI is
+   **`Input Value` → Type `Item` → Item** and **`Use Response` → Type `Item` → Item**. They are item
+   *pickers*: you supply `P3_DESCRIPTION`, **not** `&P3_DESCRIPTION.`. The old wording would send a reader
+   hunting for a text field that isn't there, and typing substitution syntax that isn't accepted.
+4. **Task 1 reframed** — the generated form already has a Reply item (because `REPLY` shipped in the Lab 2
+   schema), so Synchronize Columns is the fallback, not the main path. Also names the page: with the Lab 3
+   prompt the ticket form is page 3 `Ticket`, rendered as a drawer.
+
+**Item naming note:** the lab's `&P6_*` examples are now `P3_*` and the text says the prefix depends on
+which page the form landed on, which is honest and stays true if the generator numbers pages differently.
+
+**Next: Lab 7** — Vector Search. Already proven on the local Podman 26ai container (ONNX load,
+20/20 embedded, correct semantic hit). On ADB it needs `DBMS_CLOUD` + `create mining model` grants as
+ADMIN, then the ONNX model load.

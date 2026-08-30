@@ -26,17 +26,23 @@ This lab assumes you have:
 
 The `TICKETS` table already has a `REPLY` column (it shipped in the canonical schema, waiting for this lab).
 
-1. In **Page Designer**, open the ticket form page. If the form already shows a **Reply** item, set its type to **Textarea** and move on. If not: right-click the form region, select **Synchronize Columns**, then set the new **Reply** item's type to **Textarea**.
+1. In **Page Designer**, open the ticket form page — the one the Tickets report opens when you edit a row (with the Lab 3 prompt this is usually **page 3, `Ticket`**, and it renders as a drawer).
+
+    The generated form almost always **already has a Reply item**, because `REPLY` shipped in the Lab 2
+    schema: just select it and set **Type** to **Textarea**. Only if it is missing do you need to
+    right-click the form region, select **Synchronize Columns**, and then set the new item's type.
 
     ![Ticket form with the Reply textarea](images/reply-item.png " ")
 
 ## Task 2: Add the Generate Text with AI Action
 
-1. On the form page, create a button named **DRAFT\_REPLY** next to the Reply item (Button Template: **Text**, Label: **Draft Reply with AI**).
+1. On the form page, right-click the **Reply** item and select **Create Button Below**. Name it
+   **DRAFT\_REPLY** with Label **Draft Reply with AI** (Button Template: **Text**).
 
-2. Right-click the button, select **Create Dynamic Action**, and configure the **True** action:
+2. Right-click the new button and select **Create Trigger Action** — for buttons the menu says *Trigger
+   Action*, not "Dynamic Action". Configure it:
 
-    * Action: **Generate Text with AI**
+    * Action: **Generate Text With AI**
     * Under **Generative AI** — Service: **Helpdesk AI**
     * System Prompt:
 
@@ -46,8 +52,12 @@ The `TICKETS` table already has a `REPLY` column (it shipped in the canonical sc
         to reply if the problem persists. Plain text, no signatures.</copy>
         ```
 
-    * Message: use the ticket's description as the input — reference the description item, for example `&P6_DESCRIPTION.` (your item name may differ; check the Rendering tree)
-    * Result Item: the **Reply** item (for example `P6_REPLY`)
+    * Under **Input Value** — Type: **Item**, Item: your description item (for example `P3_DESCRIPTION`)
+    * Under **Use Response** — Type: **Item**, Item: your Reply item (for example `P3_REPLY`)
+
+    > **These are item pickers, not substitution strings.** You type or pick the item *name*
+    > (`P3_DESCRIPTION`), not `&P3_DESCRIPTION.`. The page number prefix depends on which page your ticket
+    > form landed on — check the Rendering tree; with the Lab 3 prompt it is usually page 3.
 
     ![Generate Text with AI dynamic action configuration](images/generate-text-da.png " ")
 
@@ -72,4 +82,4 @@ You may now **proceed to the next lab**.
 ## Acknowledgements
 
 * **Author** - Rick Houlihan
-* **Last Updated By/Date** - Rick Houlihan, July 2026
+* **Last Updated By/Date** - Rick Houlihan, August 2026
