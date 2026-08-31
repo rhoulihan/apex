@@ -160,7 +160,7 @@ You may now **proceed to the next lab**.
 
 ## Learn More
 
-* [Create App with AI](https://apex.oracle.com/en/platform/features/)
+* [Creating an App Using AI and Spec-Driven Development](https://docs.oracle.com/en/database/oracle/apex/26.1/htmdb/creating-an-app-using-spec-driven-development.html)
 
 ## Acknowledgements
 

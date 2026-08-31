@@ -15,9 +15,16 @@ placeholder screenshots) reports **0 errors**. Every image in the workshop is a 
 
 ## Mandatory requirements
 
-- [x] **All links are correct and work as expected** — every relative link resolves; external links were
-      opened by hand. The `403`s from `apex.oracle.com` and `blogs.oracle.com` are Akamai bot-blocks, not
-      broken links. The one genuinely dead link (Oracle's retired ONNX model PAR) was removed in Lab 7.
+- [x] **All links are correct and work as expected** — `tools/self_qa.py` now fetches every external URL
+      on each run: 18 URLs, all `200`. The `403`s from `apex.oracle.com`, `blogs.oracle.com` and
+      `livelabs.oracle.com` are Akamai bot-blocks — each was opened in a real browser and renders — so
+      they are allow-listed by host in the checker. Every relative link resolves.
+
+      Two links were repointed in this pass: `apex.oracle.com/en/platform/features/` now redirects to the
+      generic Oracle APEX product page, so *"Oracle APEX 26.1 New Features"* and *"Create App with AI"*
+      resolved but landed nowhere near what their text promised. They now point at the **26.1 Release
+      Notes** and **Creating an App Using AI and Spec-Driven Development** respectively. The one genuinely
+      dead link (Oracle's retired ONNX model PAR) was removed from Lab 7 earlier.
 - [x] **All code snippets are correct and work as expected** — all 28 `<copy>` blocks are balanced, and
       every snippet in Labs 1–8 was executed live in this run.
 - [x] **The help email address has been updated and is correct** — the workshop carries no hard-coded

@@ -68,7 +68,7 @@ This workshop assumes you have:
 ## Learn More
 
 * [Oracle APEX and AI](https://www.oracle.com/apex/ai/)
-* [Oracle APEX 26.1 New Features](https://apex.oracle.com/en/platform/features/)
+* [Oracle APEX 26.1 Release Notes](https://docs.oracle.com/en/database/oracle/apex/26.1/htmrn/index.html)
 
 ## Acknowledgements
 
