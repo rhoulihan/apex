@@ -190,7 +190,7 @@ for p in WS.rglob("*.png"):
 check("SCREENSHOTS", "OCI Menu screenshots are the common path ones", True,
       "no OCI hamburger-menu navigation shots are used")
 check("SCREENSHOTS", "Screenshots are current, clear and big", not placeholder,
-      "; ".join(placeholder) or f"{len(list(WS.rglob('*.png')))} PNGs, all captured on APEX 26.1.4 / app 105")
+      "; ".join(placeholder) or f"{len(list(WS.rglob('*.png')))} PNGs, no placeholders; APEX shots on 26.1.4 / app 105, OCI shots from the live console")
 check("SCREENSHOTS", "Screenshots trimmed of extra whitespace", True,
       "all captures are viewport-cropped, no full-desktop shots")
 check("SCREENSHOTS", "Personal/sensitive information is blurred out", True,

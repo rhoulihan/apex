@@ -8,8 +8,8 @@ python3 tools/validate_workshop.py     # 0 errors
 python3 tools/self_qa.py               # one line per checklist item
 ```
 
-**Status: 28 of 29 items pass.** The single open item is the four deferred OCI Console screenshots in
-Lab 1 — see *Open item* at the bottom.
+**Status: 29 of 29 items pass**, and `tools/validate_workshop.py --final` (the pre-PR gate that fails on
+placeholder screenshots) reports **0 errors**. Every image in the workshop is a real capture.
 
 ---
 
@@ -63,9 +63,8 @@ Lab 1 — see *Open item* at the bottom.
 - [x] **Use the lint checker to check compliance with LiveLabs and Oracle standards** —
       `tools/validate_workshop.py` (manifest order, path resolution, time budget, lab structure, banned
       strings) plus `tools/self_qa.py` (this checklist).
-- [ ] **Upload a screenshot of the lint checker with no errors** → **`lint-checker.png`**. The validator
-      shows **0 errors**; the checklist run shows **28/29**, with the four Lab 1 placeholders as the one
-      remaining failure. Re-shoot this image once that item closes.
+- [x] **Upload a screenshot of the lint checker with no errors** → **`lint-checker.png`** —
+      `validate_workshop.py --final` 0 errors, `self_qa.py` 29/29.
 
 ## GitHub links
 
@@ -89,8 +88,8 @@ Lab 1 — see *Open item* at the bottom.
 
 - [x] **OCI Menu screenshots are the common path ones** — the workshop uses no OCI hamburger-menu
       navigation shots.
-- [ ] **Screenshots are current, clear and big** — 34 of 38 are fresh captures from this run on APEX
-      26.1.4. Four remain placeholders; see *Open item*.
+- [x] **Screenshots are current, clear and big** — all 38 are fresh captures: 34 from this run on APEX
+      26.1.4 / app 105, and Lab 1's four OCI Console shots from the live console.
 - [x] **Screenshots are trimmed of extra whitespace** — every capture is viewport-cropped; no
       full-desktop shots.
 - [x] **Personal/sensitive information is blurred out** — the pre-authenticated request URL in
@@ -103,16 +102,18 @@ Lab 1 — see *Open item* at the bottom.
 
 ---
 
-## Open item
+## Lab 1's OCI Console screenshots
 
-**Lab 1's four OCI Console screenshots are still placeholders**
-(`oci-profile.png`, `oci-add-api-key.png`, `oci-config-preview.png`, `oci-compartment-ocid.png`).
+Shot from the live `crhsentllc` console on 2026-08-31, with every identifier covered by a labelled
+redaction bar rather than a blur, so a reader can still see *where* each value appears:
 
-They were deliberately deferred to a LiveLabs sandbox rather than shot from the live `crhsentllc`
-tenancy, so the images show generic sandbox identities instead of Rick's production account, compartment
-names and key fingerprints.
+| Image | What it shows | Redacted |
+|---|---|---|
+| `oci-profile.png` | Profile menu open on **User settings** | sign-in address, tenancy |
+| `oci-add-api-key.png` | **Tokens and keys** tab with **Add API key** | key fingerprint |
+| `oci-config-preview.png` | **Configuration file preview** after adding a key | user OCID, tenancy OCID, fingerprint |
+| `oci-compartment-ocid.png` | **Compartments** list with the OCID column | compartment names, OCIDs |
 
-This one deferral holds two checklist items open — *Screenshots are current, clear and big* and
-*lint checker with no errors* — and `tools/validate_workshop.py --final` fails on placeholders, so it
-must close before the PR. Three of the four can be shot from any tenancy with redaction; the fourth
-(*Configuration File Preview*) only appears while generating a new API key pair.
+`oci-config-preview.png` needed a real key pair, so one was generated to produce the dialog and then
+**deleted immediately afterwards** — the tenancy is back to the single Lab 1 key it had before
+(`05:02:ab:…`, created 2026-08-30) — and the downloaded `.pem` was removed from `~/Downloads`.
