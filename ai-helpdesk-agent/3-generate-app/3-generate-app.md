@@ -36,6 +36,8 @@ This lab assumes you have:
     2. Tickets - an Interactive Report on the TICKETS table, with an editable form to edit a
     single ticket.
     3. Knowledge Base - a report on the KB_ARTICLES table.
+    Use these exact page names: Dashboard, Tickets, Knowledge Base. Do not rename them or
+    substitute your own titles.
     Use TEAM_MEMBERS only as a lookup for a ticket's assigned team member. Do not create any
     additional pages.</copy>
     ```
@@ -51,6 +53,17 @@ This lab assumes you have:
 
 3. AI responds with an application **blueprint** — a proposed set of pages. Read it, then click **Create Application** *in the chat*.
 
+    > **🔴 Check the page names against the blueprint anyway.** Without the "use these exact page
+    > names" line above, our first run came back as **Overview**, **Ticket List** and **Article
+    > Library** — right page types and tables, wrong names. That line is in the prompt precisely to
+    > stop it, but generation varies between runs: if the names still drift, rename them in the
+    > wizard (Task 2). It matters because Labs 4, 5 and 6 all tell you to open "the **Tickets** page".
+
+    > **It also enables features you did not ask for.** Ours turned on **Install Progressive Web App**
+    > and **Push Notifications**. Harmless for the workshop, but Push Notifications creates a Web
+    > Credential that outlives the application — see Lab 8, Task 3. Turn them off in the wizard if you
+    > would rather not have them.
+
     > **That button does not create anything yet.** It hands off to the Create Application wizard, which is where the blueprint becomes editable — page names, page types, charts, features and authentication. The chat summary lists pages only; the wizard is where you can actually inspect and change them. Task 2 happens there.
 
     ![AI-proposed application blueprint](images/app-blueprint.png " ")
@@ -64,11 +77,11 @@ blueprint editor, and fiddly to change after the app exists.
 
     | # | Check | Needed by |
     |---|---|---|
-    | 1 | **Dashboard** is listed **first** — it must become page 1 | Lab 5 |
+    | 1 | **Dashboard** is listed **first** — it must become page 1; rename it if the AI called it Overview | Lab 5 |
     | 2 | Dashboard has a **tickets by status** chart and a **tickets by category** chart — click its **Edit** and step through the *Chart 1* / *Chart 2* tabs to confirm | the Lab 3 tour |
-    | 3 | A page named **Tickets** whose type is **Interactive Report** | **Lab 4** |
+    | 3 | A page named **Tickets** whose type is **Interactive Report** — **rename it here** if the AI called it something else | **Lab 4** |
     | 4 | The Tickets entry also produces an **editable form** on TICKETS | **Lab 6** |
-    | 5 | A page named **Knowledge Base** reporting on KB_ARTICLES | the tour |
+    | 5 | A page named **Knowledge Base** reporting on KB_ARTICLES — rename it if the AI called it Article Library | the tour |
     | 6 | There is only **one** page named Tickets | Lab 4 tells you to open "the Tickets page" |
 
     > **Check 3 is the one that bites.** Lab 4's AI features exist **only** on Interactive Report regions. If the blueprint chose Faceted Search, Cards, or a plain Classic Report for Tickets, change the page type here — ten seconds, declarative. Left wrong, Lab 4 has no AI settings to turn on.

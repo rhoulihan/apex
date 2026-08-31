@@ -679,3 +679,28 @@ Walked as written on a genuinely empty schema.
 
 Two screenshots that could not be automated needed Rick: the file picker in the Upload Script dialog is
 inside an APEX modal iframe and is not reachable by the extension.
+
+### Lab 3 prompt fix — A/B tested in one session (2026-08-31)
+
+The Lab 3 prompt named the three pages explicitly and the model renamed all of them anyway. Rick's call:
+fix the prompt rather than tell the reader to rename afterwards. Added:
+
+> `Use these exact page names: Dashboard, Tickets, Knowledge Base. Do not rename them or substitute your
+> own titles.`
+
+Tested A/B against the same model (`xai.grok-4.3`), same schema, same session — only the prompt differed,
+and each run used a **fresh** Assistant chat so there was no conversational carry-over:
+
+| Page | Without the clause | With the clause |
+|---|---|---|
+| 1 | `Overview` | **`Dashboard`** |
+| 2 | `Ticket List` | **`Tickets`** |
+| 3 | `Article Library` | **`Knowledge Base`** |
+
+Page types and source tables were correct in both runs; only the names drifted. `app-blueprint.png` was
+re-captured from the corrected run so the image matches the shipped prompt.
+
+**Still unfixed by the prompt:** `Install Progressive Web App` and `Push Notifications` are enabled by
+the blueprint without being asked for. That is the origin of the `App NNN Push Notifications Credentials`
+debris found during teardown. Documented in Lab 3 with a pointer to Lab 8 Task 3, and left as a reader
+choice rather than another prompt clause.
