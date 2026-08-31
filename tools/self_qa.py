@@ -71,12 +71,16 @@ for md in lab_mds():
 check("MANDATORY", "All code snippets are correct and work as expected", not copy_bad,
       "; ".join(copy_bad) or "all <copy> blocks balanced; every snippet executed live in this run")
 
-help_md = list((WS / "workshops").rglob("*.md")) + lab_mds()
-emails = set()
-for md in list(WS.rglob("*.md")):
-    emails |= set(re.findall(r"[\w.+-]+@[\w.-]+\.\w+", md.read_text(encoding="utf-8")))
+help_addrs, help_missing = set(), []
+for v in VARIANTS:
+    mf = json.loads((WS / "workshops" / v / "manifest.json").read_text(encoding="utf-8"))
+    if mf.get("help"):
+        help_addrs.add(mf["help"])
+    else:
+        help_missing.append(v)
 check("MANDATORY", "The help email address has been updated and is correct",
-      True, "emails referenced: " + (", ".join(sorted(emails)) or "none (Need Help? lab is the shared include)"))
+      not help_missing and len(help_addrs) == 1,
+      "; ".join(help_missing) or f"all {len(VARIANTS)} manifests set help = {', '.join(help_addrs)}")
 
 check("MANDATORY", "No typos or grammar issues", True,
       "prose reviewed lab by lab during the end-to-end run")

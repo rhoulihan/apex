@@ -11,6 +11,10 @@ python3 tools/self_qa.py               # one line per checklist item
 **Status: 29 of 29 items pass**, and `tools/validate_workshop.py --final` (the pre-PR gate that fails on
 placeholder screenshots) reports **0 errors**. Every image in the workshop is a real capture.
 
+**Filed in WMS 12192 on 2026-08-31:** all 31 checkboxes ticked, all three verification images uploaded,
+PR link <https://github.com/oracle-livelabs/apex/pull/346> recorded, and the workshop moved to
+**Self QA Complete** (Last QA Date 8/31/2026, rick.houlihan@oracle.com).
+
 ---
 
 ## Mandatory requirements
@@ -27,9 +31,9 @@ placeholder screenshots) reports **0 errors**. Every image in the workshop is a 
       dead link (Oracle's retired ONNX model PAR) was removed from Lab 7 earlier.
 - [x] **All code snippets are correct and work as expected** — all 28 `<copy>` blocks are balanced, and
       every snippet in Labs 1–8 was executed live in this run.
-- [x] **The help email address has been updated and is correct** — the workshop carries no hard-coded
-      support address; help routing comes from the shared **Need Help?** include, which is the current
-      LiveLabs version for each variant.
+- [x] **The help email address has been updated and is correct** — all three `manifest.json` files set
+      `help = livelabs-help-apex_us@oracle.com`, the APEX support alias, which is what the LiveLabs PR
+      template asks for.
 - [x] **No typos or grammar issues** — prose reviewed lab by lab during the run.
 
 ## File names
@@ -75,7 +79,7 @@ placeholder screenshots) reports **0 errors**. Every image in the workshop is a 
 
 ## GitHub links
 
-- [ ] **Insert GitHub Pull Request Link** — pending; the PR against `oracle-livelabs/apex` is not open yet.
+- [x] **Insert GitHub Pull Request Link** — <https://github.com/oracle-livelabs/apex/pull/346>
 - [x] **Your `github.io` workshop link** —
       `https://rhoulihan.github.io/apex/ai-helpdesk-agent/workshops/sandbox/index.html`
 
