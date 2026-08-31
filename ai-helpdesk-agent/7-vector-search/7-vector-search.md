@@ -24,6 +24,10 @@ In this lab, you will:
 This lab assumes you have:
 
 * Completed Lab 2 (the `KB_ARTICLES` table exists; its `embedding` column shipped with the schema)
+* **`ADMIN` access to the database** — Task 1's grants cannot be run as your workspace user
+* **A way to host a ~127 MB file the database can read** — see the known issue in Task 2. Oracle now
+  publishes its ONNX models only as zip archives, so you need an Object Storage bucket (or another
+  URL the database can fetch a bare `.onnx` from)
 
 ## Task 1: Grant Model Privileges
 
@@ -37,6 +41,11 @@ This lab assumes you have:
     <copy>grant execute on dbms_cloud to <your-schema-name>;
     grant create mining model to <your-schema-name>;</copy>
     ```
+
+    > **Run both statements.** In Database Actions the green ▶ button is *Run Statement* and executes only
+    > the one under your cursor — use **Run Script** (or press F5) so both grants run. If you miss the
+    > `dbms_cloud` grant, Task 2 fails with `PLS-00201: identifier 'DBMS_CLOUD' must be declared`, which
+    > gives no hint that a grant is the cause.
 
     ![Database Actions SQL as ADMIN running the grants](images/admin-grants.png " ")
 
@@ -56,7 +65,20 @@ This lab assumes you have:
     end;</copy>
     ```
 
-    The model loads in under a minute. (If the download link has rotated, search the Oracle Machine Learning blog for the current *all_MiniLM_L12_v2* ONNX location — the rest of the lab is unchanged.)
+    > **🔴 KNOWN ISSUE — this URL no longer works (verified 2026-08-30).** It returns
+    > `ORA-20401: Authorization failed for URI`. The pre-authenticated link has expired *and* Oracle has
+    > moved the models to a new bucket where **only `_augmented.zip` archives are published — there is no
+    > bare `.onnx` for any model**. Because the database cannot unzip, and `DBMS_VECTOR` in 26ai offers no
+    > cloud loader, this step cannot be fixed by swapping the URL.
+    >
+    > **To get the current model:** open
+    > `https://docs.oracle.com/pls/topic/lookup?ctx=en/database/oracle/oracle-database/26/vecse&id=oml_ai_models_object_storage`
+    > — a stable link that redirects to Oracle's current *Machine Learning AI models* page — and download
+    > `all_MiniLM_L12_v2_augmented.zip` (~117 MB). Unzip it to get `all_MiniLM_L12_v2.onnx` (~127 MB), then
+    > make that file reachable from the database: upload it to an Object Storage bucket in your own
+    > compartment, create a pre-authenticated request for it, and use that URI as the `object_uri` above.
+    >
+    > **Never hard-code a PAR in your own work either** — they expire. That is exactly what broke here.
 
     ![LOAD_ONNX_MODEL run in SQL Commands](images/load-onnx.png " ")
 
@@ -123,4 +145,4 @@ You may now **proceed to the next lab**.
 ## Acknowledgements
 
 * **Author** - Rick Houlihan
-* **Last Updated By/Date** - Rick Houlihan, July 2026
+* **Last Updated By/Date** - Rick Houlihan, August 2026

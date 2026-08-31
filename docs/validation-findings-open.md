@@ -22,6 +22,7 @@ Recording alone is not sufficient. Each entry below is marked ✅ IMPLEMENTED (w
 | 9 | Model must support tool calling | ✅ IMPLEMENTED — Labs 1/4/5 + guarded by `tools/test_model_guidance.py` |
 | 10 | Labs 4 and 5 need **different** models; two distinct 429s | ✅ IMPLEMENTED — Lab 1 + Lab 5 tables, switch instructions, guarded by tests |
 | 11 | Re-verify xAI for Lab 5 once service limits are raised | ⬜ OPEN — blocked on provisioning; steps written into `docs/wms-submission.md` step 3② + step 5 |
+| 12 | **Lab 7 ONNX URL dead; Oracle ships only `.zip` now** | 🔴 BLOCKING — warning implemented in Lab 7; needs a design decision on how to source the model |
 
 Detail for each follows.
 
@@ -242,3 +243,55 @@ service limit before **Lab 5**'s agent produced a single answer. Its agent behav
 Only running the labs settles it.
 
 **Tracked in the provisioning ask:** `docs/wms-submission.md`, step 3② and step 5.
+
+## 12. 🔴 BLOCKING — Lab 7's ONNX model URL is dead, and Oracle no longer publishes a bare `.onnx`
+
+**Verified 2026-08-30 on ADB 26ai.** Lab 7 Task 2 cannot work as written.
+
+**What happens now.** With `DBMS_CLOUD` granted (Task 1 done), the lab's `LOAD_ONNX_MODEL` call returns:
+
+```
+ORA-20401: Authorization failed for URI - https://adwc4pm.objectstorage.us-ashburn-1.oci.customer-oci.com
+/p/VBRD9P8ZFWkKvnfhrWxkpPe8K03-JIoM5h_8EJyJcpE80c108fuUjg7R5L5O7mMZ/n/adwc4pm/b/OML-Resources/o/all_MiniLM_L12_v2.onnx
+ORA-06512: at "C##CLOUD$SERVICE.DBMS_CLOUD$PDBCS_260821_1_0", line 2291
+```
+
+The pre-authenticated request in the lab has expired **and** the bucket changed.
+
+**What Oracle publishes today** (resolved via the stable docs lookup
+`docs.oracle.com/pls/topic/lookup?ctx=en/database/oracle/oracle-database/26/vecse&id=oml_ai_models_object_storage`,
+which redirects to the current *Oracle Machine Learning AI models* page):
+
+- Bucket is now **`OML-ai-models`**, not `OML-Resources`.
+- **Every model is published only as `<name>_augmented.zip`. There is no bare `.onnx` for any model** —
+  confirmed for all_MiniLM_L12_v2, multilingual_e5_base, multilingual_e5_small, and both CLIP models.
+- Downloading `all_MiniLM_L12_v2_augmented.zip` succeeds (HTTP 200, 122,537,890 bytes) and contains
+  **`all_MiniLM_L12_v2.onnx` at 133,322,334 bytes (~127 MB)**, plus a LICENSE and README, dated 2025-10-30.
+- Pointing `DBMS_CLOUD.GET_OBJECT` at a bare `.onnx` name in the new bucket also fails with ORA-20401 —
+  the PAR is scoped to the zip.
+
+**Why this is not a one-line URL swap:**
+- `LOAD_ONNX_MODEL` needs the ONNX **blob** (or a file in a directory). The database cannot unzip.
+- **`DBMS_VECTOR` in 26ai has no cloud loader** — `all_procedures` shows only `LOAD_ONNX_MODEL`,
+  `DROP_ONNX_MODEL`, `INMEMORY_ONNX_MODEL`. There is no `LOAD_ONNX_MODEL_CLOUD` to delegate to.
+- The ADB ships **no pre-loaded embedding model**: `select * from all_mining_models` returns no rows.
+
+**Options — needs a decision, each changes the lab's shape:**
+
+1. **Reader-owned Object Storage.** Download the zip, unzip locally, upload the 127 MB `.onnx` to a bucket
+   in their own compartment, create a PAR, and use that URI. Works on ADB and is Oracle's documented
+   pattern, but adds a bucket + PAR to an *optional* lab and assumes console rights.
+2. **Upload into APEX.** Put the `.onnx` in Static Workspace Files and load it from the APEX file view as a
+   BLOB. Keeps everything inside APEX, but **127 MB may exceed the instance upload limit** — untested.
+3. **Drop the in-database embedding.** Re-scope Lab 7 to use a Vector Provider backed by a remote
+   embedding service rather than a local ONNX model. Loses the "nothing left the database" governance
+   point, which is the lab's whole thesis.
+4. **Ship the model ourselves** in a LiveLabs-owned bucket with a long-lived PAR, and reference that.
+   Most reliable for readers; needs a hosting decision and periodic re-verification.
+
+**Recommendation:** option 4 if LiveLabs will host it, else option 1 with an explicit "requires an OCI
+bucket" note in the prerequisites. Whatever is chosen, **the lab must stop hard-coding a PAR** — PARs
+expire. Reference the stable docs lookup URL and tell readers to get the current link from there.
+
+**Note:** Lab 7 already requires ADMIN database access for the Task 1 grants, so it is not a pure
+green-button lab today either. Worth deciding whether it stays optional or becomes tenancy-only.

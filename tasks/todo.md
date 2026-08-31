@@ -476,3 +476,35 @@ which page the form landed on, which is honest and stays true if the generator n
 **Next: Lab 7** — Vector Search. Already proven on the local Podman 26ai container (ONNX load,
 20/20 embedded, correct semantic hit). On ADB it needs `DBMS_CLOUD` + `create mining model` grants as
 ADMIN, then the ONNX model load.
+
+### 🔴 Lab 7 BLOCKED (2026-08-30) — Oracle changed how it ships the ONNX model
+
+**Task 1 (grants): validated, with a real gotcha.** Confirmed necessary — as `WKSP_HELPDESK` the ONNX load
+fails `PLS-00201: identifier 'DBMS_CLOUD' must be declared`. Also found that in Database Actions the green
+▶ runs only the statement under the cursor: the first attempt granted `CREATE MINING MODEL` but not
+`DBMS_CLOUD`, and the resulting failure looks identical to not having run the grants at all. Lab now tells
+readers to use **Run Script / F5**.
+
+**Task 2 (load the model): cannot work as written.**
+- Lab's URI → `ORA-20401: Authorization failed for URI` (PAR expired, bucket moved).
+- Oracle's current page (via the stable docs lookup) publishes **only `_augmented.zip`** for every model.
+  No bare `.onnx` exists any more. Confirmed by fetching the page and by a direct DB attempt at a bare
+  `.onnx` name in the new bucket (also ORA-20401).
+- Downloaded and inspected the zip: HTTP 200, 122,537,890 bytes, containing
+  `all_MiniLM_L12_v2.onnx` at **133,322,334 bytes (~127 MB)**, dated 2025-10-30.
+- The database cannot unzip; `DBMS_VECTOR` has **no cloud loader** (only LOAD_ONNX_MODEL, DROP_ONNX_MODEL,
+  INMEMORY_ONNX_MODEL); and the ADB has **no pre-loaded model** (`all_mining_models` is empty).
+
+**IMPLEMENTED in Lab 7:** a prominent KNOWN ISSUE callout with the verbatim error, the stable docs-lookup
+link for finding the current model, the download/unzip/host procedure, and "never hard-code a PAR".
+Prerequisites now state that ADMIN access and a way to host a ~127 MB file are required.
+
+**NEEDS A DECISION (see docs/validation-findings-open.md #12):** host the model ourselves in a
+LiveLabs-owned bucket (most reliable for readers), require a reader-owned bucket, try APEX Static Workspace
+Files (127 MB may exceed the upload limit — untested), or re-scope the lab away from in-database embedding
+(which would cost the "nothing left the database" governance point).
+
+**Tasks 3-5 remain unvalidated on ADB** — they are blocked behind Task 2. Note the SQL itself is already
+proven on the local Podman 26ai container (ONNX loaded as MINILM_L12, 20/20 embedded, correct semantic
+hit), so what is unproven is specifically the ADB model-sourcing path plus the Vector Provider and Search
+Configuration UI.
