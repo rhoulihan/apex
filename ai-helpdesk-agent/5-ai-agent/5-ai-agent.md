@@ -126,7 +126,12 @@ This tool changes data, so you'll turn on **Requires Confirmation** — a built-
 
     * Name: **resolve\_ticket**
     * Type: **Execute Server-side Code**
-    * Execution Point: **On Demand** — this becomes read-only once you pick the type above; nothing to change
+    * Execution Point: **On Demand** — set this yourself; it is a live dropdown, not a derived value
+
+        > **The other option changes the agent fundamentally.** `Augment System Prompt` runs the tool
+        > before *every* message and injects the result as system-level context; `On Demand` lets the
+        > model decide when to call it. This workshop wants **On Demand** for all three tools.
+
     * Description:
 
         ```

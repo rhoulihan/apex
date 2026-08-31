@@ -75,11 +75,12 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
     * AI Provider: **OCI Generative AI Service**
     * Name: **Helpdesk AI**
-    * Static ID: **helpdesk\_ai** — Labs 5 and 7 refer to the service by this exact ID
+    * Static ID: **helpdesk\_ai** — Labs 5 and 7 refer to the service by this exact ID, and it becomes **read-only once the service is created**, so get it right now
     * Compartment ID: your assigned compartment OCID from Task 1, step 5
     * Region: **us-chicago-1** (OCI Generative AI runs in a limited set of regions; APEX calls it over REST, so your database can live anywhere)
     * Model ID: **replace the pre-filled value with** `xai.grok-4.3`
     * Used by App Builder: toggle **ON**
+    * Default for New Apps: toggle **ON** — new applications then pick this service up automatically
 
     > **🔴 The model matters more than you would expect — do not just pick one.** Labs 4 and 5 drive APEX through **tool calling**, and most models fail at it here. Verified on APEX 26.1.4 against the same report and prompt:
     >
@@ -141,7 +142,7 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
     * AI Provider: **OpenAI**
     * Name: **Helpdesk AI**
-    * Static ID: **helpdesk\_ai** — Labs 5 and 7 refer to the service by this exact ID
+    * Static ID: **helpdesk\_ai** — Labs 5 and 7 refer to the service by this exact ID, and it becomes **read-only once the service is created**, so get it right now
     * Model ID: **pick a current chat model that supports tool calling** (for example a recent GPT-4-class or GPT-5-class model) — Labs 4 and 5 depend on tool calling, so avoid older or lightweight models
     * Used by App Builder: toggle **ON**
     * Credential: **Create New**, and paste your API key
@@ -158,7 +159,11 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
 > **Glossary — token:** the unit LLMs read and bill by (a short word is roughly one token). Every AI call in this workshop spends tokens.
 
-1. Edit the **Helpdesk AI** service you just created and set **Maximum AI Tokens** to **500000**, then save.
+1. Edit the **Helpdesk AI** service you just created, open the **Advanced** section at the bottom of
+   the page, set **Maximum AI Tokens** to **500000**, and click **Apply Changes**.
+
+    > **Advanced is where this setting lives** — it is not in **Settings**, which is the section you
+    > would reasonably look in first.
 
     ![Maximum AI Tokens setting on the Generative AI service](images/max-ai-tokens.png " ")
 

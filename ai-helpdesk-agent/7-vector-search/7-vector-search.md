@@ -103,6 +103,11 @@ and is a genuinely useful thing to know how to do.
 
     Loading takes about ten seconds.
 
+    > **You will see new `DM$P…MINILM_L12` tables appear in Object Browser.** Loading an ONNX model
+    > creates four of them in your schema to hold the model itself. They are Oracle-managed metadata,
+    > not clutter from a failed run — leave them alone. They disappear if you drop the model with
+    > `dbms_vector.drop_onnx_model(model_name => 'minilm_l12');`.
+
     ![LOAD_ONNX_MODEL run in SQL Commands](images/load-onnx.png " ")
 
 ## Task 4: Embed the Knowledge Base — One SQL Statement
