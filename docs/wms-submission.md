@@ -164,7 +164,7 @@ Verified end-to-end on a real green-button sandbox (see `docs/t18-verification-r
    > Note that **`Test Connection` succeeding proves nothing here** — it is a plain chat call and never
    > exercises tool calling. Only running the labs settles it.
 
-   > **⬜ Also verify Lab 7 once ③ lands.** Point Task 2's `object_uri` at the hosted `.onnx` and run
+   > **⬜ Also verify Lab 7 once ③ lands.** Point Task 3's `object_uri` at the hosted `.onnx` and run
    > Tasks 2–5 end to end: model loads as `MINILM_L12`, `embed-kb.sql` reports **20**, the Vector Provider
    > and Search Configuration save, and `laptop won't connect from hotel wifi` returns the VPN 812 article.
    > None of Tasks 2–5 has been validated on Autonomous Database yet — only on a local 26ai container.
