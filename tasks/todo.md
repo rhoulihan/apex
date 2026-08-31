@@ -806,3 +806,26 @@ retired:
 `xai.grok-4.3` · `xai.grok-voice-agent`
 
 Note `xai.grok-4` does **not** exist (HTTP-404), despite limits existing for grok-3 and grok-4 names.
+
+### Labs 5 and 6 rebuilt on app 105 (2026-08-31)
+
+Built both on the fresh app and captured the two outstanding screenshots. Everything the labs claim about
+these screens held:
+
+- **Lab 5 Task 2's warning is right**: the **Tools** section does not exist until the agent is created. It
+  appeared only after clicking Create on the agent.
+- **Lab 5 Task 5's warning is right**: the region under **Breadcrumb Bar** is named after the application
+  (`Horizon Help Desk`), is a **Static Content** region on the **Hero** template, and is what you
+  right-click.
+- The context-menu item really is **`Create Trigger Action`** (Labs 5 and 6 both corrected to this).
+- **Quick Actions are `Message 1` / `Message 2`**, confirming the earlier correction.
+- **Lab 6's label is `Generate Text With AI`** — capital W, as corrected.
+- **Lab 6's biggest fix is confirmed exactly**: the action exposes two `Type`/`Item` pairs, both defaulting
+  to Type **Item** — one under **Input Value** (set to `P3_DESCRIPTION`) and one under **Use Response**
+  (set to `P3_REPLY`). They are item pickers, not substitution strings, exactly as the lab now says.
+- The generated Ticket form already contains **`P3_REPLY`**, because the seeded `TICKETS` table has a
+  `REPLY` column — so Lab 6 needs no extra item.
+
+**Technique worth keeping:** in Page Designer the property editor uses `peMain_N` ids rather than APEX
+items, and coordinate clicks on tree links are unreliable. Reading an element's `getBoundingClientRect()`
+and clicking those coordinates — or calling `.click()` directly — works consistently.
