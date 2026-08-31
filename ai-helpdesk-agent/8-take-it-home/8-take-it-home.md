@@ -17,6 +17,12 @@ In this lab, you will:
 * Clean up the credentials, scripts and services that outlive the application
 * Pick up the trail: where APEX developers actually keep learning
 
+### Prerequisites
+
+This lab assumes you have:
+
+* Completed **Lab 5** — the AI agent is the thing you are exporting (the optional Labs 6 and 7 are not required)
+
 ## Task 1: Export Your Application
 
 1. In the builder, open **Horizon Help Desk** and choose **Export / Import**. Pick **Export** on the
