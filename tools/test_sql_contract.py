@@ -28,7 +28,7 @@ class TestSchemaScript(unittest.TestCase):
 
     def test_seed_counts(self):
         self.assertEqual(len(re.findall(r"insert into tickets", self.sql, re.I)), 50)
-        self.assertEqual(len(re.findall(r"insert into kb_articles", self.sql, re.I)), 20)
+        self.assertEqual(len(re.findall(r"insert into kb_articles", self.sql, re.I)), 30)
         self.assertEqual(len(re.findall(r"insert into team_members", self.sql, re.I)), 8)
 
     def test_identity_start_1000(self):

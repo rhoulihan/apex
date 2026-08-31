@@ -58,7 +58,7 @@ This lab assumes you have:
 
 ## Task 3: Run the Canonical Schema and Seed Data
 
-1. Download [helpdesk-schema.sql](files/helpdesk-schema.sql), then navigate to **SQL Workshop > SQL Scripts**, click **Upload**, choose the file, and **Run** it. The script drops and recreates `TICKETS`, `KB_ARTICLES`, and `TEAM_MEMBERS`, then seeds 50 tickets, 20 knowledge-base articles, and 8 team members — it's a state-reset checkpoint, safe to re-run at any point today.
+1. Download [helpdesk-schema.sql](files/helpdesk-schema.sql), then navigate to **SQL Workshop > SQL Scripts**, click **Upload**, choose the file, and **Run** it. The script drops and recreates `TICKETS`, `KB_ARTICLES`, and `TEAM_MEMBERS`, then seeds 50 tickets, 30 knowledge-base articles, and 8 team members — it's a state-reset checkpoint, safe to re-run at any point today.
 
     ![SQL Scripts page with helpdesk-schema uploaded and run](images/run-schema-script.png " ")
 

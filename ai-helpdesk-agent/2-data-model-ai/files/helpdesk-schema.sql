@@ -134,6 +134,46 @@ insert into kb_articles (id, title, content, category, updated_on) values (20,
  'Laptop battery drains too fast: health checks',
  'Generate a battery report (powercfg /batteryreport) and compare design vs full-charge capacity; below 60 percent qualifies for replacement. Meanwhile lower screen brightness, enable battery saver, and quit browser tabs playing media. Swollen batteries: stop using the laptop and contact hardware support the same day.',
  'Hardware', date '2026-03-12');
+insert into kb_articles (id, title, content, category, updated_on) values (21,
+ 'Monitor flickers or goes black intermittently',
+ 'A display that blinks, flashes, or drops out briefly is almost always a cable or refresh-rate problem rather than a failing panel. 1) Reseat both ends of the video cable and try a different port. 2) Swap the cable - a marginal HDMI or USB-C cable is the most common cause. 3) In Display Settings, set the refresh rate to the panel default. 4) Update the graphics driver. If the flicker follows the monitor to another machine, replace the monitor.',
+ 'Hardware', date '2026-05-14');
+insert into kb_articles (id, title, content, category, updated_on) values (22,
+ 'Connecting on public or hotel Wi-Fi (captive portals)',
+ 'Hotels, airports, and cafes put you behind a captive portal that must be accepted before any traffic flows. 1) Join the network and wait for the sign-in page; if it does not appear, browse to any plain http site to trigger it. 2) Accept the terms and complete any room-number or voucher step. 3) Only then start the VPN - launching it before the portal is accepted makes the connection fail with a timeout. 4) If the portal never loads, forget the network and rejoin.',
+ 'Network', date '2026-05-20');
+insert into kb_articles (id, title, content, category, updated_on) values (23,
+ 'Setting up work email on a personal phone',
+ 'Personal devices need the company mail profile before they can sync. 1) Install the company portal app from your app store. 2) Sign in with your work address and complete the second-factor prompt. 3) Accept the device policy - a screen lock and remote-wipe consent are required. 4) Add the mail account; the first sync can take fifteen minutes. Contact the help desk if your device is more than four major OS versions behind.',
+ 'Email', date '2026-04-27');
+insert into kb_articles (id, title, content, category, updated_on) values (24,
+ 'Account locked after too many sign-in attempts',
+ 'Ten failed attempts lock an account for thirty minutes. The usual culprit is a stale credential cached somewhere you have forgotten: a phone mail profile, a mapped drive, or a scheduled task still presenting your old password. 1) Wait out the lockout or ask the help desk to clear it. 2) Update the saved password everywhere it is stored. 3) Sign out of the mail app on your phone before changing your password next time.',
+ 'Access', date '2026-05-06');
+insert into kb_articles (id, title, content, category, updated_on) values (25,
+ 'Printer produces blank, faded, or streaked pages',
+ 'Output quality problems are consumables, not drivers. 1) Check toner or ink levels and reseat the cartridge. 2) Run the printer cleaning cycle twice from the device panel. 3) Print the built-in test page - if that is also streaked, the fault is in the printer, not your machine. 4) For laser printers, look for a torn drum seal or condensation after a cold weekend.',
+ 'Hardware', date '2026-04-15');
+insert into kb_articles (id, title, content, category, updated_on) values (26,
+ 'Files are not syncing to cloud storage',
+ 'When local edits never reach the cloud: 1) Check the sync client icon for a paused or signed-out state. 2) Confirm you are under your storage quota - sync stops silently when full. 3) Look for filename characters the service rejects, and for paths longer than 260 characters. 4) Files left open in another application will not upload until closed. Never resolve a conflict by deleting the copy you did not edit; rename it instead.',
+ 'Software', date '2026-05-11');
+insert into kb_articles (id, title, content, category, updated_on) values (27,
+ 'Bluetooth headset will not connect for calls',
+ 'Pairing succeeds but audio does not route: 1) Remove the headset from the Bluetooth list and pair it again from a powered-off state. 2) In sound settings choose the hands-free profile for calls, not the stereo profile. 3) Set the headset as both input and output device inside the meeting application, which keeps its own selection. 4) A headset paired to a phone at the same time will steal audio - disconnect the phone.',
+ 'Hardware', date '2026-05-02');
+insert into kb_articles (id, title, content, category, updated_on) values (28,
+ 'Laptop runs hot and the fan never stops',
+ 'Constant fan noise means sustained load or blocked airflow. 1) Open Task Manager and sort by CPU to find a runaway process - a stalled sync client or a browser tab with autoplaying media are common. 2) Use the machine on a hard surface, not fabric, and clear the rear vents. 3) Check for a pending firmware update, which often ships revised fan curves. Persistent heat with an idle CPU means the vents need servicing.',
+ 'Hardware', date '2026-04-22');
+insert into kb_articles (id, title, content, category, updated_on) values (29,
+ 'Browser blocks a download or warns the site is not secure',
+ 'Security warnings usually reflect an expired certificate or an unsigned file rather than a broken browser. 1) Check the padlock and read which certificate failed - an expired intermediate needs the site owner, not you. 2) For blocked downloads, confirm the file came from an approved internal source before overriding. 3) Never click through a certificate warning on a sign-in page; report it to the help desk instead.',
+ 'Software', date '2026-05-18');
+insert into kb_articles (id, title, content, category, updated_on) values (30,
+ 'Requesting a paid software license',
+ 'Licensed titles need an approval before they will activate. 1) Raise a request in the service portal and pick the exact edition - upgrading later requires a new approval. 2) Your manager approves cost; the software asset team checks the pool for a free seat. 3) Once assigned, sign in to the vendor portal with your work address to activate. Seats reclaimed after ninety days of no use can be requested again.',
+ 'Software', date '2026-05-25');
 
 -- ---------- tickets (50) ----------
 insert into tickets (id, subject, description, status, priority, category, created_on, assigned_to) values (1,

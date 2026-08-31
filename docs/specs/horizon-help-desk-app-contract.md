@@ -34,7 +34,7 @@ If a change is made to Lab 3's prompt, or to any of Labs 4–6's page references
 | Item | Value |
 |---|---|
 | `TICKETS` rows | 50 |
-| `KB_ARTICLES` rows | 20 |
+| `KB_ARTICLES` rows | 30 |
 | `TEAM_MEMBERS` rows | 8 |
 | Ticket **42** | `Open` / `Network` — used by Lab 5's agent demo |
 | Ticket **27** | the new-laptop VPN ticket — used by Lab 6's Draft Reply demo |

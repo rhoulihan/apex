@@ -22,7 +22,8 @@ Recording alone is not sufficient. Each entry below is marked ✅ IMPLEMENTED (w
 | 9 | Model must support tool calling | ✅ IMPLEMENTED — Labs 1/4/5 + guarded by `tools/test_model_guidance.py` |
 | 10 | Labs 4 and 5 need **different** models; two distinct 429s | ✅ IMPLEMENTED — Lab 1 + Lab 5 tables, switch instructions, guarded by tests |
 | 11 | Re-verify xAI for Lab 5 once service limits are raised | ⬜ OPEN — blocked on provisioning; steps written into `docs/wms-submission.md` step 3② + step 5 |
-| 12 | **Lab 7 ONNX URL dead; Oracle ships only `.zip` now** | 🔴 BLOCKING — warning implemented in Lab 7; **hosting now requested as provisioning item 3③** in `docs/wms-submission.md` |
+| 12 | **Lab 7 ONNX URL dead; Oracle ships only `.zip` now** | ✅ **RESOLVED for the tenancy track** — full download/unzip/bucket/PAR procedure written as Lab 7 Task 2a and **validated end to end**. Still requested as provisioning item 3③ so the sandbox track does not need a reader-owned bucket. |
+| 13 | Seed data too thin for vector demos | ✅ IMPLEMENTED — 20 → 30 articles, targeted at coverage gaps; all three demo queries now measured correct |
 
 Detail for each follows.
 

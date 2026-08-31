@@ -508,3 +508,64 @@ Files (127 MB may exceed the upload limit — untested), or re-scope the lab awa
 proven on the local Podman 26ai container (ONNX loaded as MINILM_L12, 20/20 embedded, correct semantic
 hit), so what is unproven is specifically the ADB model-sourcing path plus the Vector Provider and Search
 Configuration UI.
+
+### ⭐⭐ Lab 7 PASSED end to end on ADB via a tenancy-owned bucket (2026-08-31)
+
+The last unvalidated part of the workshop. Full chain proven on APEX 26.1.4 / ADB 26ai:
+
+| Step | Evidence |
+|---|---|
+| Grants (Task 1) | `DBMS_CLOUD` + `CREATE MINING MODEL` to `WKSP_HELPDESK` |
+| Bucket | `workshop-models`, namespace `ax2feb9jcdu9`, `crhsentllc (root)`, Phoenix, **Private** |
+| Upload | `all_MiniLM_L12_v2.onnx`, **127.15 MiB** |
+| PAR | **Object**-scoped, **Permit object reads** only (least privilege) |
+| Load (Task 2) | `Statement processed. **11.51 seconds**` |
+| Model registered | `MINILM_L12` / `ONNX` / `EMBEDDING` in `user_mining_models` |
+| Embed (Task 3) | `**20 row(s) updated**` in 2.55 s; `EMBEDDED = 20` |
+| Vector Provider (Task 4) | `KB MiniLM` / `kb_minilm` / Database ONNX Model / `MINILM_L12` |
+| Search Config (Task 4) | `Oracle AI Vector Search` on `KB_ARTICLES`, EMBEDDING/TITLE/CONTENT |
+| Search page (Task 5) | page 5 `Ask the Knowledge Base` |
+| **Semantic search** | `email box is jammed` → **`Mailbox is full: fixing email quota issues`** first. Zero keyword overlap. |
+
+**Measured relevance (cosine distance, 20-article corpus):**
+
+| Query | Top hit | Distance | Verdict |
+|---|---|---|---|
+| `email box is jammed` | Mailbox is full: fixing email quota issues | .4674 | ✅ ideal demo |
+| `laptop won't connect from hotel wifi` | Wi-Fi shows connected but no intranet | .5711 | ⚠️ **not** the VPN 812 article the lab promises |
+| `screen keeps blinking` | Triage steps for a slow laptop | .6982 | ❌ weak — no display article existed |
+| `vpn error 812` | Fixing VPN Error 812 | .2553 | ✅ but keyword overlap, so a poor "meaning" demo |
+
+**Lab 7 doc fixes to implement:**
+1. 🔴 **The headline expected result is wrong.** `laptop won't connect from hotel wifi` does not return the
+   VPN 812 article. Fixed at the data layer instead of by rewording — see seed expansion below.
+2. `screen keeps blinking` had no matching article. Also fixed by seed expansion.
+3. **Vector Providers is directly under Workspace Utilities** — there is no "All Workspace Utilities" step.
+4. Search type is **`Oracle AI Vector Search`**, not "Oracle Vector Search".
+5. **Search Page lives under the `Component` tab** of Create a Page; the dialog now opens on a
+   `Generative AI` tab.
+6. **Static ID auto-fills from Name.** Typing appends to it — we produced `kb-minilmkb_minilm` before
+   noticing. Tell readers to clear the field first.
+7. ONNX Model Owner defaults to **`- Current Parsing Schema -`**, simpler than naming the schema.
+8. **Bearer-credential warning** (Rick): a PAR URL is a credential — anyone holding it can read the object
+   until it expires. Use Object scope + reads only, never share it, and note the console's own warning
+   that the URL is shown once.
+9. **Teardown step** (Rick): delete the PAR and the bucket object when finished.
+
+### Seed data expanded 20 → 30 KB articles (2026-08-31)
+
+Targeted, not bulk. Chosen to close real coverage gaps AND make the documented demo queries land:
+
+`Monitor flickers or goes black intermittently` (fixes `screen keeps blinking`) ·
+`Connecting on public or hotel Wi-Fi (captive portals)` (**makes the lab's own hotel-wifi query correct**) ·
+`Setting up work email on a personal phone` · `Account locked after too many sign-in attempts` ·
+`Printer produces blank, faded, or streaked pages` · `Files are not syncing to cloud storage` ·
+`Bluetooth headset will not connect for calls` · `Laptop runs hot and the fan never stops` ·
+`Browser blocks a download or warns the site is not secure` · `Requesting a paid software license`
+
+**Why 30 and not 100:** Lab 5's `get_kb_articles` tool sends `id, title, content, category` for every row
+to the agent as context on every turn. A large corpus inflates every agent call and eventually breaks it.
+30 keeps the agent payload modest while giving vector search enough coverage to be convincing.
+
+**Ripples to re-verify:** `20` is asserted in Lab 2 Task 3, Lab 7 Task 3, the app contract, and
+`tools/test_sql_contract.py`. All must move to 30, then re-run schema + re-embed + re-measure.
