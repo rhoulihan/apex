@@ -700,7 +700,11 @@ and each run used a **fresh** Assistant chat so there was no conversational carr
 Page types and source tables were correct in both runs; only the names drifted. `app-blueprint.png` was
 re-captured from the corrected run so the image matches the shipped prompt.
 
-**Still unfixed by the prompt:** `Install Progressive Web App` and `Push Notifications` are enabled by
-the blueprint without being asked for. That is the origin of the `App NNN Push Notifications Credentials`
-debris found during teardown. Documented in Lab 3 with a pointer to Lab 8 Task 3, and left as a reader
-choice rather than another prompt clause.
+**Second clause, also A/B tested** (Rick asked for it to be pinned rather than left to the reader):
+
+> `Do not enable Progressive Web App or Push Notifications.`
+
+Without it the blueprint ends with *"With the following features enabled: Install Progressive Web App,
+Push Notifications"*. With it that line is **absent entirely** — no features are enabled. This removes the
+source of the `App NNN Push Notifications Credentials` debris at generation time rather than cleaning it
+up afterwards. `app-blueprint.png` re-captured a third time so the image matches the final prompt.

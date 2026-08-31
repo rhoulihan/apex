@@ -39,7 +39,7 @@ This lab assumes you have:
     Use these exact page names: Dashboard, Tickets, Knowledge Base. Do not rename them or
     substitute your own titles.
     Use TEAM_MEMBERS only as a lookup for a ticket's assigned team member. Do not create any
-    additional pages.</copy>
+    additional pages. Do not enable Progressive Web App or Push Notifications.</copy>
     ```
 
     > **Why this prompt is so specific.** Generated apps vary between runs, but Labs 4, 5 and 6 build on
@@ -59,10 +59,11 @@ This lab assumes you have:
     > stop it, but generation varies between runs: if the names still drift, rename them in the
     > wizard (Task 2). It matters because Labs 4, 5 and 6 all tell you to open "the **Tickets** page".
 
-    > **It also enables features you did not ask for.** Ours turned on **Install Progressive Web App**
-    > and **Push Notifications**. Harmless for the workshop, but Push Notifications creates a Web
-    > Credential that outlives the application — see Lab 8, Task 3. Turn them off in the wizard if you
-    > would rather not have them.
+    > **Why the prompt refuses two features.** Left to itself the blueprint enables **Install
+    > Progressive Web App** and **Push Notifications** — neither was asked for, and Push Notifications
+    > creates a Web Credential that outlives the application (see Lab 8, Task 3). The final line of the
+    > prompt suppresses both; with it, the blueprint lists no features at all. If you *want* them, drop
+    > that line and turn them on deliberately.
 
     > **That button does not create anything yet.** It hands off to the Create Application wizard, which is where the blueprint becomes editable — page names, page types, charts, features and authentication. The chat summary lists pages only; the wizard is where you can actually inspect and change them. Task 2 happens there.
 
