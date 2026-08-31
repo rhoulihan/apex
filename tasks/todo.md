@@ -708,3 +708,26 @@ Without it the blueprint ends with *"With the following features enabled: Instal
 Push Notifications"*. With it that line is **absent entirely** — no features are enabled. This removes the
 source of the `App NNN Push Notifications Credentials` debris at generation time rather than cleaning it
 up afterwards. `app-blueprint.png` re-captured a third time so the image matches the final prompt.
+
+### Chart aggregation is NOT promptable — tested and reverted (2026-08-31)
+
+Rick asked to refine the prompt to produce the missing chart configuration. Tested, and it does not work.
+
+**Real cause of ORA-20987, found in the wizard before the app exists:** each Dashboard chart defaults to
+aggregation **`Sum`** over Value Column **`ID`** — it sums primary keys. After grouping by `STATUS`, the
+`ID` the series refers to is gone, hence *"Column \"ID\" specified for attribute \"\" has not been found in
+data source"*. **The lab previously said the wizard applies a `Count` aggregation. It applies `Sum`.**
+
+**Clause tested:** `Both charts must aggregate by counting rows - use a Count aggregation over all
+columns, not a Sum of the ID column.`
+
+**Result:** the clause *did* change behaviour — the `Sum`/`ID` default was gone — but both charts came back
+on **`Column Value`** with **`- Select Value Column -`** unset. Unconfigured rather than correct, which is
+worse than the original: `Sum(ID)` at least produces a chart that fails loudly at runtime. Consistent
+across Chart 1 and Chart 2. **Clause reverted.**
+
+**Reliable fix, now in Task 2 check 2:** in the wizard, Edit the Dashboard page and click **Count** on both
+the Chart 1 and Chart 2 tabs. Value Column flips to *All Columns* (`count(*)`), no `ID` reference. Two
+clicks, declarative, at the exact moment the lab already says "free to change now, fiddly later" — which is
+where the fix belonged all along. The Page Designer SQL rewrite survives as recovery for anyone who
+already created the app.

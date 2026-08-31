@@ -79,7 +79,7 @@ blueprint editor, and fiddly to change after the app exists.
     | # | Check | Needed by |
     |---|---|---|
     | 1 | **Dashboard** is listed **first** — it must become page 1; rename it if the AI called it Overview | Lab 5 |
-    | 2 | Dashboard has a **tickets by status** chart and a **tickets by category** chart — click its **Edit** and step through the *Chart 1* / *Chart 2* tabs to confirm | the Lab 3 tour |
+    | 2 | Dashboard has a **tickets by status** chart and a **tickets by category** chart — click its **Edit**, and on *both* the **Chart 1** and **Chart 2** tabs set the aggregation to **Count** | the Lab 3 tour |
     | 3 | A page named **Tickets** whose type is **Interactive Report** — **rename it here** if the AI called it something else | **Lab 4** |
     | 4 | The Tickets entry also produces an **editable form** on TICKETS | **Lab 6** |
     | 5 | A page named **Knowledge Base** reporting on KB_ARTICLES — rename it if the AI called it Article Library | the tour |
@@ -103,21 +103,30 @@ blueprint editor, and fiddly to change after the app exists.
 
 2. Take that in: **a real web application — authentication, a URL you could send to a colleague, responsive UI — from one reviewed prompt.** In most stacks that was your whole afternoon.
 
-    > **Dashboard charts empty, with an `ORA-20987` error?** Known issue in APEX 26.1.4, not something you
-    > did. Verbatim: `ORA-20987: APEX - Column "ID" specified for attribute "" has not been found in data
-    > source!` The Create App wizard builds each chart series from the whole `TICKETS` table *and* applies a
-    > `Count` aggregation, so after grouping, the `ID` column it still refers to no longer exists.
+    > **Dashboard charts empty, with an `ORA-20987` error?** That means the charts were left on their
+    > default aggregation. Verbatim: `ORA-20987: APEX - Column "ID" specified for attribute "" has not
+    > been found in data source!`
     >
-    > **Sixty-second fix, per chart:** in **Page Designer** open page 1, select the chart region's
-    > **Series 1**, and under **Source** set **Type** to **SQL Query**. Replace the query with:
+    > **The cause.** In the blueprint editor each chart defaults to aggregation **Sum** over Value Column
+    > **ID** — it sums primary keys. After APEX groups by `STATUS`, the `ID` column that series still
+    > refers to no longer exists, and you get the error.
+    >
+    > **Prevent it in ten seconds** (this is Task 2, check 2): in the wizard, **Edit** the Dashboard page
+    > and on both the **Chart 1** and **Chart 2** tabs click **Count**. Value Column flips to
+    > *All Columns* — a plain `count(*)` with no `ID` reference — and both charts render.
+    >
+    > **Already created the app?** Fix it in **Page Designer** instead: open page 1, select the chart
+    > region's **Series 1**, set **Source** > **Type** to **SQL Query**, and use:
     >
     > `select status as label, count(*) as value from tickets group by status order by 1`
     >
-    > (use `category` in place of `status` for the second chart). Then set **Column Mapping** — **Label** to `LABEL` and
-    > **Value** to `VALUE` — and click **Save**. Reload the app and both charts render.
+    > (use `category` for the second chart), then set **Column Mapping** — **Label** to `LABEL`, **Value**
+    > to `VALUE` — and **Save**.
     >
-    > Worth doing even though nothing later depends on these charts: it is a tidy example of reading an
-    > Oracle error, finding the real cause, and fixing it declaratively.
+    > Asking the prompt to pin the aggregation does **not** work: we tested `use a Count aggregation over
+    > all columns, not a Sum of the ID column` and the wizard came back on **Column Value** with no Value
+    > Column chosen at all — unconfigured rather than correct. The chart aggregation is a wizard setting,
+    > not a promptable one.
 
 ## Task 4: A Two-Minute Tour (Vocabulary for the Rest of the Day)
 
