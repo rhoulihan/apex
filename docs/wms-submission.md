@@ -116,6 +116,7 @@ Verified end-to-end on a real green-button sandbox (see `docs/t18-verification-r
 |---|---|
 | **APEX 26.1 on the sandbox ADB** | ✅ **Resolved** — provisions **APEX 26.1.1** (was 24.2.17 on 2026-07-08). Labs 4 & 5 unblocked; 26.1 AI-Agent data model present. |
 | **OCI GenAI compartment chat quota** | ⚠️ **Zero by default → 429**, but **the Oracle LiveLabs team has confirmed they can raise `max-on-demand-chat-request-per-minute-count` on request** once the workshop's sandbox exists. So this is a **standard provisioning line-item**, not a blocker — it just has to be requested for our compartments (step 3 below). |
+| **Lab 7 ONNX model hosting** | 🔴 **Lab 7 cannot run without this.** Oracle now publishes its embedding models **only as `_augmented.zip`**, and the database cannot unzip. Lab 7 needs a **LiveLabs-hosted, unzipped `all_MiniLM_L12_v2.onnx` (~127 MB)** reachable over HTTPS. This is a *hosting* request, not a service-limit one (step 3③). |
 | **OCI GenAI per-model service limit** | ⚠️ **A second, separate limit** — tenancy/region scoped and applied **per model**, not per compartment. Raising the compartment quota does nothing for it. Verified 2026-08-30: `xai.grok-4.3` returned `HTTP-429: The requested model is throttled because the OCI Generative AI service limit for this model has been reached` after only two Lab 4 prompts, and had not recovered 70 s later. Must be requested **by model name** (step 3② below). |
 | **Always Free ADB** | Unreliable on green-button (varies by region assignment) → workshop uses **trial-credit** ADB, not Always Free. |
 | **Lab 7 ONNX grants** | `DBMS_CLOUD` execute + `CREATE MINING MODEL` need to be grantable to the workspace schema (or the model pre-loaded); not re-tested 2026-07-28. |
@@ -125,6 +126,18 @@ Verified end-to-end on a real green-button sandbox (see `docs/t18-verification-r
 1. **Submit the workshop.** Connect **Oracle VPN** → `livelabs.oracle.com/wms` → **Submit a Workshop**. Paste **Title, Abstract, Outline, Prerequisites, Tags** from the sections above. Submit. *(Council reviews in ~2–3 business days.)*
 2. **On `Approved` → create the green-button sandbox.** On the workshop's **Sandbox Environment** tab, tick the **Sandbox Lite** checkbox (auto-created in ~1 business day). This is the ship-now green-button path. *(Optional, non-blocking upgrade: open the **Full Sandbox Jira** — summary `[Sandbox] WMS ID: <id> LL ID: <id> Build an AI-Powered Help Desk with Oracle APEX` — for a pre-provisioned 26ai/APEX-26.1 ADB + pre-created workspace per attendee; cite `apex-native-map-regions` as the existing full-sandbox APEX precedent.)*
 3. **Request the provisioning items for our compartments** (in the Sandbox Lite request and/or the Jira). These are the environment settings the AI labs need:
+   - **③ Host the Lab 7 embedding model.** Publish an **unzipped** `all_MiniLM_L12_v2.onnx` in a
+     LiveLabs-owned Object Storage bucket and give us a **long-lived** URL (public object or a PAR with a
+     far-future expiry). Source: Oracle's *Machine Learning AI models* page, reached via the stable lookup
+     `https://docs.oracle.com/pls/topic/lookup?ctx=en/database/oracle/oracle-database/26/vecse&id=oml_ai_models_object_storage`
+     → download `all_MiniLM_L12_v2_augmented.zip` (~117 MB) → unzip → host the ~127 MB `.onnx`.
+     **It must be the bare `.onnx`, not the zip** — `DBMS_VECTOR.LOAD_ONNX_MODEL` takes the model blob, the
+     database has no unzip, and 26ai has no cloud loader to delegate to.
+     *Why we are asking rather than self-hosting:* the workshop's previous hard-coded PAR expired and broke
+     Lab 7 silently (`ORA-20401`). A LiveLabs-owned, long-lived URL is the only version of this that does
+     not rot. **Whoever owns it should re-verify the link each quarterly QA.**
+     *If LiveLabs will not host it:* Lab 7 becomes tenancy-only — each reader must create their own bucket
+     and PAR — and the sandbox variant should drop Lab 7 or mark it as requiring an OCI bucket.
    - **② Raise the per-model GenAI service limits — by model name.** Separate from ①. The workshop
      currently needs an **xAI** model for Lab 4 (AI Interactive Reports) and **`cohere.command-a-03-2025`**
      for Lab 5 (AI Agents); no single model passes both labs on APEX 26.1.4. Size for **agents, not
@@ -150,6 +163,11 @@ Verified end-to-end on a real green-button sandbox (see `docs/t18-verification-r
    >
    > Note that **`Test Connection` succeeding proves nothing here** — it is a plain chat call and never
    > exercises tool calling. Only running the labs settles it.
+
+   > **⬜ Also verify Lab 7 once ③ lands.** Point Task 2's `object_uri` at the hosted `.onnx` and run
+   > Tasks 2–5 end to end: model loads as `MINILM_L12`, `embed-kb.sql` reports **20**, the Vector Provider
+   > and Search Configuration save, and `laptop won't connect from hotel wifi` returns the VPN 812 article.
+   > None of Tasks 2–5 has been validated on Autonomous Database yet — only on a local 26ai container.
 
 > **Workshop-content note (not a WMS field):** the ADB-create **DB-version dropdown defaults to `19c`** (options: 26ai / 19c) until Oracle flips the default on **Sep 15 2026** — the sign-up lab must tell readers to pick **26ai** explicitly, or every 26ai-dependent lab silently fails.
 

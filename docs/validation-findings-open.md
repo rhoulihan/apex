@@ -22,7 +22,7 @@ Recording alone is not sufficient. Each entry below is marked ✅ IMPLEMENTED (w
 | 9 | Model must support tool calling | ✅ IMPLEMENTED — Labs 1/4/5 + guarded by `tools/test_model_guidance.py` |
 | 10 | Labs 4 and 5 need **different** models; two distinct 429s | ✅ IMPLEMENTED — Lab 1 + Lab 5 tables, switch instructions, guarded by tests |
 | 11 | Re-verify xAI for Lab 5 once service limits are raised | ⬜ OPEN — blocked on provisioning; steps written into `docs/wms-submission.md` step 3② + step 5 |
-| 12 | **Lab 7 ONNX URL dead; Oracle ships only `.zip` now** | 🔴 BLOCKING — warning implemented in Lab 7; needs a design decision on how to source the model |
+| 12 | **Lab 7 ONNX URL dead; Oracle ships only `.zip` now** | 🔴 BLOCKING — warning implemented in Lab 7; **hosting now requested as provisioning item 3③** in `docs/wms-submission.md` |
 
 Detail for each follows.
 
@@ -289,8 +289,9 @@ which redirects to the current *Oracle Machine Learning AI models* page):
 4. **Ship the model ourselves** in a LiveLabs-owned bucket with a long-lived PAR, and reference that.
    Most reliable for readers; needs a hosting decision and periodic re-verification.
 
-**Recommendation:** option 4 if LiveLabs will host it, else option 1 with an explicit "requires an OCI
-bucket" note in the prerequisites. Whatever is chosen, **the lab must stop hard-coding a PAR** — PARs
+**DECIDED — pursuing option 4.** A LiveLabs-hosted, unzipped `.onnx` with a long-lived URL is now
+**provisioning item 3③** in `docs/wms-submission.md`, with option 1 (reader-owned bucket) as the documented
+fallback if LiveLabs declines, in which case Lab 7 becomes tenancy-only. Whatever is chosen, **the lab must stop hard-coding a PAR** — PARs
 expire. Reference the stable docs lookup URL and tell readers to get the current link from there.
 
 **Note:** Lab 7 already requires ADMIN database access for the Task 1 grants, so it is not a pure
