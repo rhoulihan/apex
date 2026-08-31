@@ -772,3 +772,37 @@ that grok-4.3 drives NL2IR actions rather than just answering about them. **`nl2
 captured until the service limit is raised**, and Lab 4's payoff needs re-testing at that point.
 
 Documented the 429 in Lab 4's troubleshooting, which previously only covered `INVALID_TOOL_GENERATION`.
+
+### Lab 4 — CORRECTION: NL2IR works; the 429 is noisy, not fatal (2026-08-31)
+
+Two things I got wrong earlier in this run, both now corrected in the lab.
+
+**1. grok-4.3 was not hallucinating.** When it replied *"The report already displays a pie chart of open
+tickets by priority"* and the report looked unchanged, the actions **had** been applied — the page had not
+re-rendered. After a reload the chips were there: a `Chart` chip and a `Status = 'Open'` filter chip with a
+real pie chart (Critical 1, High 3, Medium 6, Low 4).
+
+**2. A 429 in the Assistant panel does not mean the prompt failed.** The prompt `only show Critical
+priority tickets` showed the ORA-20954/HTTP-429 error, and after a reload the report carried a removable
+`Priority = 'Critical'` chip filtered to exactly the 4 Critical tickets. The tool call lands; the
+follow-up narration is what gets throttled. `nl2ir-chips.png` was captured from that state.
+
+**The throttle is xAI-family-wide, not per-model.** `xai.grok-4.3` and `xai.grok-4.20-reasoning` both hit
+it; `cohere.command-a-03-2025` never did in the same session.
+
+**A tenancy limit increase would not have helped, and we did not file one.** The limit
+`grok-4-3-tokens-per-minute-count` is **200,000 tokens per minute per tenancy**; this lab consumes a tiny
+fraction. Rick's observation settled it: waiting more than a minute does not clear the throttle, which
+rules out a per-minute token bucket. It is shared regional on-demand capacity for the xAI models.
+
+**Model inventory for `us-chicago-1` / `crhsentllc`** (from the Playground picker), useful when a model is
+retired:
+
+`cohere.command-a-03-2025` · `cohere.command-a-vision` · `google.gemini-2.5-flash` ·
+`google.gemini-2.5-flash-lite` · `google.gemini-2.5-pro` · `meta.llama-3.3-70b-instruct` ·
+`meta.llama-4-maverick-17b-128e-instruct-fp8` · `meta.llama-4-scout-17b-16e-instruct` ·
+`openai.gpt-oss-120b` · `openai.gpt-oss-20b` · `xai.grok-4.20-0309-non-reasoning` ·
+`xai.grok-4.20-0309-reasoning` · `xai.grok-4.20-non-reasoning` · `xai.grok-4.20-reasoning` ·
+`xai.grok-4.3` · `xai.grok-voice-agent`
+
+Note `xai.grok-4` does **not** exist (HTTP-404), despite limits existing for grok-3 and grok-4 names.

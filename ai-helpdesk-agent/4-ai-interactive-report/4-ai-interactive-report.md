@@ -70,9 +70,16 @@ The workspace-level service from Lab 1 must be selected inside the app before in
     > `Generative AI service limit for this model has been reached. Request a service limit increase`
     > `for Generative AI in OCI, then retry.`
     >
-    > Raise the limit in **OCI Console > Governance & Administration > Limits, Quotas and Usage**
-    > for Generative AI, or run this lab on a tenancy where it is already raised. Retrying works,
-    > but not reliably enough to demo.
+    > **Important: a 429 does not always mean the prompt failed.** We repeatedly saw the error appear
+    > in the Assistant panel while the chip was applied anyway — the tool call landed and only the
+    > follow-up narration was throttled. **Reload the page before concluding it did not work.**
+    >
+    > The throttle is **xAI-family-wide, not per-model**: `xai.grok-4.3` and
+    > `xai.grok-4.20-reasoning` both hit it, while `cohere.command-a-03-2025` was never throttled in
+    > the same session. And it is **not your tenancy allocation** — the tenancy limit
+    > `grok-4-3-tokens-per-minute-count` is 200,000 tokens/minute and this lab uses a tiny fraction
+    > of that, so requesting a limit increase will not help. It is shared on-demand capacity for the
+    > xAI models in the region. Retry, or run the lab at a quieter time.
 
     > **If prompting the report returns an error instead of chips**, read the error text:
     > `INVALID_TOOL_GENERATION`, or a complaint about `$schema` / `function_declarations`, means your
