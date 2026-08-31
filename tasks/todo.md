@@ -591,7 +591,7 @@ Rick approved a content reset (workspace and ADB kept). Executed and verified:
 | Vector Provider `kb_minilm` | deleted |
 | Generative AI service `helpdesk_ai` | deleted — "No AI Services configured in this workspace." |
 | `MINILM_L12` ONNX model + `TICKETS`/`KB_ARTICLES`/`TEAM_MEMBERS` | dropped via one PL/SQL block; `user_objects` returns **no data found** for all four names and the `DM$` tables |
-| OCI bucket PAR + `.onnx` object | **Rick's to do** — the extension is denied on `cloud.oracle.com` |
+| OCI bucket PAR + `.onnx` object | **done** — Rick deleted the bucket; OCI's Delete-bucket panel cascades, and it listed Pre-authenticated requests(1) and Objects(1), confirming both were still live. Buckets list in `crhsentllc (root)` / Phoenix now reads "No items to display". |
 
 Captured `genai-create.png` from the resulting empty state (success banner dismissed first, so the
 image shows what a Lab 1 reader actually sees).
@@ -605,3 +605,11 @@ image shows what a Lab 1 reader actually sees).
 2. **Deleting an APEX application leaves its push-notification credential behind.** Both
    `App 101 Push Notifications Credentials` and `App 102 Push Notifications Credentials` are still
    present, app 101 having been deleted long ago. Harmless, but it is real debris a tidy teardown misses.
+
+**Teardown verified on both sides.** Database: `user_objects` returns no rows for `TICKETS`, `KB_ARTICLES`, `TEAM_MEMBERS`, `MINILM_L12` or the `DM$` tables. OCI: no buckets remain in the root compartment. The workspace keeps `Credentials for helpdesk ai`, so Lab 1 can reuse it rather than
+re-pasting the private key.
+
+> **Console note:** the Object Storage deep link `…/buckets/<ns>/<bucket>/objects?region=…` rendered
+> as an empty skeleton with stray numeric tabs. Navigating from **Storage > Buckets** worked. Lab 7
+> already tells readers to go via the console menu, so no lab change is needed — but do not "helpfully"
+> replace that with a deep link.
