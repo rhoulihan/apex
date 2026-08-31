@@ -579,3 +579,29 @@ to the agent as context on every turn. A large corpus inflates every agent call 
       the Create Page dialog (Lab 7 Task 6 refers to it by the un-normalised name).
 - [ ] **`object-browser-tables.png`** must be captured *before* Lab 7 runs, so it shows only the three
       seeded tables and not the four `DM$P*MINILM_L12` model tables.
+
+### Teardown for the clean-room rebuild (2026-08-31)
+
+Rick approved a content reset (workspace and ADB kept). Executed and verified:
+
+| Step | Result |
+|---|---|
+| App 102 `Horizon Help Desk` | deleted — "Application 102 deleted." |
+| Search Configuration `Kb Semantic Search` | went with the app (app-scoped, not workspace-scoped) |
+| Vector Provider `kb_minilm` | deleted |
+| Generative AI service `helpdesk_ai` | deleted — "No AI Services configured in this workspace." |
+| `MINILM_L12` ONNX model + `TICKETS`/`KB_ARTICLES`/`TEAM_MEMBERS` | dropped via one PL/SQL block; `user_objects` returns **no data found** for all four names and the `DM$` tables |
+| OCI bucket PAR + `.onnx` object | **Rick's to do** — the extension is denied on `cloud.oracle.com` |
+
+Captured `genai-create.png` from the resulting empty state (success banner dismissed first, so the
+image shows what a Lab 1 reader actually sees).
+
+**Two behaviours worth knowing, both observed here:**
+
+1. **Deleting a Generative AI service does NOT delete its Web Credential.** `Credentials for helpdesk ai`
+   (`credentials-for-helpdesk-ai`, OCI Native Authentication) survived. Good news for the rebuild — Lab 1
+   can select the existing credential rather than re-pasting the private key. It also means a reader who
+   "removes" the service still has OCI key material stored in the workspace.
+2. **Deleting an APEX application leaves its push-notification credential behind.** Both
+   `App 101 Push Notifications Credentials` and `App 102 Push Notifications Credentials` are still
+   present, app 101 having been deleted long ago. Harmless, but it is real debris a tidy teardown misses.
