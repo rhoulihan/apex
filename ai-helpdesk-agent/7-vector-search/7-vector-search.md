@@ -101,7 +101,7 @@ and is a genuinely useful thing to know how to do.
     end;</copy>
     ```
 
-    Loading takes about ten seconds.
+    Loading takes about twenty seconds.
 
     > **You will see new `DM$P…MINILM_L12` tables appear in Object Browser.** Loading an ONNX model
     > creates four of them in your schema to hold the model itself. They are Oracle-managed metadata,
@@ -123,6 +123,11 @@ and is a genuinely useful thing to know how to do.
     select count(*) as embedded from kb_articles where embedding is not null;</copy>
     ```
 
+    > **Run the three statements one at a time.** SQL Commands executes a single statement per **Run**;
+    > pasting all three at once fails with `ORA-03405: End of query reached; no additional text should
+    > follow.` Run the `update`, then `commit`, then the `select`. (Or paste all three into a script under
+    > **SQL Workshop > SQL Scripts** and run it there — scripts do handle multiple statements.)
+
     Expected result: **30**. That's the entire embedding pipeline — one SQL function, running next to your data. Nothing left the database.
 
 ## Task 5: Create the Vector Provider and Search Configuration
@@ -130,8 +135,17 @@ and is a genuinely useful thing to know how to do.
 1. Navigate to **App Builder > Workspace Utilities > Vector Providers**, click **Create**, and enter/select:
 
     * Provider Type: **Database ONNX Model**
-    * Name: **KB MiniLM** — Static ID: **kb\_minilm** (the Static ID auto-fills from the Name, so clear the field before typing or you will end up with both values concatenated)
-    * ONNX Model Owner: leave as **- Current Parsing Schema -** — ONNX Model Name: **MINILM\_L12**
+    * Name: **KB MiniLM** — Static ID: **kb\_minilm**
+
+        > **⚠️ The Static ID auto-fills from the Name, and it uses a hyphen** — typing `KB MiniLM` gives
+        > you `kb-minilm`. Overwrite it with the underscore form before you click Create, exactly as in
+        > Lab 1.
+    * ONNX Model Owner: **your workspace schema** — for example `WKSP_HELPDESK` — and ONNX Model Name: **MINILM\_L12**
+
+        > **⚠️ Do not leave the owner on "- Current Parsing Schema -".** With that setting, ONNX Model
+        > Name stays a popup search box that returns no rows however you search, and you cannot pick the
+        > model. Selecting the schema explicitly turns ONNX Model Name into a select list with
+        > `MINILM_L12` in it.
 
     ![Vector Provider configuration](images/vector-provider.png " ")
 
@@ -147,7 +161,7 @@ and is a genuinely useful thing to know how to do.
 
 ## Task 6: Build the Search Page and Beat Keywords
 
-1. **Create Page**, switch to the **Component** tab (the dialog opens on *Generative AI*), choose **Search Page**, name it **Ask the Knowledge Base**, and include the **KB Semantic Search** configuration.
+1. **Create Page**, switch to the **Component** tab (the dialog opens on whichever tab you used last — often *Generative AI*), choose **Search Page**, name it **Ask the Knowledge Base**, and include the **KB Semantic Search** configuration.
 
 2. Run the page and search:
 
@@ -170,8 +184,8 @@ and is a genuinely useful thing to know how to do.
 
     > **Measured on this data set** (cosine distance, lower is closer): `email box is jammed` →
     > *Mailbox is full* at **0.467**; `screen keeps blinking` → *Monitor flickers or goes black
-    > intermittently* at **0.415**; `laptop won't connect from hotel wifi` → *Connecting on public or
-    > hotel Wi-Fi (captive portals)* at **0.511**. Your numbers should be close to these.
+    > intermittently* at **0.420**; `laptop won't connect from hotel wifi` → *Connecting on public or
+    > hotel Wi-Fi (captive portals)* at **0.487**. Your numbers should be close to these.
 
     > **Why not just search for "VPN error 812"?** You can, and it works — but that is keyword overlap
     > doing the job, not meaning. The queries above are the honest demonstration, because the winning

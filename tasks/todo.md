@@ -829,3 +829,48 @@ these screens held:
 **Technique worth keeping:** in Page Designer the property editor uses `peMain_N` ids rather than APEX
 items, and coordinate clicks on tree links are unreliable. Reading an element's `getBoundingClientRect()`
 and clicking those coordinates — or calling `.click()` directly — works consistently.
+
+### Lab 7 executed end to end on app 105 (2026-08-31)
+
+The model is loaded, the 30 articles are embedded, and the Vector Provider, Search Configuration and
+search page all exist on **app 105**. Five defects found and fixed in the lab text.
+
+**Getting the model into Object Storage without the console's file picker.** The OCI Console's *Upload
+objects* panel has no reachable `input[type=file]` — none in the DOM, none in any shadow root — so the
+extension cannot drive it, the same wall the APEX *Upload Script* dialog puts up. The way around it needs
+no file picker at all:
+
+1. Bucket **Management** tab > *Create pre-authenticated request* > target **Bucket**, access **Permit
+   object writes**.
+2. `curl -T all_MiniLM_L12_v2.onnx "<write-par-url>all_MiniLM_L12_v2.onnx"` → HTTP 200, 133,322,334 bytes.
+3. Object's **⋯** > *Create Pre-Authenticated Request* > target **Object**, **Permit object reads** — the
+   least-privilege PAR the lab asks for. `HEAD` returned 200 with `content-length: 133322334`.
+4. Delete the write PAR. Verified dead: a `PUT` through it now returns **401**.
+
+The PAR URL never entered the transcript. The extension **blocks** JavaScript that returns credential-like
+strings (`[BLOCKED: Cookie/query string data]`), so it went console **Copy** button → `pbpaste` →
+scratchpad file → `curl`, and into SQL Commands as a clipboard paste.
+
+**Defects found and fixed:**
+
+1. **Task 4's copy block cannot be pasted into SQL Commands.** Three statements at once fail with
+   `ORA-03405: End of query reached; no additional text should follow.` Lab now says to run them one at a
+   time, or to run the script under SQL Scripts.
+2. **Task 5's "leave ONNX Model Owner as - Current Parsing Schema -" is wrong and blocks the lab.** With
+   that setting, ONNX Model Name is a popup search box that returns nothing for any search. Selecting the
+   schema explicitly (`WKSP_HELPDESK`) turns it into a select list containing `MINILM_L12`.
+3. **The Static ID auto-fills as `kb-minilm`** — a hyphen, exactly the Lab 1 trap — not "both values
+   concatenated" as the lab claimed. Warning rewritten to match Lab 1.
+4. **Load time is ~20 s, not ~10 s** (measured 19.74 s).
+5. **Two of the three published distances were stale.** Re-measured against the freshly embedded data:
+   `email box is jammed` → *Mailbox is full* **.4674** (unchanged); `screen keeps blinking` → *Monitor
+   flickers* **.4201** (was .415); `laptop won't connect from hotel wifi` → *Connecting on public or hotel
+   Wi-Fi* **.4873** (was .511). All three still return the intended article as the nearest match.
+
+**Also observed:** APEX title-cases the search configuration name to `Kb Semantic Search`, and the Create
+Page dialog opened on **Component**, not *Generative AI* — it remembers the last tab used, so the lab's
+parenthetical is now hedged.
+
+**Screenshots replaced:** `load-onnx.png` (new — PAR URL redacted with a drawn bar), `vector-provider.png`
+and `search-config.png` were both stale captures from the retired **app 102** and are re-shot on app 105.
+`semantic-results.png` is still the app 102 capture — the runtime app needs a sign-in to re-shoot.
