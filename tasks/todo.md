@@ -731,3 +731,18 @@ the Chart 1 and Chart 2 tabs. Value Column flips to *All Columns* (`count(*)`), 
 clicks, declarative, at the exact moment the lab already says "free to change now, fiddly later" — which is
 where the fix belonged all along. The Page Designer SQL rewrite survives as recovery for anyone who
 already created the app.
+
+### Lab 3 — placeholder Chart 3 / Chart 4 (2026-08-31)
+
+The generated Dashboard page ships **four** chart slots. The prompt fills two, and **Charts 3 and 4 render
+fabricated placeholder data** — a line chart and a pie chart of "Series A" … "Series E". Confirmed in Page
+Designer: Chart 3's region has **Source Location = `None`**, so it is a dummy region, not a misconfigured
+one. Every reader following this lab would ship a dashboard with two fake charts on it.
+
+Fixed in Lab 3 Task 2: delete the **Chart 3** and **Chart 4** tabs in the Edit dialog, alongside setting
+Count on Charts 1 and 2. Both are free in the blueprint and fiddly afterwards — which is the section's
+whole argument.
+
+`app-running.png` and `finished-dashboard.png` re-captured from app 105 after removing the two placeholder
+regions, so the shipped images show what a reader following the corrected lab actually gets: two real
+charts, correct counts, no ORA-20987.

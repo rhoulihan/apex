@@ -79,11 +79,17 @@ blueprint editor, and fiddly to change after the app exists.
     | # | Check | Needed by |
     |---|---|---|
     | 1 | **Dashboard** is listed **first** — it must become page 1; rename it if the AI called it Overview | Lab 5 |
-    | 2 | Dashboard has a **tickets by status** chart and a **tickets by category** chart — click its **Edit**, and on *both* the **Chart 1** and **Chart 2** tabs set the aggregation to **Count** | the Lab 3 tour |
+    | 2 | Dashboard has a **tickets by status** chart and a **tickets by category** chart — click its **Edit**, set the aggregation to **Count** on *both* the **Chart 1** and **Chart 2** tabs, then **delete Chart 3 and Chart 4** | the Lab 3 tour |
     | 3 | A page named **Tickets** whose type is **Interactive Report** — **rename it here** if the AI called it something else | **Lab 4** |
     | 4 | The Tickets entry also produces an **editable form** on TICKETS | **Lab 6** |
     | 5 | A page named **Knowledge Base** reporting on KB_ARTICLES — rename it if the AI called it Article Library | the tour |
     | 6 | There is only **one** page named Tickets | Lab 4 tells you to open "the Tickets page" |
+
+    > **🔴 The Dashboard page has four chart slots, and you only asked for two.** Charts 3 and 4 ship
+    > filled with **placeholder data** — a line chart and a pie chart of invented "Series A" to
+    > "Series E" values. They are not tied to your tables and they make the finished dashboard look
+    > broken. In the **Edit** dialog, open the **Chart 3** tab and click **Delete**, then do the same
+    > on **Chart 4**. Like everything else here, free now and fiddly once the app exists.
 
     > **Check 3 is the one that bites.** Lab 4's AI features exist **only** on Interactive Report regions. If the blueprint chose Faceted Search, Cards, or a plain Classic Report for Tickets, change the page type here — ten seconds, declarative. Left wrong, Lab 4 has no AI settings to turn on.
 
