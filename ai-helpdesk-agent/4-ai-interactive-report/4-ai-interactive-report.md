@@ -61,6 +61,19 @@ The workspace-level service from Lab 1 must be selected inside the app before in
 
 4. **Save and Run Page.** The report opens with a conversational search bar.
 
+    > **`HTTP-429 ... the OCI Generative AI service limit for this model has been reached`** is the
+    > other one you may hit, and it is **not** a configuration problem. It is a **per-model service
+    > limit** on your tenancy, separate from the compartment chat quota. Symptoms: the first prompt
+    > errors, a retry a minute later succeeds, the next prompt errors again. Verbatim:
+    >
+    > `ORA-20954: ... failed with HTTP-429: 429: The requested model is throttled because the OCI`
+    > `Generative AI service limit for this model has been reached. Request a service limit increase`
+    > `for Generative AI in OCI, then retry.`
+    >
+    > Raise the limit in **OCI Console > Governance & Administration > Limits, Quotas and Usage**
+    > for Generative AI, or run this lab on a tenancy where it is already raised. Retrying works,
+    > but not reliably enough to demo.
+
     > **If prompting the report returns an error instead of chips**, read the error text:
     > `INVALID_TOOL_GENERATION`, or a complaint about `$schema` / `function_declarations`, means your
     > **Model ID cannot drive APEX's tool calling**. Nothing on this page is wrong. Go to

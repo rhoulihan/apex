@@ -746,3 +746,29 @@ whole argument.
 `app-running.png` and `finished-dashboard.png` re-captured from app 105 after removing the two placeholder
 regions, so the shipped images show what a reader following the corrected lab actually gets: two real
 charts, correct counts, no ORA-20987.
+
+### Lab 4 — blocked by the per-model service limit (2026-08-31)
+
+**Model choice confirmed correct.** The service is on `xai.grok-4.3`, which is what Lab 1 prescribes for
+Lab 4's tool calling. Tested `xai.grok-4` as an alternative: **HTTP-404 "Entity with key xai.grok-4 not
+found"** — it does not exist. Service restored to `xai.grok-4.3` and saved.
+
+**What blocks Lab 4 is the tenancy's per-model service limit, not the model.** Reproduced live:
+
+```
+ORA-20954: ... failed with HTTP-429: 429: The requested model is throttled because the OCI Generative AI
+service limit for this model has been reached. Request a service limit increase for Generative AI in OCI,
+then retry.
+```
+
+Behaviour: first prompt 429s, a retry ~60s later succeeds, the next prompt 429s again. **This refines
+finding #11** — the earlier run recorded the throttle as *not* clearing after 70s; here it does clear, but
+not reliably enough to run the lab.
+
+**Second, separate concern.** On the one call that got through, `xai.grok-4.3` replied conversationally —
+*"The report already displays a pie chart of open tickets by priority (count of SUBJECT)"* — and applied
+**no chips**; the report was unchanged. That claim was false. So even with quota headroom, it is unproven
+that grok-4.3 drives NL2IR actions rather than just answering about them. **`nl2ir-chips.png` cannot be
+captured until the service limit is raised**, and Lab 4's payoff needs re-testing at that point.
+
+Documented the 429 in Lab 4's troubleshooting, which previously only covered `INVALID_TOOL_GENERATION`.
