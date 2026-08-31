@@ -24,6 +24,8 @@ Recording alone is not sufficient. Each entry below is marked ✅ IMPLEMENTED (w
 | 11 | Re-verify xAI for Lab 5 once service limits are raised | ⬜ OPEN — blocked on provisioning; steps written into `docs/wms-submission.md` step 3② + step 5 |
 | 12 | **Lab 7 ONNX URL dead; Oracle ships only `.zip` now** | ✅ **RESOLVED for the tenancy track** — full download/unzip/bucket/PAR procedure written as Lab 7 Tasks 2–3 and **validated end to end**. Still requested as provisioning item 3③ so the sandbox track does not need a reader-owned bucket. |
 | 13 | Seed data too thin for vector demos | ✅ IMPLEMENTED — 20 → 30 articles, targeted at coverage gaps; all three demo queries now measured correct |
+| 14 | Lab 7 shipped a known-dead PAR as a runnable `<copy>` block; `Task 2a` broke task numbering | ✅ IMPLEMENTED — hosting is Task 2, loading is Task 3 using the reader's own PAR; tasks renumbered 1–7 |
+| 15 | **PR scope: internal-only files would ship to the public Oracle repo** | ⬜ **OPEN — needs Rick's decision.** `docs/`, `tools/`, `tasks/` (20 files) are ours and do not exist upstream; `docs/wms-submission.md` carries the Southwest Airlines account justification |
 
 Detail for each follows.
 
@@ -297,3 +299,47 @@ expire. Reference the stable docs lookup URL and tell readers to get the current
 
 **Note:** Lab 7 already requires ADMIN database access for the Task 1 grants, so it is not a pure
 green-button lab today either. Worth deciding whether it stays optional or becomes tenancy-only.
+
+---
+
+## 14. Lab 7 offered a dead PAR as the default path — IMPLEMENTED
+
+Found by the WMS self-QA pass (2026-08-30), checklist item **LARGE BINARY FILES — "PAR links functional"**.
+
+Lab 7 Task 2 opened with a `<copy>` block whose `object_uri` was Oracle's retired model PAR, and placed
+the "this no longer works" warning *after* it. Readers copy first and read second, so the documented
+failure was the default path. Independently reconfirmed:
+
+```
+$ curl https://adwc4pm.objectstorage.us-ashburn-1.oci.customer-oci.com/p/.../all_MiniLM_L12_v2.onnx
+{"code":"NotAuthenticated","message":"PAR does not exist"}
+```
+
+Object Storage is not behind Oracle's Akamai WAF, so unlike the `403`s on `apex.oracle.com` and
+`blogs.oracle.com` (which are bot-blocks, not broken links) this `401` is a genuine dead link.
+
+Secondary defect: the working procedure was numbered **`Task 2a`**, which breaks LiveLabs' sequential
+task numbering.
+
+**Implemented:** hosting became **Task 2**, loading became **Task 3** and now takes the reader's own
+`<your-par-url>`; the retired-URL explanation survives as a note rather than runnable code; tasks
+renumbered gap-free **1–7**; cross-references updated in the Prerequisites, the `PLS-00201` note, and in
+`docs/`. Validator 0 errors, 39/39 tests pass.
+
+## 15. PR scope — internal files would ship to the public repo — OPEN
+
+The PR target is the **public** `oracle-livelabs/apex` repo. Confirmed against the root import commit
+`49a6a5e` (a 14,351-file squashed upstream import): upstream has **no `docs/`, `tools/`, or `tasks/`** at
+root. All 20 such files in our diff are ours, and they are internal working material:
+
+* `docs/wms-submission.md` — contains the **Southwest Airlines (SWA) strategic-account justification**
+* `docs/validation-findings-open.md`, `tasks/todo.md` — name Rick's live tenancy `crhsentllc`
+* `docs/apex-team-email.md`, `docs/apex-defect-report-ora-20987.md` — unsent internal drafts
+* `docs/plans/`, `docs/research/`, `docs/specs/`, `tools/` — build-time material, not workshop content
+
+**Recommended:** the upstream PR should carry only `ai-helpdesk-agent/**` plus the one shared fix to
+`common-261/1-sign-up-apex/sign-up-apex-sandbox.md`; everything else stays on the fork.
+
+**Also note:** that `common-261` file is **shared** — `ai-vision-lab`'s sandbox manifest includes it too.
+The edit is a correct bug fix (sandboxes refuse Always Free) and benefits both, but the PR description
+must call out the cross-workshop change so reviewers are not surprised.
