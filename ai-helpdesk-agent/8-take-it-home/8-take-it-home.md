@@ -18,7 +18,11 @@ In this lab, you will:
 
 ## Task 1: Export Your Application
 
-1. In the builder, open **Horizon Help Desk**, then **Export/Import > Export**, and download the export file. It imports into any APEX 26.1 workspace — including a free one at apex.oracle.com.
+1. In the builder, open **Horizon Help Desk** and choose **Export / Import**. Pick **Export** on the
+   "What task would you like to perform?" screen and click **Next** — Export is a two-step wizard, not
+   a single click. On the **Export Application** page leave Format on **SQL** and Type on
+   **Standard Export**, then click **Export**. The file imports into any APEX 26.1 workspace —
+   including a free one at apex.oracle.com.
 
     ![Application export page](images/app-export.png " ")
 

@@ -569,3 +569,13 @@ to the agent as context on every turn. A large corpus inflates every agent call 
 
 **Ripples to re-verify:** `20` is asserted in Lab 2 Task 3, Lab 7 Task 3, the app contract, and
 `tools/test_sql_contract.py`. All must move to 30, then re-run schema + re-embed + re-measure.
+
+### Rebuild checks queued from the 2026-08-30 capture pass
+
+- [ ] **Search Configuration label case.** Lab 7 tells the reader to enter `KB Semantic Search`; the stored
+      Label reads `Kb Semantic Search`. Unresolved whether APEX title-cases the field or the original run
+      typed it that way. On the rebuild, type `KB Semantic Search` exactly and observe what is stored — if
+      APEX normalises it, say so in the lab so the reader is not thrown when picking the configuration in
+      the Create Page dialog (Lab 7 Task 6 refers to it by the un-normalised name).
+- [ ] **`object-browser-tables.png`** must be captured *before* Lab 7 runs, so it shows only the three
+      seeded tables and not the four `DM$P*MINILM_L12` model tables.
