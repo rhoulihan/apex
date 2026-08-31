@@ -659,3 +659,23 @@ deleted first. Both facts are now in Lab 2 Task 3.
 
 **Add to any future clean-room teardown:** SQL Scripts, Web Credentials, Vector Providers, Generative AI
 services — all survive a schema drop.
+
+### Rebuild — Lab 2 re-run (2026-08-31)
+
+Walked as written on a genuinely empty schema.
+
+- `Create Data Model Using AI` **is** under `SQL Workshop > Utilities`, as the lab says — but it is the
+  **last tile**, needing a scroll, and is also linked from the SQL Workshop home Tasks list. Documented.
+- The dialog offers a **SQL Format** toggle (`Oracle SQL` / `Quick SQL`) the lab never mentioned.
+  Documented: stay on Oracle SQL, since Quick SQL returns shorthand rather than the runnable DDL this
+  lab has you review.
+- The AI's actual proposal: prefixed tables (`it_team_members`), identity PKs, `row_version` and four
+  audit columns, audit triggers, plus two follow-up questions — all reasonable, all different from the
+  canonical schema. Written into Task 2, because that gap *is* the review lesson.
+- Script ran clean: **93 statements, Status Complete**, and the seed verified live as
+  **50 tickets / 30 KB articles / 8 team members**, matching `tools/test_sql_contract.py`.
+- `object-browser-tables.png` captured at the right moment — three tables, no `DM$` model tables, because
+  Lab 7 has not run yet.
+
+Two screenshots that could not be automated needed Rick: the file picker in the Upload Script dialog is
+inside an APEX modal iframe and is not reachable by the extension.
