@@ -35,7 +35,7 @@ Each AI feature sends a different, well-defined slice of context to the model �
 | 5 | Build the Help Desk AI Agent | 25 min |
 | 6 | OPTIONAL: Draft Replies with AI | 10 min |
 | 7 | OPTIONAL: Semantic Knowledge-Base Search | 15 min |
-| — | Take It Home | 5 min |
+| — | Take It Home | 7 min |
 
 ### Objectives
 

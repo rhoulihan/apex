@@ -57,7 +57,7 @@ Design rules derived from the persona (enforced throughout section 4):
 
 ## 4. Lab-by-lab breakdown (90-minute budget)
 
-Timing model: LiveLabs Sandbox Lite — attendee logs into an assigned compartment and creates ADB + workspace themselves (the pattern of the four APEX sandbox workshops that provision their own ADB: nyc-genai-lab, ai-vision-lab, image-semantic-search, social-media-app; a pre-provisioned full sandbox is a possible upgrade, §5). Reservation set to 90 min in WMS; attendees can extend to 180 (manual, one click, ~1-hour increments — not automatic). **Core slot time = 85 min** (15 setup + 65 hands-on labs + 5 Take It Home); optional labs add 25 for fast attendees (110 max, inside the extendable reservation).
+Timing model: LiveLabs Sandbox Lite — attendee logs into an assigned compartment and creates ADB + workspace themselves (the pattern of the four APEX sandbox workshops that provision their own ADB: nyc-genai-lab, ai-vision-lab, image-semantic-search, social-media-app; a pre-provisioned full sandbox is a possible upgrade, §5). Reservation set to 90 min in WMS; attendees can extend to 180 (manual, one click, ~1-hour increments — not automatic). **Core slot time = 87 min** (15 setup + 65 hands-on labs + 7 Take It Home); optional labs add 25 for fast attendees (110 max, inside the extendable reservation).
 
 Manifest order follows the AI-workshop pattern in this repo (nyc-genai-lab, ai-vision-lab, image-semantic-search, social-media-app): **Introduction first, Get Started second, sign-up third** — validator-enforced (§7). (The sample-workshop template orders Get Started before Introduction; the AI workshops we model on do the reverse. We consciously pick the AI-workshop pattern; flip only if the LiveLabs council objects.)
 
@@ -75,7 +75,7 @@ Manifest order follows the AI-workshop pattern in this repo (nyc-genai-lab, ai-v
 | 7 | OPTIONAL: Semantic Knowledge-Base Search with AI Vector Search | 15 | (105) |
 | — | Take It Home: export your app + learning trail | 5 | **85 (core) – 110 (all optionals)** |
 
-Optionals overflow the 90-min slot by design — the full path with both optionals plus Take It Home is 110 min, comfortably within the 180-min extended reservation. Both are marked OPTIONAL in the manifest title (established pattern: nyc-genai-lab Lab 7), and **each opens by instructing the attendee to extend the reservation first** (one click while it is still active). The §7 validator's budget check excludes OPTIONAL labs for exactly this reason.
+Optionals overflow the 90-min slot by design — the full path with both optionals plus Take It Home is 112 min, comfortably within the 180-min extended reservation. Both are marked OPTIONAL in the manifest title (established pattern: nyc-genai-lab Lab 7), and **each opens by instructing the attendee to extend the reservation first** (one click while it is still active). The §7 validator's budget check excludes OPTIONAL labs for exactly this reason.
 
 **Live-event pacing:** while ADB provisions (~2–5 min), the instructor demos the finished app — this plants the wow before minute 10 and absorbs the provisioning wait. In self-paced mode the Introduction's finished-app tour fills the same gap.
 
@@ -124,7 +124,7 @@ Budget evidence: `scm-ai-agent` (Oracle's own 26.1 agent workshop, prebuilt app)
 - **Cross-track dependency (hard requirement):** an OCI-GenAI-type Vector Provider reuses Lab 1's OCI web credential — attendees on Lab 1's **OpenAI track have no OCI key**. Whichever approach ships must work on both provider tracks. Options, decided at dev time: **(a) preferred — in-database ONNX embedding** (`DBMS_VECTOR.LOAD_ONNX_MODEL` + provider type "Database ONNX Model", the nyc-genai-lab precedent: no external credential, works on both tracks, immune to GenAI throttling); (b) make Lab 7 `type`-conditional like Lab 1; (c) ship pre-computed vectors in the seed data and keep live embedding as a stretch step.
 - Clearly marked OPTIONAL; nothing downstream depends on it. This is the segment-(a) magnet and the 26ai tie-in.
 
-### Take It Home (5 min)
+### Take It Home (7 min)
 - Export the app (and note APEXlang/SQLcl as the modern export for source control — one paragraph, no exercise); download links for all scripts; **the sandbox is wiped at reservation end** (warning box); "run this again free": apex.oracle.com + Always Free; one-paragraph recap tying the five governance mechanisms together (objective 5); learning trail (LiveLabs catalog, APEX Office Hours, Insum Instant Tips, Cloud Nueva, apex.world); pointers to the tenancy-only sequels (scm-ai-agent, crm-apexlang) as "your next workshop."
 
 ## 5. Environment design

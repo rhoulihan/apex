@@ -73,7 +73,7 @@ Lab 4: Ask Your Data Anything with AI Interactive Reports - NL filters/charts as
 Lab 5: Build the Help Desk AI Agent - Retrieve Data tools + write tool with Requires Confirmation, Show AI Assistant embed (25 min)
 Lab 6 [OPTIONAL]: Draft Replies with AI - Generate Text with AI on the ticket form (10 min)
 Lab 7 [OPTIONAL]: Semantic Knowledge-Base Search - in-database ONNX embedding + Oracle Vector Search (15 min)
-Take It Home: export, governance recap, learning trail (5 min)
+Take It Home: export, governance recap, credential cleanup, learning trail (7 min)
 ```
 
 ## Prerequisites

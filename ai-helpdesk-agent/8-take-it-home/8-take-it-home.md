@@ -4,9 +4,9 @@
 
 Ninety minutes ago this was an empty workspace. Now it's a running help desk with an AI-designed schema, an app generated from a prompt, natural-language analytics, and a governed AI agent. This last stop makes sure you leave with all of it.
 
-> **Your sandbox is deleted when the reservation ends — export now, not later.** Everything below takes five minutes.
+> **Your sandbox is deleted when the reservation ends — export now, not later.** Everything below takes about seven minutes.
 
-Estimated Time: 5 minutes
+Estimated Time: 7 minutes
 
 ### Objectives
 
@@ -14,6 +14,7 @@ In this lab, you will:
 
 * Export your application and keep the workshop scripts
 * Recap the five governance mechanisms you used
+* Delete the credentials that outlive the service and the app that used them
 * Pick up the trail: where APEX developers actually keep learning
 
 ## Task 1: Export Your Application
@@ -48,7 +49,32 @@ You met five governance mechanisms today, one per AI feature:
 
 And in every lab, you knew **exactly what data was sent to the model** — from metadata-only (Lab 4) to scoped query results (Lab 5) to nothing at all (Lab 7, in-database). That's the difference between an AI demo and an AI feature you'd ship: *AI as amplifier, with you as the reviewer.*
 
-## Task 3: Where APEX Developers Actually Keep Learning
+## Task 3: Clean Up What Still Holds Your Credentials
+
+Deleting an application or an AI service does **not** delete the credentials behind it. Both of these
+were verified on APEX 26.1.4 — check them before you walk away from a workspace.
+
+1. Go to **App Builder > Workspace Utilities > Web Credentials**.
+
+2. Delete the credential holding your **OCI key material** — `Credentials for helpdesk ai`
+   (static ID `credentials-for-helpdesk-ai`) if you followed Lab 1's naming.
+
+    > **Deleting the Generative AI service leaves this behind.** The service is gone from
+    > **Workspace Utilities > Generative AI**, but your OCI user OCID, tenancy OCID, fingerprint and
+    > **private key** are still stored in the workspace — and APEX will not even offer the credential
+    > back to you when you create a new service, so it is stranded rather than reusable.
+
+3. Delete any leftover **`App NNN Push Notifications Credentials`**. APEX creates one per application
+   and leaves it behind when the application is deleted, so these accumulate silently.
+
+4. If you did the optional Lab 7, confirm its **pre-authenticated request and bucket are gone** — that
+   was Lab 7's own last task, and the PAR is a bearer token that works for anyone holding the URL.
+
+> **Why this is the right note to end on.** Every governance mechanism in this workshop is about
+> controlling what the AI can reach *while it runs*. This one is about what is left over *after* — which
+> is the part people forget, and the part that quietly turns into an incident.
+
+## Task 4: Where APEX Developers Actually Keep Learning
 
 * **[Oracle LiveLabs](https://livelabs.oracle.com)** — your next workshops, hands-on and free. Natural sequels to today: *Build an AI Procurement Agent in Oracle APEX* (deeper agent tooling) and *Spec-Driven Development with AI and APEXlang*.
 * **[APEX Office Hours](https://apex.oracle.com/officehours)** — live sessions with the APEX product managers.
