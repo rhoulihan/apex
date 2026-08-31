@@ -22,7 +22,12 @@ This lab assumes you have:
 
 ## Task 1: Describe the Data Model to AI
 
-1. Navigate to **SQL Workshop > Utilities > Create Data Model Using AI**.
+1. Navigate to **SQL Workshop > Utilities > Create Data Model Using AI**. It is the **last tile on the
+   page**, so scroll to the bottom — or use the **Create Data Model Using AI** shortcut in the Tasks
+   list on the SQL Workshop home page.
+
+    > **Leave SQL Format on `Oracle SQL`.** The dialog that opens offers `Oracle SQL` or `Quick SQL`.
+    > Quick SQL returns shorthand rather than runnable DDL, which is not what this lab reviews.
 
     ![Create Data Model Using AI utility](images/create-data-model-ai.png " ")
 
@@ -46,6 +51,12 @@ This lab assumes you have:
     * **Types and sizes** — are text columns sized realistically? Are dates actually dates?
     * **Naming** — will you still understand these names in six months?
 
+    > **What it actually proposed when we ran this.** The AI prefixed every table (`it_team_members`,
+    > not `team_members`), gave each one identity primary keys plus `row_version`, `created_on`,
+    > `created_by`, `updated_on`, `updated_by` audit columns and audit triggers, and finished by asking
+    > two follow-up questions. All defensible choices — and all different from the schema the rest of
+    > this workshop is built on. That gap *is* the lesson: AI output is a proposal, and you decide.
+
     > **Governance beat #2 — you review AI's SQL before anything runs.** The habit you just practiced is the whole trick to trustworthy AI-assisted development: AI proposes, you approve. Nothing the AI wrote has touched your database yet.
     >
     > Oracle makes the same point in the product: the APEX Assistant panel tells you, unprompted, that
@@ -61,6 +72,12 @@ This lab assumes you have:
 1. Download [helpdesk-schema.sql](files/helpdesk-schema.sql), then navigate to **SQL Workshop > SQL Scripts**, click **Upload**, choose the file, and **Run** it. The script drops and recreates `TICKETS`, `KB_ARTICLES`, and `TEAM_MEMBERS`, then seeds 50 tickets, 30 knowledge-base articles, and 8 team members — it's a state-reset checkpoint, safe to re-run at any point today.
 
     ![SQL Scripts page with helpdesk-schema uploaded and run](images/run-schema-script.png " ")
+
+    > **Uploading a second time fails with "a script with this name already exists".** SQL Scripts are
+    > stored at the *workspace* level, so a script you uploaded earlier survives dropping every table
+    > in the schema. If you need to re-upload — a corrected file, or a fresh download — tick the old
+    > script on the **SQL Scripts** page and use **Delete Checked** first. Re-*running* the script you
+    > already have is always safe; it is the re-*upload* that collides.
 
 2. Verify the seed loaded:
 

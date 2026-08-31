@@ -14,7 +14,7 @@ In this lab, you will:
 
 * Export your application and keep the workshop scripts
 * Recap the five governance mechanisms you used
-* Delete the credentials that outlive the service and the app that used them
+* Clean up the credentials, scripts and services that outlive the application
 * Pick up the trail: where APEX developers actually keep learning
 
 ## Task 1: Export Your Application
@@ -49,30 +49,37 @@ You met five governance mechanisms today, one per AI feature:
 
 And in every lab, you knew **exactly what data was sent to the model** — from metadata-only (Lab 4) to scoped query results (Lab 5) to nothing at all (Lab 7, in-database). That's the difference between an AI demo and an AI feature you'd ship: *AI as amplifier, with you as the reviewer.*
 
-## Task 3: Clean Up What Still Holds Your Credentials
+## Task 3: Clean Up What Outlives the Application
 
-Deleting an application or an AI service does **not** delete the credentials behind it. Both of these
-were verified on APEX 26.1.4 — check them before you walk away from a workspace.
+Deleting your application — or even dropping every table in the schema — leaves a surprising amount
+behind, because these objects live at the **workspace** level, not inside the schema. All of the
+following were verified on APEX 26.1.4.
 
-1. Go to **App Builder > Workspace Utilities > Web Credentials**.
+1. **Web Credentials** — **App Builder > Workspace Utilities > Web Credentials**.
 
-2. Delete the credential holding your **OCI key material** — `Credentials for helpdesk ai`
-   (static ID `credentials-for-helpdesk-ai`) if you followed Lab 1's naming.
+    * Delete `Credentials for helpdesk ai`. Deleting the Generative AI service does **not** remove it,
+      so your OCI user OCID, tenancy OCID, fingerprint and **private key** stay stored in the workspace.
+      APEX will not even offer the credential back when you create a new service, so it is stranded
+      rather than reusable.
+    * Delete any `App NNN Push Notifications Credentials`. APEX creates one per application and leaves
+      it behind when the application is deleted, so they accumulate silently.
 
-    > **Deleting the Generative AI service leaves this behind.** The service is gone from
-    > **Workspace Utilities > Generative AI**, but your OCI user OCID, tenancy OCID, fingerprint and
-    > **private key** are still stored in the workspace — and APEX will not even offer the credential
-    > back to you when you create a new service, so it is stranded rather than reusable.
+2. **SQL Scripts** — **SQL Workshop > SQL Scripts**. Delete `helpdesk-schema.sql`.
 
-3. Delete any leftover **`App NNN Push Notifications Credentials`**. APEX creates one per application
-   and leaves it behind when the application is deleted, so these accumulate silently.
+    > **This one can bite you rather than just clutter.** A script you uploaded survives dropping every
+    > table it created. Re-running an out-of-date copy silently reseeds the *old* data — and you get no
+    > error, just different results. If you ever need to upload a corrected version, APEX refuses with
+    > *"a script with this name already exists"* until you tick the old one and use **Delete Checked**.
 
-4. If you did the optional Lab 7, confirm its **pre-authenticated request and bucket are gone** — that
-   was Lab 7's own last task, and the PAR is a bearer token that works for anyone holding the URL.
+3. **Generative AI service and Vector Provider** — both under **Workspace Utilities**. Delete
+   `Helpdesk AI` and, if you did Lab 7, `KB MiniLM`.
 
-> **Why this is the right note to end on.** Every governance mechanism in this workshop is about
-> controlling what the AI can reach *while it runs*. This one is about what is left over *after* — which
-> is the part people forget, and the part that quietly turns into an incident.
+4. **The Lab 7 bucket** — confirm its **pre-authenticated request** and object are gone. That was Lab 7's
+   own last task, and the PAR is a bearer token that works for anyone holding the URL.
+
+> **Why this is the right note to end on.** Every governance mechanism in this workshop controls what the
+> AI can reach *while it runs*. This one covers what is left over *after* — the credentials, and the
+> stale scripts that quietly produce the wrong answer. That is the part people forget.
 
 ## Task 4: Where APEX Developers Actually Keep Learning
 

@@ -645,3 +645,17 @@ Walked as written on APEX 26.1.4. Confirmed live, matching the lab text:
 **Not re-verifiable this run:** Task 4's third-party AI terms dialog did not appear. Acceptance is once
 per workspace and we deliberately kept the workspace, so this is expected — *not* evidence the step is
 wrong. It needs a genuinely new workspace to re-confirm.
+
+### Teardown gap found during the Lab 2 rebuild (2026-08-31)
+
+**Dropping the schema does not clear workspace-level artifacts.** After the teardown, `SQL Scripts` still
+held `helpdesk-schema.sql` from the previous run — the **stale 25,834-byte, 20-article version**, while the
+repo now ships 31,712 bytes with 30 articles. Clicking Run on it would have seeded 20 articles and quietly
+invalidated every vector distance measured in Lab 7, with no error to signal it. The only tell was the byte
+count in the list.
+
+Re-uploading is refused with *"a script with this name already exists"*, so the old script had to be
+deleted first. Both facts are now in Lab 2 Task 3.
+
+**Add to any future clean-room teardown:** SQL Scripts, Web Credentials, Vector Providers, Generative AI
+services — all survive a schema drop.
