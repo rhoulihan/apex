@@ -606,6 +606,14 @@ image shows what a Lab 1 reader actually sees).
    `App 101 Push Notifications Credentials` and `App 102 Push Notifications Credentials` are still
    present, app 101 having been deleted long ago. Harmless, but it is real debris a tidy teardown misses.
 
+3. **CORRECTION to (1): a surviving Web Credential cannot be reused for a new Generative AI service.**
+   On the Create form the **Credential** list offers only `- Create New -`, even after an explicit
+   `apex.item(...).refresh()`, and even though `Credentials for helpdesk ai` (OCI Native Authentication)
+   still exists at workspace level. So deleting a GenAI service *does* strand its credential: the key
+   material stays in the workspace but is not offered back to you, and rebuilding means pasting the
+   private key again. This matches the original 2026-07-28 finding that the dropdown offers only
+   "- Create New -" with no resource-principal option.
+
 **Teardown verified on both sides.** Database: `user_objects` returns no rows for `TICKETS`, `KB_ARTICLES`, `TEAM_MEMBERS`, `MINILM_L12` or the `DM$` tables. OCI: no buckets remain in the root compartment. The workspace keeps `Credentials for helpdesk ai`, so Lab 1 can reuse it rather than
 re-pasting the private key.
 
@@ -613,3 +621,27 @@ re-pasting the private key.
 > as an empty skeleton with stray numeric tabs. Navigating from **Storage > Buckets** worked. Lab 7
 > already tells readers to go via the console menu, so no lab change is needed — but do not "helpfully"
 > replace that with a deep link.
+
+### Rebuild — Lab 1 re-run (2026-08-31), clean workspace
+
+Walked as written on APEX 26.1.4. Confirmed live, matching the lab text:
+
+- Create form defaults: Model ID `cohere.command-a-03-2025`, Base URL Chicago, **Used by App Builder OFF**.
+  All three are exactly what Lab 1 warns about.
+- Provider list is the documented 8 (OCI GenAI / OpenAI / Cohere / Gemini / Claude / Mistral / Ollama /
+  Generic).
+- `Test Connection` **succeeded on `xai.grok-4.3`** — no per-model 429 at this time, so Lab 4 should run.
+- `Maximum AI Tokens` is under **Advanced** (item `P9801_AI_MAX_TOKENS`), as now documented.
+- Turning on **Used by App Builder** is what puts the **APEX Assistant** button in the SQL Commands
+  toolbar — the lab's "most commonly missed step" claim holds.
+- The Assistant answered the lab's prompt and the inserted query ran: `31-AUG-2026`, `2026-08-31`,
+  `31/08/2026`.
+
+**Two new defects found and fixed in Lab 1:**
+- Static ID **auto-fills with a hyphen** (`helpdesk-ai`) from the Name, but the lab requires
+  `helpdesk_ai` and the field locks after Create.
+- `Default for New Apps` is **ON by default**, so "toggle ON" was wrong; it now says "leave it ON".
+
+**Not re-verifiable this run:** Task 4's third-party AI terms dialog did not appear. Acceptance is once
+per workspace and we deliberately kept the workspace, so this is expected — *not* evidence the step is
+wrong. It needs a genuinely new workspace to re-confirm.
