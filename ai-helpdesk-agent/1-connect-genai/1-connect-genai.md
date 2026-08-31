@@ -126,8 +126,6 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
 1. Sign in at the OpenAI platform site, open **API keys**, and create a new secret key. Copy it immediately — it is shown only once.
 
-    ![OpenAI API keys page](images/openai-key.png " ")
-
     > **Where your data goes on this track.** With OpenAI as the provider, your prompts — and any data the AI features send as context (query results, ticket text) — go to a third party. That's fine for this workshop's synthetic seed data; evaluate it deliberately for your own applications.
 
     > At an instructor-led event, use the event-provided key shown on screen instead of creating your own. Self-paced? You need your own (paid) OpenAI key on this track — or switch this page to the OCI Generative AI instructions.

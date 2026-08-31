@@ -17,7 +17,7 @@ Recording alone is not sufficient. Each entry below is marked ✅ IMPLEMENTED (w
 | 4 | OCI region/model reference data | ✅ IMPLEMENTED — Lab 1 region + model guidance |
 | 5 | Sandbox GenAI 429 quota | ✅ IMPLEMENTED — Lab 1 troubleshooting now distinguishes busy-service from zero-quota and routes to the OpenAI track |
 | 6 | In-product governance disclaimer | ✅ IMPLEMENTED — quoted in Lab 2 governance beat #2 |
-| 7 | T18 screenshots (39 placeholders) | ⬜ OPEN — needs real capture; cannot be written, only taken |
+| 7 | T18 screenshots | 🟡 IN PROGRESS — 15/38 captured live on APEX 26.1.4. `openai-key.png` **dropped** (OpenAI track is a fallback; the step reads fine without it). The 4 OCI-console shots (`oci-profile`, `oci-add-api-key`, `oci-config-preview`, `oci-compartment-ocid`) are **deliberately deferred to the LiveLabs sandbox** so console chrome, compartment names and region pickers match what attendees see, per the spec's "never from Rick's tenancy" rule — not missing work. |
 | 8 | ORA-20987 dashboard chart defect | ✅ IMPLEMENTED — Lab 3 Task 3 workaround + defect report drafted |
 | 9 | Model must support tool calling | ✅ IMPLEMENTED — Labs 1/4/5 + guarded by `tools/test_model_guidance.py` |
 | 10 | Labs 4 and 5 need **different** models; two distinct 429s | ✅ IMPLEMENTED — Lab 1 + Lab 5 tables, switch instructions, guarded by tests |

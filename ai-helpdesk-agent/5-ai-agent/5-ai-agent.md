@@ -77,6 +77,14 @@ This lab assumes you have:
 
     * Name: **get\_tickets**
     * Type: **Retrieve Data**
+    * Execution Point: leave it on **On Demand**
+
+        > **This one is a real choice, and only for `Retrieve Data` tools.** `On Demand` lets the model
+        > call the tool when it decides it needs the data; `Augment System Prompt` runs it before
+        > *every* message and injects the result as system-level context. Pick **On Demand** for both
+        > retrieval tools. On the `Execute Server-side Code` tool later, APEX greys this field out and
+        > fixes it at On Demand for you.
+
     * Description:
 
         ```
@@ -126,12 +134,7 @@ This tool changes data, so you'll turn on **Requires Confirmation** — a built-
 
     * Name: **resolve\_ticket**
     * Type: **Execute Server-side Code**
-    * Execution Point: **On Demand** — set this yourself; it is a live dropdown, not a derived value
-
-        > **The other option changes the agent fundamentally.** `Augment System Prompt` runs the tool
-        > before *every* message and injects the result as system-level context; `On Demand` lets the
-        > model decide when to call it. This workshop wants **On Demand** for all three tools.
-
+    * Execution Point: **On Demand** — greyed out and fixed at this value, because the Type above is *Execute Server-side Code*
     * Description:
 
         ```
