@@ -23,8 +23,8 @@ This lab assumes you have:
 ## Task 1: Describe the Data Model to AI
 
 1. Navigate to **SQL Workshop > Utilities > Create Data Model Using AI**. It is the **last tile on the
-   page**, so scroll to the bottom — or use the **Create Data Model Using AI** shortcut in the Tasks
-   list on the SQL Workshop home page.
+    page**, so scroll to the bottom — or use the **Create Data Model Using AI** shortcut in the Tasks
+    list on the SQL Workshop home page.
 
     > **Leave SQL Format on `Oracle SQL`.** The dialog that opens offers `Oracle SQL` or `Quick SQL`.
     > Quick SQL returns shorthand rather than runnable DDL, which is not what this lab reviews.

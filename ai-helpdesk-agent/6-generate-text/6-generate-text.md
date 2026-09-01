@@ -37,10 +37,10 @@ The `TICKETS` table already has a `REPLY` column (it shipped in the canonical sc
 ## Task 2: Add the Generate Text with AI Action
 
 1. On the form page, right-click the **Reply** item and select **Create Button Below**. Name it
-   **DRAFT\_REPLY** with Label **Draft Reply with AI** (Button Template: **Text**).
+    **DRAFT\_REPLY** with Label **Draft Reply with AI** (Button Template: **Text**).
 
 2. Right-click the new button and select **Create Trigger Action** — for buttons the menu says *Trigger
-   Action*, not "Dynamic Action". Configure it:
+    Action*, not "Dynamic Action". Configure it:
 
     * Action: **Generate Text With AI**
     * Under **Generative AI** — Service: **Helpdesk AI**

@@ -166,7 +166,7 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 > **Glossary — token:** the unit LLMs read and bill by (a short word is roughly one token). Every AI call in this workshop spends tokens.
 
 1. Edit the **Helpdesk AI** service you just created, open the **Advanced** section at the bottom of
-   the page, set **Maximum AI Tokens** to **500000**, and click **Apply Changes**.
+    the page, set **Maximum AI Tokens** to **500000**, and click **Apply Changes**.
 
     > **Advanced is where this setting lives** — it is not in **Settings**, which is the section you
     > would reasonably look in first.

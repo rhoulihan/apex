@@ -32,16 +32,16 @@ This lab assumes you have:
 ## Task 1: Create the Autonomous AI Database
 
 1. Sign in to the OCI Console. From the navigation menu, choose **Oracle AI Database**, then
-   **Autonomous AI Database**.
+    **Autonomous AI Database**.
 
     ![OCI navigation menu with Autonomous AI Database selected](images/database-atp.png " ")
 
 2. Check the **compartment** the list is filtered to, shown as an *Applied filters* chip above the table.
-   A fresh tenancy defaults to the root compartment; if you were given a specific compartment, switch to
-   it, otherwise the list may look empty or return a permissions error.
+    A fresh tenancy defaults to the root compartment; if you were given a specific compartment, switch to
+    it, otherwise the list may look empty or return a permissions error.
 
 3. Click **Create Autonomous AI Database**. The page that opens is titled **Create Autonomous AI Database
-   Serverless** — that is the right page.
+    Serverless** — that is the right page.
 
     ![Autonomous AI Database list with the Create button](images/click-create-autonomous-database.png " ")
 
@@ -120,7 +120,7 @@ APEX ships with the database but has no workspace yet, so your first visit is as
 administrator.
 
 1. On the database details page, open the **Tool configuration** tab. Under **Oracle APEX**, click
-   **Copy** next to the public access URL and open it in a new browser tab.
+    **Copy** next to the public access URL and open it in a new browser tab.
 
     > **Copy the URL, do not retype it.** The console displays the host upper-cased
     > (`GC9C36CF5A92CB1-…`). Browsers do not care, but it is easy to mistype by hand.
@@ -128,8 +128,8 @@ administrator.
     ![Tool configuration tab with the APEX public access URL](images/launch-apex-inst.png " ")
 
 2. The URL does **not** open APEX directly. It opens the Autonomous AI Database sign-in page —
-   *"Sign in with your database credentials"*, with Username and Password fields above a row of external
-   identity providers. Enter **`ADMIN`** and the ADMIN password you set in Task 1, and click **Sign in**.
+    *"Sign in with your database credentials"*, with Username and Password fields above a row of external
+    identity providers. Enter **`ADMIN`** and the ADMIN password you set in Task 1, and click **Sign in**.
 
     ![Autonomous AI Database sign-in page](images/log-in-as-admin.png " ")
 
@@ -154,9 +154,9 @@ administrator.
     ![Choose between a new schema and an existing schema](images/choose-schema.png " ")
 
 3. Enter a **Workspace Name**, **Workspace Username** and **Workspace Password**, then click **Create
-   Workspace**. This workshop uses workspace `HELPDESK` with username `helpadmin`; any names work as long
-   as you remember them. Leave the **Advanced** section alone — its optional *Database Password* and
-   *Workspace ID* are not needed.
+    Workspace**. This workshop uses workspace `HELPDESK` with username `helpadmin`; any names work as long
+    as you remember them. Leave the **Advanced** section alone — its optional *Database Password* and
+    *Workspace ID* are not needed.
 
     ![Create Workspace dialog with name, username and password](images/create-workspace.png " ")
 
@@ -173,7 +173,7 @@ administrator.
     > shows it in the header.
 
 4. Sign in at the same APEX URL with your workspace username and password. APEX then asks you to **select
-   a workspace** — click your workspace name to continue.
+    a workspace** — click your workspace name to continue.
 
     ![APEX workspace sign-in page](images/log-in-to-workspace.png " ")
 

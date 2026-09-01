@@ -26,10 +26,10 @@ This lab assumes you have:
 ## Task 1: Export Your Application
 
 1. In the builder, open **Horizon Help Desk** and choose **Export / Import**. Pick **Export** on the
-   "What task would you like to perform?" screen and click **Next** — Export is a two-step wizard, not
-   a single click. On the **Export Application** page leave Format on **SQL** and Type on
-   **Standard Export**, then click **Export**. The file imports into any APEX 26.1 workspace —
-   including a free one at apex.oracle.com.
+    "What task would you like to perform?" screen and click **Next** — Export is a two-step wizard, not
+    a single click. On the **Export Application** page leave Format on **SQL** and Type on
+    **Standard Export**, then click **Export**. The file imports into any APEX 26.1 workspace —
+    including a free one at apex.oracle.com.
 
     ![Application export page](images/app-export.png " ")
 
@@ -78,10 +78,10 @@ following were verified on APEX 26.1.4.
     > *"a script with this name already exists"* until you tick the old one and use **Delete Checked**.
 
 3. **Generative AI service and Vector Provider** — both under **Workspace Utilities**. Delete
-   `Helpdesk AI` and, if you did Lab 7, `KB MiniLM`.
+    `Helpdesk AI` and, if you did Lab 7, `KB MiniLM`.
 
 4. **The Lab 7 bucket** — confirm its **pre-authenticated request** and object are gone. That was Lab 7's
-   own last task, and the PAR is a bearer token that works for anyone holding the URL.
+    own last task, and the PAR is a bearer token that works for anyone holding the URL.
 
 > **Why this is the right note to end on.** Every governance mechanism in this workshop controls what the
 > AI can reach *while it runs*. This one covers what is left over *after* — the credentials, and the

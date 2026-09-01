@@ -125,6 +125,55 @@ def check_time_budget(manifest, variant, variant_dir, config):
     return errs
 
 
+MAX_IMAGE_PX = 1280
+
+
+def png_size(path):
+    """Read width/height from a PNG IHDR without pulling in a dependency."""
+    with open(path, "rb") as fh:
+        head = fh.read(24)
+    if len(head) < 24 or head[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+
+
+def check_image_sizes(wdir):
+    """oracle-livelabs CI rejects any image over 1280px in either dimension."""
+    errs = []
+    for img in sorted(Path(wdir).rglob("*.png")):
+        dims = png_size(img)
+        if not dims:
+            continue
+        w, h = dims
+        if w > MAX_IMAGE_PX or h > MAX_IMAGE_PX:
+            errs.append(f"{img}: {w}x{h} exceeds {MAX_IMAGE_PX}px (LiveLabs image validation)")
+    return errs
+
+
+def check_step_indentation(md_path):
+    """LiveLabs requires content inside numbered steps to be indented 4+ spaces."""
+    errs, in_ordered, in_fence = [], False, False
+    lines = Path(md_path).read_text(encoding="utf-8").split("\n")
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+        indent = len(line) - len(line.lstrip(" "))
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence or not stripped:
+            continue
+        if re.match(r"^[0-9]+\. ", line):
+            in_ordered = True
+            continue
+        if in_ordered and indent == 0 and not re.match(r"^[0-9]+\. ", line):
+            in_ordered = False
+            continue
+        if in_ordered and 0 < indent < 4:
+            errs.append(f"{Path(md_path).name}: line {i}: content inside a numbered step "
+                        f"is indented {indent}, needs 4")
+    return errs
+
+
 COPY_RE = re.compile(r"<copy>.*?</copy>", re.S)
 
 
@@ -161,6 +210,7 @@ def main(argv=None):
         errs += check_manifest_order(m, variant)
         errs += check_paths_resolve(m, vd, online=args.online)
         errs += check_time_budget(m, variant, vd, config)
+        errs += check_image_sizes(wdir)
         for t in m.get("tutorials", []):
             fn = t.get("filename", "")
             # only labs local to this workshop get structure/bans checks
@@ -169,6 +219,7 @@ def main(argv=None):
                 p = (vd / fn).resolve()
                 if p.exists():
                     errs += check_lab_structure(p)
+                    errs += check_step_indentation(p)
                     errs += check_banned_strings(p, config)
                     if args.final:
                         imgdir = p.parent / "images"

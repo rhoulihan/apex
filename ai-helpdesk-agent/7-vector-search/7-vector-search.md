@@ -61,23 +61,23 @@ and is a genuinely useful thing to know how to do.
 > fixable by swapping the URL — you download the archive, unzip it, and host the bare `.onnx`.
 
 1. **Get the model.** Open
-   `https://docs.oracle.com/pls/topic/lookup?ctx=en/database/oracle/oracle-database/26/vecse&id=oml_ai_models_object_storage`
-   — a stable Oracle link that always redirects to the current *Machine Learning AI models* page — and
-   download **`all_MiniLM_L12_v2_augmented.zip`** (~117 MB).
+    `https://docs.oracle.com/pls/topic/lookup?ctx=en/database/oracle/oracle-database/26/vecse&id=oml_ai_models_object_storage`
+    — a stable Oracle link that always redirects to the current *Machine Learning AI models* page — and
+    download **`all_MiniLM_L12_v2_augmented.zip`** (~117 MB).
 
 2. **Unzip it.** You want the bare **`all_MiniLM_L12_v2.onnx`** (~127 MB). The zip also contains a LICENSE
-   and README you do not need.
+    and README you do not need.
 
 3. **Create a bucket.** OCI Console > **Storage** > **Buckets** > **Create bucket**. Any name will do —
-   `workshop-models` is used here. Leave it **Private**; the pre-authenticated request in the next step is
-   what grants access.
+    `workshop-models` is used here. Leave it **Private**; the pre-authenticated request in the next step is
+    what grants access.
 
 4. **Upload the `.onnx`** into the bucket with **Upload objects**.
 
 5. **Create a pre-authenticated request.** On the object's **⋯** menu choose
-   **Create Pre-Authenticated Request**, and keep the defaults: target **Object**, access
-   **Permit object reads**. That is least privilege — it grants read on this one file and nothing else.
-   Copy the URL when it appears.
+    **Create Pre-Authenticated Request**, and keep the defaults: target **Object**, access
+    **Permit object reads**. That is least privilege — it grants read on this one file and nothing else.
+    Copy the URL when it appears.
 
     > **⚠️ Treat that URL as a credential.** A pre-authenticated request is a *bearer* token: anyone who
     > has the link can read the object until it expires, with no sign-in. Do not paste it into chats,
@@ -87,7 +87,7 @@ and is a genuinely useful thing to know how to do.
 ## Task 3: Load the Embedding Model
 
 1. Back in APEX, in **SQL Workshop > SQL Commands**, load the model into your schema.
-   Replace `<your-par-url>` with the pre-authenticated request URL you copied in Task 2:
+    Replace `<your-par-url>` with the pre-authenticated request URL you copied in Task 2:
 
     ```
     <copy>begin
@@ -204,7 +204,7 @@ The bucket and its pre-authenticated request exist only to get the model into th
 lives *inside* your schema, so nothing downstream needs them.
 
 1. Delete the **pre-authenticated request** on the object. This is the important one — it is a bearer
-   credential, and leaving it alive means the link keeps working for anyone who has it.
+    credential, and leaving it alive means the link keeps working for anyone who has it.
 2. Delete the **`all_MiniLM_L12_v2.onnx` object**, and the bucket if you created it only for this lab.
 
 Your embeddings, the `MINILM_L12` model, the Vector Provider, and the search page all keep working —
