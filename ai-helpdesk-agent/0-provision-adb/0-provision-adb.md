@@ -119,18 +119,33 @@ This lab assumes you have:
 APEX ships with the database but has no workspace yet, so your first visit is as the instance
 administrator.
 
-1. On the database details page, open the **Tool configuration** tab. Under **Oracle APEX**, copy the
-   public access URL and open it in a new browser tab.
+1. On the database details page, open the **Tool configuration** tab. Under **Oracle APEX**, click
+   **Copy** next to the public access URL and open it in a new browser tab.
+
+    > **Copy the URL, do not retype it.** The console displays the host upper-cased
+    > (`GC9C36CF5A92CB1-…`). Browsers do not care, but it is easy to mistype by hand.
 
     ![Tool configuration tab with the APEX public access URL](images/launch-apex-inst.png " ")
 
-2. Sign in to **Administration Services** with the **ADMIN** password you set in Task 1.
+2. The URL does **not** open APEX directly. It opens the Autonomous AI Database sign-in page —
+   *"Sign in with your database credentials"*, with Username and Password fields above a row of external
+   identity providers. Enter **`ADMIN`** and the ADMIN password you set in Task 1, and click **Sign in**.
 
-    ![APEX Administration Services sign-in page](images/log-in-as-admin.png " ")
+    ![Autonomous AI Database sign-in page](images/log-in-as-admin.png " ")
+
+    > **This is a database sign-in, not an APEX one.** Ignore the external identity provider buttons
+    > (OCI IAM, Azure, GCP, AWS, Okta) — they are for federated database users, not for this workshop.
+
+3. You land directly in **APEX Administration Services**. There is no second sign-in.
+
+    > **Ignore the Workspace Summary tile.** On a database this new it may already claim several
+    > workspaces and applications. Those are stale daily-aggregate counts, and the `INTERNAL` workspace
+    > alone holds nearly 200 Oracle-supplied applications. Your instance is empty until you create a
+    > workspace in Task 3.
 
 ## Task 3: Create Your Workspace
 
-1. Click **Create Workspace**.
+1. Click **Create Workspace**, at the top right of Administration Services.
 
     ![APEX Administration Services welcome page with Create Workspace](images/welcome-create-workspace.png " ")
 
@@ -138,26 +153,32 @@ administrator.
 
     ![Choose between a new schema and an existing schema](images/choose-schema.png " ")
 
-3. Enter a workspace name, username and password. `HELPDESK` is used throughout this workshop; any name
-   works as long as you remember it.
+3. Enter a **Workspace Name**, **Workspace Username** and **Workspace Password**, then click **Create
+   Workspace**. This workshop uses workspace `HELPDESK` with username `helpadmin`; any names work as long
+   as you remember them. Leave the **Advanced** section alone — its optional *Database Password* and
+   *Workspace ID* are not needed.
 
     ![Create Workspace dialog with name, username and password](images/create-workspace.png " ")
 
-    > **Your schema name will not match your workspace name.** Autonomous AI Database prefixes new APEX
-    > schemas with `WKSP_`, so a workspace called `HELPDESK` runs on schema **`WKSP_HELPDESK`**. Nothing in
-    > this workshop schema-qualifies anything, so it simply works — but Lab 7 asks you to type the schema
-    > name, and that prefixed form is the one it wants. SQL Workshop shows it in the header.
+    > **⚠️ If you see "Workspace name already exists", check before you retry.** The dialog can stay open
+    > after a *successful* create, so clicking Create Workspace a second time reports a name clash for the
+    > workspace you just made. Go to **Manage Workspaces > Existing Workspaces** and look for your
+    > workspace — if it is listed with a recent *Provisioned* time, it worked. Do **not** delete it and
+    > start over; that throws away the workspace the error is complaining about.
 
-4. Click the workspace name in the success message to leave Administration Services.
+    > **You cannot choose the schema name.** There is no schema field, even under Advanced. Autonomous AI
+    > Database derives it by prefixing the workspace name, so workspace `HELPDESK` runs on schema
+    > **`WKSP_HELPDESK`**. Nothing in this workshop schema-qualifies anything, so it simply works — but
+    > Lab 7 asks you to type the schema name, and the prefixed form is the one it wants. SQL Workshop
+    > shows it in the header.
 
-    ![Success message linking to the new workspace](images/log-out-from-admin.png " ")
-
-5. Sign in to your new workspace with the username and password you just set.
+4. Sign in at the same APEX URL with your workspace username and password. APEX then asks you to **select
+   a workspace** — click your workspace name to continue.
 
     ![APEX workspace sign-in page](images/log-in-to-workspace.png " ")
 
-You now have an Autonomous AI Database 26ai running APEX 26.1 with an empty workspace — everything the
-rest of the workshop builds on.
+You should land on the APEX home page with **0 applications and 0 tables**, and the footer showing your
+APEX release. That empty workspace is exactly what Lab 1 expects.
 
 You may now **proceed to the next lab**.
 
