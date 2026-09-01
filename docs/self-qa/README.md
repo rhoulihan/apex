@@ -16,8 +16,16 @@ PR link <https://github.com/oracle-livelabs/apex/pull/346> recorded, and the wor
 **Self QA Complete** (Last QA Date 8/31/2026, rick.houlihan@oracle.com).
 
 **Re-verified 2026-09-01** after the workshop gained a provisioning lab. The evidence images in this
-folder were regenerated against the current tree (**10 labs, 110 files, 52 screenshots**) and re-uploaded
-to WMS.
+folder were regenerated against the current tree (**10 labs, 110 files, 52 screenshots**).
+
+> **The copies uploaded to WMS are the 2026-08-31 versions and were deliberately left alone.** Once a
+> workshop reaches **Self QA Complete** the checklist locks: saving a replacement file fails with
+> `Session state protection violation … P320_UPLOAD_SCREENSHOT`, and every status button becomes
+> non-interactive (`pointer-events: none`), so the owner cannot move it back to *Self QA* to re-upload.
+> The checklist **answers** in WMS remain accurate — only the screenshots predate the provisioning lab,
+> and the lint image quotes 38 PNGs where the workshop now has 52. **PR #346 is the current source of
+> truth** for reviewers; the images here are the up-to-date evidence, and they can be re-uploaded when
+> the checklist re-opens at Quarterly QA.
 
 ---
 
