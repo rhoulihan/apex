@@ -60,7 +60,14 @@ This lab assumes you have:
 
     * Under **Database configuration**, toggle **Always Free** ON if it is offered, and leave the
       **Developer** toggle off.
-    * **Choose database version: `26ai`**
+    * **Choose database version: `26ai`** — set this *after* Always Free, and see the warning below.
+
+        > **⚠️ Toggling Always Free resets the version back to `19c`.** Set Always Free first, then the
+        > version — and glance at the version field one more time immediately before you click Create.
+        > Flipping Always Free after choosing `26ai` silently reverts it, with no message. The same
+        > happens if your console session drops and you sign in again: the form comes back with the name
+        > fields regenerated and Always Free switched off, while workload type and version appear to
+        > survive. Re-check every field after any interruption.
 
         > **⚠️ This selector defaults to `19c`, and that silently breaks the workshop.** Verified on a paid
         > tenancy, not just a sandbox: the only two options are `26ai` and `19c`, and `19c` is preselected.
