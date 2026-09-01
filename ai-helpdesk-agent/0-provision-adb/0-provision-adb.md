@@ -36,47 +36,70 @@ This lab assumes you have:
 
     ![OCI navigation menu with Autonomous AI Database selected](images/database-atp.png " ")
 
-2. Check the **compartment** selector on the left before you go further. A fresh tenancy defaults to the
-   root compartment; if you were given a specific compartment, switch to it now, otherwise the list may
-   show nothing or return a permissions error.
+2. Check the **compartment** the list is filtered to, shown as an *Applied filters* chip above the table.
+   A fresh tenancy defaults to the root compartment; if you were given a specific compartment, switch to
+   it, otherwise the list may look empty or return a permissions error.
 
-3. Click **Create Autonomous AI Database**.
+3. Click **Create Autonomous AI Database**. The page that opens is titled **Create Autonomous AI Database
+   Serverless** — that is the right page.
 
     ![Autonomous AI Database list with the Create button](images/click-create-autonomous-database.png " ")
 
-4. Enter and select the following:
+4. Fill in the form, top to bottom:
 
-    * Display name and database name: anything you like — `HELPDESK` is used in this workshop
-    * Workload type: **Transaction Processing**
-    * **Database version: `26ai`**
-    * Always Free: toggle **ON** if it is offered — see the note below if it is not
-    * Administrator password: choose one you will remember, and **write it down now**
+    * **Display name** and **Database name** — both are pre-filled with a random string like
+      `Q4QY2GKQ81XOBOWK`. Replace both; `HELPDESK` is used throughout this workshop.
+    * **Compartment** — this is a field on the form, not just the list filter. Confirm it is the
+      compartment you intend.
+    * **Workload type** — choose **Transaction Processing**.
 
-    ![Create Autonomous AI Database dialog, workload type](images/atp-settings-1.png " ")
+        > **⚠️ The form preselects `Lakehouse`, and one of the other cards is a trap.** There is an
+        > **APEX** workload card, which looks like the obvious choice for an APEX workshop. It is not:
+        > that shape is tuned for APEX-only use and does not give you the `ADMIN` database access Lab 7
+        > needs for its grants. Pick **Transaction Processing**.
 
-    ![Create Autonomous AI Database dialog, database version](images/atp-settings-2.png " ")
+    * Under **Database configuration**, toggle **Always Free** ON if it is offered, and leave the
+      **Developer** toggle off.
+    * **Choose database version: `26ai`**
 
-    ![Create Autonomous AI Database dialog, administrator password](images/atp-settings-3.png " ")
+        > **⚠️ This selector defaults to `19c`, and that silently breaks the workshop.** Verified on a paid
+        > tenancy, not just a sandbox: the only two options are `26ai` and `19c`, and `19c` is preselected.
+        > AI Interactive Reports, the AI Agent and in-database vector search all need **26ai**. A 19c
+        > database provisions perfectly happily and then fails several labs in, with errors that never
+        > mention the version.
 
-    > **⚠️ The version selector defaults to `19c`, and that silently breaks this workshop.** AI Interactive
-    > Reports, the AI Agent, and in-database vector search all need **26ai**. A 19c database provisions
-    > perfectly happily and then fails several labs in with errors that never mention the version. Change
-    > it before you click Create.
+    * Under **Administrator credentials creation**, the username is fixed as **ADMIN**. Set a password you
+      will remember and **write it down now**.
 
-    > **⚠️ Keep the ADMIN password.** Lab 7 signs in to Database Actions as `ADMIN` to grant your workspace
-    > schema two privileges. That is the only place it is needed — but there is no way to continue Lab 7
-    > without it, and resetting it means a detour through the console.
+        > **⚠️ Keep the ADMIN password.** Lab 7 signs in to Database Actions as `ADMIN` to grant your
+        > workspace schema two privileges. That is the only place it is needed — but there is no way
+        > through Lab 7 without it, and resetting it means a detour through the console.
+
+    * Under **Network access**, leave the default **Secure access from everywhere**. With Always Free on,
+      the private-endpoint option is greyed out anyway, and APEX needs the public endpoint.
+
+    ![Create form: display name, database name, compartment and workload type](images/atp-settings-1.png " ")
+
+    ![Create form: Always Free toggle and the database version selector](images/atp-settings-2.png " ")
+
+    ![Create form: administrator credentials](images/atp-settings-3.png " ")
 
     > **Always Free greyed out, or refused with a capacity message?** That is common and nothing to fix.
-    > Always Free can only be created in your tenancy's **home region**, and individual regions run out of
-    > Always Free capacity (`adb-free-count=0`). **Leave Always Free OFF and continue** — a trial or paid
-    > instance is identical for this workshop's purposes.
+    > Always Free can only be created in your tenancy's **home region**, individual regions run out of
+    > Always Free capacity (`adb-free-count=0`), and a tenancy is limited to two Always Free databases.
+    > **Leave Always Free OFF and continue** — a trial or paid instance is identical for this workshop's
+    > purposes.
+
+    > **Always Free databases stop themselves.** Turning the toggle on raises a warning worth reading: an
+    > Always Free database with no activity for **7 consecutive days is stopped automatically**. Your data
+    > is preserved and you restart it from the console — but if you come back to this workshop after a
+    > week, start the database before wondering why APEX will not load.
 
     > **Which region?** Any. Your database does not have to sit in a region that offers OCI Generative AI —
     > APEX calls that service over REST, so the two are independent. Lab 1 covers the region requirement
     > for Generative AI itself.
 
-5. Click **Create Autonomous AI Database**. Provisioning takes a few minutes.
+5. Click **Create**. Provisioning takes a few minutes.
 
 6. Wait for the state to change from **Provisioning** to **Available** before continuing.
 
