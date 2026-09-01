@@ -218,7 +218,8 @@ for p in WS.rglob("*.png"):
         placeholder.append(str(p.relative_to(WS)))
 
 check("SCREENSHOTS", "OCI Menu screenshots are the common path ones", True,
-      "no OCI hamburger-menu navigation shots are used")
+      "the one navigation shot (0-provision-adb/images/database-atp.png) is the shared "
+      "common-261 capture; no bespoke menu shots")
 check("SCREENSHOTS", "Screenshots are current, clear and big", not placeholder,
       "; ".join(placeholder) or f"{len(list(WS.rglob('*.png')))} PNGs, no placeholders; APEX shots on 26.1.4 / app 105, OCI shots from the live console")
 check("SCREENSHOTS", "Screenshots trimmed of extra whitespace", True,

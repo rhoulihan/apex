@@ -26,8 +26,8 @@ Each AI feature sends a different, well-defined slice of context to the model �
 
 | Lab | Title | Duration |
 |---|---|---|
-| — | Get Started: log in to the LiveLabs Sandbox | 5 min |
-| — | Sign up for an APEX Workspace | 10 min |
+| — | Get Started: log in to the LiveLabs Sandbox *(sandbox only)* | 5 min |
+| — | Provision an Autonomous AI Database and an APEX workspace | 10–15 min |
 | 1 | Connect APEX to Generative AI | 10 min |
 | 2 | Design the Data Model with AI | 10 min |
 | 3 | Generate the App from a Prompt | 10 min |
