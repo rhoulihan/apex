@@ -15,6 +15,10 @@ placeholder screenshots) reports **0 errors**. Every image in the workshop is a 
 PR link <https://github.com/oracle-livelabs/apex/pull/346> recorded, and the workshop moved to
 **Self QA Complete** (Last QA Date 8/31/2026, rick.houlihan@oracle.com).
 
+**Re-verified 2026-09-01** after the workshop gained a provisioning lab. The evidence images in this
+folder were regenerated against the current tree (**10 labs, 110 files, 52 screenshots**) and re-uploaded
+to WMS.
+
 ---
 
 ## Mandatory requirements
@@ -85,33 +89,46 @@ PR link <https://github.com/oracle-livelabs/apex/pull/346> recorded, and the wor
 
 ## Lab section
 
-- [x] **Each lab has a title (#)** — 8/8 labs (plus the Introduction).
-- [x] **Each lab has an Introduction (##) with "Estimated Time"** — 8/8. The Introduction lab correctly
+- [x] **Each lab has a title (#)** — 9/9 labs (plus the Introduction).
+- [x] **Each lab has an Introduction (##) with "Estimated Time"** — 9/9. The Introduction lab correctly
       uses `## About this Workshop` and `Estimated Workshop Time:` instead.
-- [x] **Each lab has Objectives (###)** — 8/8.
-- [x] **Each lab has Prerequisites (###)** — 8/8. *Take It Home* was missing one; added in this pass.
-- [x] **Tasks (##), initial capitalized, not bold, colon between number and title** — 8/8.
-- [x] **Each task has numbered, indented Steps** — 8/8.
-- [x] **"You may now proceed to the next lab" at the end (except the last)** — 7/7 non-final labs.
-- [x] **Each lab has Acknowledgements (##)** — 8/8.
+- [x] **Each lab has Objectives (###)** — 9/9.
+- [x] **Each lab has Prerequisites (###)** — 9/9. *Take It Home* was missing one; added in this pass.
+- [x] **Tasks (##), initial capitalized, not bold, colon between number and title** — 9/9.
+- [x] **Each task has numbered, indented Steps** — 9/9.
+- [x] **"You may now proceed to the next lab" at the end (except the last)** — 8/8 non-final labs.
+- [x] **Each lab has Acknowledgements (##)** — 9/9.
 
 ## Screenshots
 
 - [x] **OCI Menu screenshots are the common path ones** — the workshop uses no OCI hamburger-menu
       navigation shots.
-- [x] **Screenshots are current, clear and big** — all 38 are fresh captures: 34 from this run on APEX
-      26.1.4 / app 105, and Lab 1's four OCI Console shots from the live console.
+- [x] **Screenshots are current, clear and big** — all 52 are real captures: 34 from the APEX 26.1.4 / app 105
+      run, Lab 1's four OCI Console shots from the live console, and 14 provisioning shots.
 - [x] **Screenshots are trimmed of extra whitespace** — every capture is viewport-cropped; no
       full-desktop shots.
 - [x] **Personal/sensitive information is blurred out** — the pre-authenticated request URL in
       `load-onnx.png` is under a drawn redaction bar; no OCIDs, keys, tokens or email addresses appear
       in any image.
-- [x] **Names of the images are descriptive** — 38 distinct, descriptive filenames; no `image1.png`.
-- [x] **There is a description to explain what the image looks like for accessibility** — 40/40 images
+- [x] **Names of the images are descriptive** — 52 distinct, descriptive filenames; no `image1.png`.
+- [x] **There is a description to explain what the image looks like for accessibility** — 54/54 images
       carry alt text.
 - [x] **Upload a screenshot sample of one of your accessibility descriptions** → **`alt-text-sample.png`**.
 
 ---
+
+## The provisioning lab was walked, not written
+
+`ai-helpdesk-agent/0-provision-adb/` was added after Self QA Complete, so on **2026-09-01** it was walked
+end to end on a real tenancy — `HELPDESK` terminated and rebuilt as an Always Free **26ai** database,
+then a fresh `HELPDESK` workspace created and signed in to on APEX **26.1.4**. Nine corrections came out
+of that walk, including three that would have cost a reader real time:
+
+* **Always Free resets the database version back to `19c`** — set Always Free first, then the version.
+* **"Workspace name already exists" can mean it worked** — the dialog stays open after a successful
+  create, and the obvious recovery (delete and retry) destroys the new workspace.
+* **The APEX URL opens the database sign-in page, not APEX Administration Services** — the lab pointed at
+  a screen that never appears.
 
 ## Lab 1's OCI Console screenshots
 
