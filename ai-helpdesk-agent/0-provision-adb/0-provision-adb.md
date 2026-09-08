@@ -172,13 +172,26 @@ administrator.
     > Lab 7 asks you to type the schema name, and the prefixed form is the one it wants. SQL Workshop
     > shows it in the header.
 
-4. Sign in at the same APEX URL with your workspace username and password. APEX then asks you to **select
-    a workspace** — click your workspace name to continue.
+4. The success message links your new workspace by name. Clicking it **signs you out of Administration
+    Services** — that is expected, because instance administration and your workspace are separate
+    logins. You now need to sign in again as the workspace user.
+
+    ![Success message linking to the new workspace](images/log-out-from-admin.png " ")
+
+    > **This hand-off trips people up.** Clicking the workspace link logs you out of Administration
+    > Services, and signing in straight afterwards can fail because you are still on the *administration*
+    > sign-in page, which only accepts the instance admin. If that happens, go back to the **APEX public
+    > access URL** you copied in Task 2 and sign in there instead.
+
+5. At the APEX sign-in page enter your **workspace name**, **workspace username** and **workspace
+    password** from step 3 — not the database `ADMIN` account. If your user belongs to only one
+    workspace, APEX may still show a **select a workspace** step; click your workspace name to continue.
 
     ![APEX workspace sign-in page](images/log-in-to-workspace.png " ")
 
-You should land on the APEX home page with **0 applications and 0 tables**, and the footer showing your
-APEX release. That empty workspace is exactly what Lab 1 expects.
+You should land on the APEX home page showing four tiles — App Builder, SQL Workshop, Data Reporter and
+Gallery — with **0 applications and 0 tables** in the summary and your APEX release in the footer. That
+empty workspace is exactly what Lab 1 expects.
 
 You may now **proceed to the next lab**.
 

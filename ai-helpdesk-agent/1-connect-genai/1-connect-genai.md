@@ -59,7 +59,14 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
     ![Configuration file preview dialog](images/oci-config-preview.png " ")
 
-5. You also need your **assigned compartment's OCID** — this one is *not* in the configuration file. In the LiveLabs Sandbox, open your reservation details to find your assigned compartment, or in the OCI Console navigate to **Identity & Security > Compartments** and copy the OCID shown next to your compartment.
+5. You also need your **assigned compartment's OCID** — this one is *not* in the configuration file.
+
+    * **In your own tenancy:** in the OCI Console navigate to **Identity & Security > Compartments** and
+      copy the OCID shown next to your compartment.
+    * **On a LiveLabs Sandbox:** your sandbox is assigned a compartment named after your reservation,
+      like `LL123456-COMPARTMENT`. Find it the same way — **Identity & Security > Compartments** — or
+      read it off the **View Login Info** panel on your LiveLabs reservation page, the same panel that
+      gave you your sandbox username and password.
 
     > **Running in your own tenancy's root compartment?** Then the compartment OCID *is* the tenancy OCID — reuse the `tenancy=` value from the Configuration File Preview and skip this step.
 
@@ -105,9 +112,14 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 3. For Credential, select **Create New** and enter, from your Task 1 scratch note:
 
     * **OCI User ID** (the user OCID)
-    * **OCI Private Key** (paste the full contents of the downloaded .pem file)
+    * **OCI Private Key** — see the warning below before you paste
     * **OCI Tenancy ID** (the tenancy OCID)
     * **OCI Public Key Fingerprint**
+
+    > **⚠️ Paste the key body only — no header or footer line.** Open the `.pem` file and copy
+    > everything *between* `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`, leaving both
+    > of those lines out. Pasting the whole file, header and footer included, makes **Test Connection**
+    > fail. This is the single most common reason this step fails.
 
 4. Click **Test Connection**. When it succeeds, click **Create**.
 
@@ -177,7 +189,14 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
 ## Task 4: Prove the Wiring with the APEX Assistant
 
-1. Navigate to **SQL Workshop > SQL Commands** and click the **APEX Assistant** button in the toolbar.
+1. Get back to the workspace home page first: click the **Oracle APEX** logo at the top left, or the
+    **App Builder** breadcrumb, from wherever the Generative AI pages left you. From the workspace home
+    page, navigate to **SQL Workshop > SQL Commands** and click the **APEX Assistant** button in the
+    toolbar.
+
+    > **SQL Workshop is one of the four tiles on the workspace home page**, alongside App Builder, Data
+    > Reporter and Gallery. If you cannot see them, you are still inside a builder page — click the
+    > APEX logo at the very top left to go home.
 
 2. **The first time you use an AI feature in a workspace, APEX asks you to accept the third-party AI terms.** Read them and click **Accept** — the Assistant will not open otherwise. This appears once per workspace.
 
@@ -193,7 +212,13 @@ OCI API keys are a public/private key pair used to authenticate REST calls to OC
 
 ## Go Further (optional)
 
-Paste this block into SQL Commands, select it, and ask the APEX Assistant to *explain* it — you'll meet this exact code again in Lab 5 as your AI agent's write tool:
+Open the **APEX Assistant** in SQL Commands and paste this block **into the chat box**, followed by the
+question *"Explain what this does."* — you'll meet this exact code again in Lab 5 as your AI agent's
+write tool:
+
+> **Paste it into the chat, not the editor.** The Assistant answers what you type in the chat panel; it
+> does not read the SQL editor or whatever you have selected there. Pasting the code into the editor and
+> asking "explain the command to be run" gets you an answer about your *previous* question instead.
 
 ```
 <copy>declare
